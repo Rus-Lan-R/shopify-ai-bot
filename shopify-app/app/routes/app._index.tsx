@@ -1,6 +1,14 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Card, Page } from "@shopify/polaris";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import {
+  BlockStack,
+  Button,
+  Card,
+  InlineStack,
+  Page,
+  Text,
+} from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
+import { ChatBot } from "app/packages/ChatBot";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
@@ -8,14 +16,27 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return null;
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const { admin } = await authenticate.admin(request);
-};
-
 export default function Index() {
   return (
     <Page>
-      <Card></Card>
+      <BlockStack gap={"300"}>
+        <Card padding={"500"}>
+          <InlineStack gap={"500"} blockAlign={"center"}>
+            <Text as={"p"}>Assistant</Text>
+            <Button fullWidth={false} url={"/app/settings/assistance"}>
+              Edit
+            </Button>
+          </InlineStack>
+        </Card>
+        <Card padding={"500"}>
+          <Text as={"p"}>Whats up</Text>
+        </Card>
+        <Card padding={"500"}>
+          <Text as={"p"}>Telegram</Text>
+        </Card>
+
+        <ChatBot></ChatBot>
+      </BlockStack>
     </Page>
   );
 }

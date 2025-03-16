@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
-application_url = "https://download-covers-par-marilyn.trycloudflare.com"
+application_url = "https://sit-kirk-coffee-memorabilia.trycloudflare.com"
 embedded = true
 name = "Support AI"
 handle = "support-ai-5"
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://download-covers-par-marilyn.trycloudflare.com/auth/callback",
-  "https://download-covers-par-marilyn.trycloudflare.com/auth/shopify/callback",
-  "https://download-covers-par-marilyn.trycloudflare.com/api/auth/callback"
+  "https://sit-kirk-coffee-memorabilia.trycloudflare.com/auth/callback",
+  "https://sit-kirk-coffee-memorabilia.trycloudflare.com/auth/shopify/callback",
+  "https://sit-kirk-coffee-memorabilia.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]
