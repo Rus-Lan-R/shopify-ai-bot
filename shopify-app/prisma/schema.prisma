@@ -14,6 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model Session {
   session_id              String    @id @default(auto()) @map("_id") @db.ObjectId
   id                      String    @unique
@@ -36,4 +37,5 @@ model Session {
   assistantPrompt         String?
   assistantVectorStoreId  String?
   mainThreadId            String?
+  assistantFiles          Json?
 }

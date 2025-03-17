@@ -1,15 +1,15 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
-application_url = "https://sit-kirk-coffee-memorabilia.trycloudflare.com"
+application_url = "https://share-privacy-emerald-mn.trycloudflare.com"
 embedded = true
 name = "Support AI"
 handle = "support-ai-5"
 
 [build]
 include_config_on_deploy = true
-dev_store_url = "dev-temple.myshopify.com"
 automatically_update_urls_on_dev = true
+dev_store_url = "nikasoul-store.myshopify.com"
 
 [webhooks]
 api_version = "2025-01"
@@ -24,14 +24,14 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://sit-kirk-coffee-memorabilia.trycloudflare.com/auth/callback",
-  "https://sit-kirk-coffee-memorabilia.trycloudflare.com/auth/shopify/callback",
-  "https://sit-kirk-coffee-memorabilia.trycloudflare.com/api/auth/callback"
+  "https://share-privacy-emerald-mn.trycloudflare.com/auth/callback",
+  "https://share-privacy-emerald-mn.trycloudflare.com/auth/shopify/callback",
+  "https://share-privacy-emerald-mn.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_customers,read_orders,read_products,read_returns"
+scopes = "read_customers,read_orders,read_products,read_returns,write_products"
 
 [pos]
 embedded = false

@@ -1,61 +1,46 @@
 import { Box, Button, Card, InlineStack, TextField } from "@shopify/polaris";
 import { ChatBody, IMessage } from "./ChatBody";
-import { useEffect, useState } from "react";
-import { useFetcher } from "@remix-run/react";
-import { MainChatLoader } from "app/routes/main-chat";
+import { useState } from "react";
 
-export const Chat = (props: {}) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<string>("");
-  const [messagesList, setMessagesList] = useState<IMessage[]>([]);
-  const fetcher = useFetcher<MainChatLoader>();
+export const Chat = (props: {
+  isLoading: boolean;
+  messagesList: IMessage[];
+  onSend: (message: string) => void;
+}) => {
+  const { messagesList, isLoading, onSend } = props;
+  const [message, setMessage] = useState("");
 
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("action", "message");
-    formData.append("message", message);
-    try {
-      setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
-      setMessage("");
-      setIsLoading(true);
-      const response = await fetch("/main-chat", {
-        method: "POST",
-        body: formData,
-      });
-      const data = (await response.json()) as { answer: string };
-      setMessagesList((prev) => [
-        { role: "assistant", text: data.answer },
-        ...prev,
-      ]);
-    } catch (error) {
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSubmit = () => {
+    setMessage("");
+    onSend(message);
   };
-
-  useEffect(() => {
-    setMessagesList(fetcher.data?.messages || []);
-  }, [fetcher.data]);
-
-  useEffect(() => {
-    fetcher.load("/main-chat");
-  }, []);
 
   return (
     <Card>
       <ChatBody messages={messagesList}>
-        <InlineStack gap={"300"} blockAlign={"stretch"} wrap={false}>
+        <InlineStack
+          gap={"300"}
+          blockAlign={"stretch"}
+          wrap={false}
+          align={"end"}
+        >
           <Box width={"100%"}>
             <TextField
               label=""
               autoComplete="off"
               value={message}
+              ariaExpanded={true}
+              multiline={true}
+              placeholder={"Message"}
               onChange={(value) => setMessage(value)}
             ></TextField>
           </Box>
-          <Button onClick={handleSubmit} loading={isLoading}>
-            Send
-          </Button>
+
+          <div style={{ height: "fit-content", marginTop: "auto" }}>
+            <Button onClick={handleSubmit} loading={isLoading}>
+              Send
+            </Button>
+          </div>
         </InlineStack>
       </ChatBody>
     </Card>

@@ -4,8 +4,41 @@ import { Message } from "openai/resources/beta/threads/messages";
 import { aiClient } from "../../../services/openAi/openAi";
 
 export const getStores = async () => {
-  const list = await aiClient.vectorStores.list();
-  console.log(list);
+  const assistant = await aiClient.beta.assistants.retrieve(
+    "asst_MEQbDlKBQC4uWlGo2s1da9Zg"
+  );
+
+  if (!!assistant?.tool_resources?.file_search?.vector_store_ids?.[0]) {
+    console.log(assistant.tool_resources.file_search.vector_store_ids);
+    const list = await aiClient.vectorStores.files.list(
+      assistant.tool_resources?.file_search?.vector_store_ids?.[0]
+    );
+
+    // await Promise.all(
+    //   list.data.map((item) => {
+    //     try {
+    //       aiClient.vectorStores.files.del(
+    //         assistant?.tool_resources?.file_search?.vector_store_ids?.[0]!,
+    //         item.id
+    //       );
+    //     } catch (error) {}
+    //     try {
+    //       aiClient.files.del(item.id);
+    //     } catch (error) {}
+    //   })
+    // );
+
+    console.log(list.data);
+  }
+
+  // await Promise.all(
+  //   list.data.map((item) =>
+  //     aiClient.vectorStores.files.del(
+  //       "vs_67d706f4213c8191bc014913cb6bfcb7",
+  //       item.id
+  //     )
+  //   )
+  // );
 };
 
 export const createThread = async () => {

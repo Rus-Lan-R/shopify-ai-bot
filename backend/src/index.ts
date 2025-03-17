@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
-import { connect } from "./database";
 import apiRoute from "./routes";
 import { getStores } from "./routes/api/ai/ai.module";
 

@@ -2,11 +2,11 @@ import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { authenticate } from "app/shopify.server";
 import db from "../db.server";
 import { formDataToObject } from "app/helpers/utils";
+import { aiClient } from "app/services/openAi.server";
 import {
-  aiClient,
   extractTextWithoutAnnotations,
   getOpenAIResponse,
-} from "app/services/openAi.server";
+} from "app/modules/openAi/request";
 
 export type MainChatLoader = typeof loader;
 
@@ -16,17 +16,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     where: { id: session.id },
   });
 
-  if (shopSession?.mainThreadId) {
-    const messages = await aiClient.beta.threads.messages.list(
-      shopSession?.mainThreadId,
-      { limit: 100 },
-    );
-    const preparedMessages = messages.data.map((item) => ({
-      role: item.role,
-      text: extractTextWithoutAnnotations(item.content),
-    }));
-    return { messages: preparedMessages };
+  try {
+    if (shopSession?.mainThreadId) {
+      const messages = await aiClient.beta.threads.messages.list(
+        shopSession?.mainThreadId,
+        { limit: 100 },
+      );
+      const preparedMessages = messages.data.map((item) => ({
+        role: item.role,
+        text: extractTextWithoutAnnotations(item.content),
+      }));
+      return { messages: preparedMessages };
+    }
+  } catch (error) {
+    console.log(error);
   }
+
   return { messages: [] };
 };
 

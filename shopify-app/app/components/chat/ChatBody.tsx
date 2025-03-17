@@ -1,4 +1,4 @@
-import { Box, Card, Text } from "@shopify/polaris";
+import { BlockStack, Box, Card, Scrollable, Text } from "@shopify/polaris";
 
 export interface IMessage {
   role: "assistant" | "user";
@@ -12,38 +12,46 @@ export const ChatBody = (props: {
 
   return (
     <Box position={"relative"} minHeight={"300px"}>
-      <div
+      <Scrollable
         style={{
-          maxHeight: "300px",
-          overflowY: "scroll",
+          height: "300px",
           display: "flex",
           flexDirection: "column-reverse",
           gap: "16px",
           marginBottom: "16px",
         }}
       >
-        {messages?.map((item, index) => {
-          const isRight = item.role === "user";
-          return (
-            <div
-              style={{
-                alignSelf: isRight ? "flex-end" : "flex-start",
-                maxWidth: "66%",
-              }}
-              key={index}
-            >
-              <Card
-                padding={"200"}
-                background={isRight ? "bg-fill-info" : "bg-fill-transparent"}
+        <Scrollable.ScrollTo />
+        {messages.length ? (
+          messages?.map((item, index) => {
+            const isRight = item.role === "user";
+            return (
+              <div
+                style={{
+                  alignSelf: isRight ? "flex-end" : "flex-start",
+                  maxWidth: "66%",
+                }}
+                key={index}
               >
-                <Text alignment={isRight ? "end" : "start"} as={"p"}>
-                  {item.text}
-                </Text>
-              </Card>
-            </div>
-          );
-        })}
-      </div>
+                <Card
+                  padding={"200"}
+                  background={isRight ? "bg-fill-info" : "bg-fill-transparent"}
+                >
+                  <div style={{ whiteSpace: "pre-wrap" }}>
+                    <Text alignment={isRight ? "end" : "start"} as={"p"}>
+                      {item.text}
+                    </Text>
+                  </div>
+                </Card>
+              </div>
+            );
+          })
+        ) : (
+          <BlockStack align={"center"} inlineAlign={"center"}>
+            <Text as={"p"}>Start conversation</Text>
+          </BlockStack>
+        )}
+      </Scrollable>
       <Box
         position={"sticky"}
         insetBlockEnd={"0"}
