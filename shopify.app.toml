@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
-application_url = "https://share-privacy-emerald-mn.trycloudflare.com"
+application_url = "https://smoking-clara-doctrine-posters.trycloudflare.com"
 embedded = true
 name = "Support AI"
 handle = "support-ai-5"
@@ -24,14 +24,14 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://share-privacy-emerald-mn.trycloudflare.com/auth/callback",
-  "https://share-privacy-emerald-mn.trycloudflare.com/auth/shopify/callback",
-  "https://share-privacy-emerald-mn.trycloudflare.com/api/auth/callback"
+  "https://smoking-clara-doctrine-posters.trycloudflare.com/auth/callback",
+  "https://smoking-clara-doctrine-posters.trycloudflare.com/auth/shopify/callback",
+  "https://smoking-clara-doctrine-posters.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_customers,read_orders,read_products,read_returns,write_products"
+scopes = "read_customers,read_orders,read_products,read_returns,write_products,write_script_tags"
 
 [pos]
 embedded = false

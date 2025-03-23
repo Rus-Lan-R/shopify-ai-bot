@@ -23,15 +23,25 @@ import { createGraphqlRequest } from "app/api/graphql";
 import { dataSync } from "app/modules/vectoreStoreSync";
 import { FileTypes, VsFile } from "app/modules/openAi/openAi.interfaces";
 import { assistantInit, assistantUpdate } from "app/modules/openAi/assistant";
+import { CREATE_SCRIPT, GET_SCRIPT_TAGS } from "app/api/scripts/scripts.gql";
+import { GetScriptTagsQuery } from "app/types/admin.generated";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
+  const graphqlRequest = await createGraphqlRequest(request);
 
   const shopSession = await db.session.findFirst({
     where: { id: session.id },
   });
 
+  const {
+    data: { scriptTags },
+  } = await graphqlRequest<{ data: GetScriptTagsQuery }>(GET_SCRIPT_TAGS, {
+    src: `${process.env.SHOPIFY_APP_URL}/chat.js`,
+  });
+
   return {
+    scriptTag: scriptTags?.nodes?.[0],
     files: shopSession?.assistantFiles as { type: FileTypes; fileId: string }[],
     assistant: {
       id: shopSession?.assistantId,
@@ -126,6 +136,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
         break;
       }
+      case "chat-init": {
+        const response = await graphqlRequest(CREATE_SCRIPT, {
+          input: {
+            displayScope: "ALL",
+            src: `${process.env.SHOPIFY_APP_URL}/chat.js`,
+          },
+        });
+        console.log(response);
+        break;
+      }
 
       default:
         break;
@@ -136,7 +156,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Index() {
-  const { assistant, files } = useLoaderData<typeof loader>();
+  const { assistant, files, scriptTag } = useLoaderData<typeof loader>();
   const form = useForm({
     defaultValues: {
       ...assistant,
@@ -158,6 +178,17 @@ export default function Index() {
     const formData = new FormData();
     formData.append("action", "sync");
     formData.append("fileType", type);
+    submit(formData, { method: "POST" });
+  };
+  const initChat = () => {
+    const formData = new FormData();
+    formData.append("action", "chat-init");
+    submit(formData, { method: "POST" });
+  };
+  const deleteChat = (id: string) => {
+    const formData = new FormData();
+    formData.append("action", "chat-init");
+    formData.append("chatId", id);
     submit(formData, { method: "POST" });
   };
 
@@ -229,6 +260,57 @@ export default function Index() {
           >
             <BlockStack gap="400">
               <Text as="h3" variant="headingMd">
+                Chat
+              </Text>
+              <Text as="p" variant="bodyMd">
+                Init chat
+              </Text>
+            </BlockStack>
+          </Box>
+          <Card roundedAbove="sm">
+            <BlockStack gap={"300"}>
+              <InlineStack align={"space-between"}>
+                <Text as="p" variant="bodyMd">
+                  Script tag
+                </Text>
+                <Text as="p" variant="bodyMd">
+                  {scriptTag?.createdAt}
+                </Text>
+              </InlineStack>
+              <ButtonGroup>
+                {scriptTag?.id ? (
+                  <Button
+                    disabled={isLoading}
+                    fullWidth={false}
+                    variant={"primary"}
+                    tone={"critical"}
+                    onClick={() => deleteChat(scriptTag.id)}
+                  >
+                    Delete chat tag
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={isLoading}
+                    fullWidth={false}
+                    variant={"primary"}
+                    onClick={initChat}
+                  >
+                    Init chat
+                  </Button>
+                )}
+              </ButtonGroup>
+            </BlockStack>
+          </Card>
+        </InlineGrid>
+        <Divider />
+        <InlineGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="400">
+          <Box
+            as="section"
+            paddingInlineStart={{ xs: "400", sm: "0" }}
+            paddingInlineEnd={{ xs: "400", sm: "0" }}
+          >
+            <BlockStack gap="400">
+              <Text as="h3" variant="headingMd">
                 Synchronized data
               </Text>
               <BlockStack gap={"200"}>
@@ -245,26 +327,36 @@ export default function Index() {
           </Box>
           <Card roundedAbove="sm">
             <BlockStack gap={"400"}>
-              {files?.map((item) => (
-                <Box borderColor={"input-border"}>
-                  <BlockStack gap={"300"}>
-                    <InlineStack align={"space-between"}>
-                      <Text as={"p"}>{firstLetterUpperCase(item.type)}</Text>
-                      <Badge tone={item.fileId ? "success" : "critical"}>
-                        {item.fileId ? "Connected" : "Empty"}
-                      </Badge>
-                    </InlineStack>
-                    <ButtonGroup>
-                      <Button variant={"primary"} tone={"critical"}>
-                        Delete
-                      </Button>
-                      <Button onClick={() => onSyncData(item.type)}>
-                        Sync
-                      </Button>
-                    </ButtonGroup>
-                  </BlockStack>
-                </Box>
-              ))}
+              {files.length ? (
+                files?.map((item, index) => (
+                  <Box
+                    borderColor={"input-border"}
+                    key={`${item.type}-${item.fileId}`}
+                  >
+                    <BlockStack gap={"300"}>
+                      {!!index && <Divider></Divider>}
+                      <InlineStack align={"space-between"}>
+                        <Text as={"p"}>{firstLetterUpperCase(item.type)}</Text>
+                        <Badge tone={item.fileId ? "success" : "critical"}>
+                          {item.fileId ? "Connected" : "Empty"}
+                        </Badge>
+                      </InlineStack>
+                      <ButtonGroup>
+                        <Button variant={"primary"} tone={"critical"}>
+                          Delete
+                        </Button>
+                        <Button onClick={() => onSyncData(item.type)}>
+                          Sync
+                        </Button>
+                      </ButtonGroup>
+                    </BlockStack>
+                  </Box>
+                ))
+              ) : (
+                <Text as="p" variant="bodyMd">
+                  Fill in the block with "Assistant Settings"
+                </Text>
+              )}
             </BlockStack>
           </Card>
         </InlineGrid>

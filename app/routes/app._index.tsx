@@ -23,32 +23,50 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     return {
       assistantId: shopAssistant?.assistantId,
+      assistant: {
+        assistantName: shopAssistant?.assistantName,
+        assistantPrompt: shopAssistant?.assistantPrompt,
+      },
     };
   } catch (error) {
-    return { assistantId: null };
+    return { assistantId: null, assistant: {} };
   }
 };
 
 export default function Index() {
-  const { assistantId } = useLoaderData<typeof loader>();
+  const { assistantId, assistant } = useLoaderData<typeof loader>();
   return (
     <Page>
       <BlockStack gap={"300"}>
         {assistantId ? (
           <>
             <Card padding={"300"}>
-              <InlineStack
-                gap={"500"}
-                blockAlign={"center"}
-                align={"space-between"}
-              >
-                <Text as={"h2"} variant={"headingSm"}>
-                  Assistant
-                </Text>
-                <Button fullWidth={false} url={"/app/settings/assistant"}>
-                  Edit
-                </Button>
-              </InlineStack>
+              <BlockStack gap={"500"}>
+                <InlineStack
+                  gap={"500"}
+                  blockAlign={"center"}
+                  align={"space-between"}
+                >
+                  <Text as={"h2"} variant={"headingSm"}>
+                    Assistant
+                  </Text>
+                  <Button fullWidth={false} url={"/app/settings/assistant"}>
+                    Edit
+                  </Button>
+                </InlineStack>
+                {!!assistant?.assistantName && (
+                  <BlockStack>
+                    <InlineStack gap={"100"}>
+                      <Text as="p" fontWeight={"bold"}>{`Name: `}</Text>
+                      <Text as="p">{assistant.assistantName}</Text>
+                    </InlineStack>
+                    <InlineStack gap={"100"}>
+                      <Text as="p" fontWeight={"bold"}>{`Instruction: `}</Text>
+                      <Text as="p">{assistant.assistantPrompt}</Text>
+                    </InlineStack>
+                  </BlockStack>
+                )}
+              </BlockStack>
             </Card>
 
             <ChatBot></ChatBot>
