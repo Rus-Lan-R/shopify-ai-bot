@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import {
   BlockStack,
+  Box,
   Button,
   Card,
   EmptyState,
@@ -37,53 +38,58 @@ export default function Index() {
   const { assistantId, assistant } = useLoaderData<typeof loader>();
   return (
     <Page>
-      <BlockStack gap={"300"}>
-        {assistantId ? (
-          <>
-            <Card padding={"300"}>
-              <BlockStack gap={"500"}>
-                <InlineStack
-                  gap={"500"}
-                  blockAlign={"center"}
-                  align={"space-between"}
-                >
-                  <Text as={"h2"} variant={"headingSm"}>
-                    Assistant
-                  </Text>
-                  <Button fullWidth={false} url={"/app/settings/assistant"}>
-                    Edit
-                  </Button>
-                </InlineStack>
-                {!!assistant?.assistantName && (
-                  <BlockStack>
-                    <InlineStack gap={"100"}>
-                      <Text as="p" fontWeight={"bold"}>{`Name: `}</Text>
-                      <Text as="p">{assistant.assistantName}</Text>
-                    </InlineStack>
-                    <InlineStack gap={"100"}>
-                      <Text as="p" fontWeight={"bold"}>{`Instruction: `}</Text>
-                      <Text as="p">{assistant.assistantPrompt}</Text>
-                    </InlineStack>
-                  </BlockStack>
-                )}
-              </BlockStack>
-            </Card>
+      <Box paddingBlockEnd={"3200"}>
+        <BlockStack gap={"300"}>
+          {assistantId ? (
+            <>
+              <Card padding={"300"}>
+                <BlockStack gap={"500"}>
+                  <InlineStack
+                    gap={"500"}
+                    blockAlign={"center"}
+                    align={"space-between"}
+                  >
+                    <Text as={"h2"} variant={"headingSm"}>
+                      Assistant
+                    </Text>
+                    <Button fullWidth={false} url={"/app/settings/assistant"}>
+                      Edit
+                    </Button>
+                  </InlineStack>
+                  {!!assistant?.assistantName && (
+                    <BlockStack>
+                      <InlineStack gap={"100"}>
+                        <Text as="p" fontWeight={"bold"}>{`Name: `}</Text>
+                        <Text as="p">{assistant.assistantName}</Text>
+                      </InlineStack>
+                      <InlineStack gap={"100"}>
+                        <Text
+                          as="p"
+                          fontWeight={"bold"}
+                        >{`Instruction: `}</Text>
+                        <Text as="p">{assistant.assistantPrompt}</Text>
+                      </InlineStack>
+                    </BlockStack>
+                  )}
+                </BlockStack>
+              </Card>
 
-            <ChatBot></ChatBot>
-          </>
-        ) : (
-          <EmptyState
-            heading="Start working with AI Assistant"
-            action={{
-              content: "Setup Assistant",
-              url: "/app/settings/assistant",
-            }}
-            image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
-          >
-            <Text as={"p"}>Set up your assistant</Text>
-          </EmptyState>
-        )}
-      </BlockStack>
+              <ChatBot></ChatBot>
+            </>
+          ) : (
+            <EmptyState
+              heading="Start working with AI Assistant"
+              action={{
+                content: "Setup Assistant",
+                url: "/app/settings/assistant",
+              }}
+              image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+            >
+              <Text as={"p"}>Set up your assistant</Text>
+            </EmptyState>
+          )}
+        </BlockStack>
+      </Box>
     </Page>
   );
 }

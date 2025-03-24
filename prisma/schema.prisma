@@ -38,4 +38,6 @@ model Session {
   assistantVectorStoreId  String?
   mainThreadId            String?
   assistantFiles          Json?
+  totalAiRequests         Int?
+  monthlyAiRequests       Int?
 }
