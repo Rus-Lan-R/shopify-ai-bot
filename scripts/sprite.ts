@@ -19,9 +19,9 @@ type Sprite = {
 };
 
 const config: Config = {
-  spritesPath: "./app/components/ui/SpriteIcon/icons",
-  spriteTypesOutputPath: "./app/components/ui/SpriteIcon/types.d.ts",
-  spriteOutputPath: "./app/components/ui/SpriteIcon/Sprite.tsx",
+  spritesPath: "./app/assets/icons",
+  spriteTypesOutputPath: "./app/components/SpriteIcon/types.d.ts",
+  spriteOutputPath: "./app/components/SpriteIcon/Sprite.tsx",
 };
 
 async function main() {
@@ -35,6 +35,7 @@ async function updateSprites() {
     entries.map(async (e) => {
       const path = join(config.spritesPath, e);
       const contents = await readFile(path, { encoding: "utf-8" });
+
       const id = e.replace(sep, ":").replace(".svg", "").trim();
 
       return {
@@ -43,7 +44,7 @@ async function updateSprites() {
         path,
         contents,
       };
-    })
+    }),
   );
 
   const spriteContents = generateSprite(sprites);
@@ -67,11 +68,19 @@ function generateSprite(sprites: Pick<Sprite, "contents" | "id">[]): string {
 
   sprites.forEach((e) => {
     const fragment = document.createDocumentFragment();
-    fragment.append(e.contents);
+    document.body.innerHTML = e.contents;
+
+    const svgElement = document.querySelector("svg"); // Ищем <svg>
+
+    if (svgElement) {
+      fragment.appendChild(svgElement);
+    } else {
+      console.error("SVG not found in contents");
+    }
 
     const symbol = replaceElement(
+      document.createElementNS("http://www.w3.org/2000/svg", "symbol"),
       fragment?.querySelector("svg"),
-      document.createElementNS("http://www.w3.org/2000/svg", "symbol")
     );
 
     symbol.setAttribute("id", e.id);
@@ -81,11 +90,11 @@ function generateSprite(sprites: Pick<Sprite, "contents" | "id">[]): string {
         const reactName = kebabToCamel(htmlName);
         if (htmlName !== reactName) {
           const value = element.getAttribute(htmlName);
-          element.setAttribute(reactName, value);
+          element.setAttribute(reactName, value || "");
           element.removeAttribute(htmlName);
         }
       });
-      element.children?.forEach(renameAttributes);
+      [...element?.children].flat()?.forEach(renameAttributes);
     };
     renameAttributes(symbol);
 
@@ -109,17 +118,17 @@ function generateSpriteTypes(sprites: Pick<Sprite, "id">[]): string {
             factory.createAsExpression(
               factory.createArrayLiteralExpression(
                 sprites.map((s) => factory.createStringLiteral(s.id)),
-                false
+                false,
               ),
               factory.createTypeReferenceNode(
                 factory.createIdentifier("const"),
-                undefined
-              )
-            )
+                undefined,
+              ),
+            ),
           ),
         ],
-        ts.NodeFlags.Const
-      )
+        ts.NodeFlags.Const,
+      ),
     ),
     factory.createTypeAliasDeclaration(
       [factory.createModifier(ts.SyntaxKind.ExportKeyword)],
@@ -128,10 +137,10 @@ function generateSpriteTypes(sprites: Pick<Sprite, "id">[]): string {
       factory.createIndexedAccessTypeNode(
         factory.createTypeQueryNode(
           factory.createIdentifier("spriteIconNames"),
-          undefined
+          undefined,
         ),
-        factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword)
-      )
+        factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
+      ),
     ),
   ]);
 
@@ -140,17 +149,22 @@ function generateSpriteTypes(sprites: Pick<Sprite, "id">[]): string {
     "",
     ts.ScriptTarget.ESNext,
     false,
-    ts.ScriptKind.TS
+    ts.ScriptKind.TS,
   );
   const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
   return printer.printList(ts.ListFormat.MultiLine, nodes, file);
 }
 
-function replaceElement(existing: IElement, replacement: IElement) {
-  replacement.append(...existing.children?.map((c) => c.cloneNode(true)));
+function replaceElement(replacement: IElement, existing: SVGSVGElement | null) {
+  console.log(existing);
+  if (!existing) return;
+  console;
+  replacement.append(
+    ...Array.from(existing.children).map((c) => c.cloneNode(true)),
+  );
 
   existing
-    .getAttributeNames()
+    ?.getAttributeNames()
     .map((n) => {
       return existing.getAttributeNode(n);
     })
@@ -158,7 +172,7 @@ function replaceElement(existing: IElement, replacement: IElement) {
       replacement.setAttributeNode(a);
     });
 
-  existing.replaceWith(replacement);
+  existing?.replaceWith(replacement);
 
   return replacement;
 }

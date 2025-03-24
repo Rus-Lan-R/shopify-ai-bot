@@ -17,14 +17,16 @@
 .chatBody {
   padding: 0 0.75rem;
   display: flex;
-  flex-direction: column;
   flex: 1 1 0%;
+  overflow: scroll;
 }
+
 .chatConversation {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   justify-content: flex-end;
   flex-grow: 1;
+  gap: 0.5rem;
 }
 
 .chatHeader {
@@ -42,6 +44,8 @@
   left: 0;
   right: 0;
   display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .chatInput {
@@ -58,4 +62,44 @@
   resize: none;
   color: #161616;
   background-color: #fff;
+}
+
+.chatButtonFrame {
+  margin-top: auto;
+}
+
+.chatSendButton {
+  cursor: pointer;
+  padding: 0.5rem;
+  background-color: none;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: fit-content;
+}
+
+.chatMessage {
+  border-radius: 14px;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  max-width: 80%;
+  white-space: pre-wrap;
+}
+
+.chatMessage_user {
+  align-self: flex-end;
+  background-color: rgb(235, 235, 235);
+}
+
+.chatMessage_assistant {
+  background-color: rgb(244, 245, 247);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
+}
+
+.chatMessage_text {
+  margin: 0;
+  font-size: 10px;
 }
