@@ -11,4 +11,5 @@ export const firstLetterUpperCase = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const mergeClassNames = (classes: string[]) => classes.join(" ");
+export const mergeClassNames = (classes: (string | null)[]) =>
+  classes.filter((item) => !!item).join(" ");

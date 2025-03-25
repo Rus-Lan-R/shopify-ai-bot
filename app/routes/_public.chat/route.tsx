@@ -25,7 +25,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const [shop, chatId] = [searchParams.get("shop"), searchParams.get("chatId")];
 
-  if (!shop || !chatId) {
+  if (!shop) {
     throw new Response("Loader Bad Request", {
       status: 400,
     });
@@ -41,14 +41,18 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
   }
 
-  const messages = await aiClient.beta.threads.messages.list(chatId, {
-    limit: 100,
-  });
+  let preparedMessages;
+  if (chatId) {
+    const messages = await aiClient.beta.threads.messages.list(chatId, {
+      limit: 100,
+    });
 
-  const preparedMessages = messages.data.map((item) => ({
-    role: item.role,
-    text: extractTextWithoutAnnotations(item.content),
-  }));
+    preparedMessages = messages.data.map((item) => ({
+      role: item.role,
+      text: extractTextWithoutAnnotations(item.content),
+    }));
+  }
+
   return {
     chatId: chatId,
     shop: shop,
@@ -62,9 +66,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { action, message } = formDataToObject(formData);
   const searchParams = new URL(request.url).searchParams;
   const [shop, chatId] = [searchParams.get("shop"), searchParams.get("chatId")];
-  if (!shop || !chatId) {
-    throw new Response("Chat not found", {
-      status: 404,
+
+  if (!shop) {
+    throw new Response("Chat bad request", {
+      status: 400,
     });
   }
 
@@ -77,9 +82,24 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       status: 404,
     });
   }
-  console.log(action);
+
   switch (action) {
+    case "init": {
+      if (shopSession?.assistantId) {
+        const thread = await aiClient.beta.threads.create();
+        return new Response(JSON.stringify({ chatId: thread.id }), {
+          headers: { "content-type": "application/json" },
+        });
+      }
+      // add error response
+    }
     case "message":
+      if (!chatId) {
+        throw new Response("Chat not found", {
+          status: 404,
+        });
+      }
+
       if (shopSession?.assistantId) {
         const answer = await getOpenAIResponse({
           userText: message,
@@ -91,12 +111,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           headers: { "content-type": "application/json" },
         });
       }
+      // add error response
       break;
 
     default:
       break;
+    // add error respons
   }
-  console.log("default");
 
   return {};
 };
@@ -108,7 +129,8 @@ const PublicChat = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [messagesList, setMessagesList] = useState<IMessage[]>(messages);
+  const [isOpen, setIsOpen] = useState(false);
+  const [messagesList, setMessagesList] = useState<IMessage[]>(messages || []);
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (message: string) => {
@@ -150,6 +172,32 @@ const PublicChat = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  };
+
+  const handleOpen = async () => {
+    setIsOpen((prev) => !prev);
+    const localChatId = localStorage.getItem("chatId");
+    if (!localChatId) {
+      const formData = new FormData();
+      formData.append("action", "init");
+
+      try {
+        setIsLoading(true);
+
+        const response = await fetch(
+          `/chat?_data=routes/_public.chat&shop=${shop}`,
+          {
+            method: "POST",
+            body: formData,
+          },
+        );
+        const data = (await response.json()) as { chatId: string };
+        localStorage.setItem("chatId", data.chatId);
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
