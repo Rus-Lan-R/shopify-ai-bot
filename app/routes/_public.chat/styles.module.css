@@ -2,15 +2,18 @@
 ::after,
 ::before {
   box-sizing: border-box;
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-seri;
 }
 
 .chatFrame {
-  height: 22rem;
+  height: 29rem;
   border-radius: 1rem;
   position: relative;
   box-shadow: rgba(22, 22, 22, 0.1) 0px 0px 16px 0px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  background-color: rgb(235, 235, 235);
 }
 
 .chatBody {
@@ -18,25 +21,33 @@
   display: flex;
   flex: 1 1 0%;
   overflow: scroll;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  background-color: #fff;
 }
 
 .chatConversation {
+  padding: 1rem 0;
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
   flex-grow: 1;
   gap: 0.5rem;
+  background-color: #fff;
 }
 
 .chatHeader {
+  background-color: rgb(235, 235, 235);
   padding: 0.75rem;
   position: sticky;
   top: 0;
   left: 0;
   right: 0;
+  overflow: hidden;
 }
 
 .chatFooter {
+  background-color: #fff;
   padding: 0.75rem;
   position: sticky;
   bottom: 0;
@@ -45,22 +56,23 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  overflow: hidden;
 }
 
 .chatInput {
   flex-grow: 1;
   min-height: 2rem;
   max-height: 12rem;
-  font-size: 14px;
-  padding: 0.5rem;
+  font-size: 12px;
   overflow-y: auto;
   width: 100%;
-  border: 1px solid#dddddd;
+  border: 1px solid #eeeeee;
   border-radius: 4px;
+  padding: 8px 12px;
   outline: none;
   resize: none;
   color: #161616;
-  background-color: #fff;
+  background-color: #eeeeee;
 }
 
 .chatButtonFrame {
@@ -84,7 +96,7 @@
   border-radius: 14px;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  max-width: 80%;
+  max-width: 90%;
   white-space: pre-wrap;
 }
 
@@ -100,5 +112,5 @@
 
 .chatMessage_text {
   margin: 0;
-  font-size: 10px;
+  font-size: 12px;
 }

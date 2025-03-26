@@ -38,6 +38,7 @@ export default function Index() {
   const { assistantId, assistant } = useLoaderData<typeof loader>();
   return (
     <Page>
+      <script src="http://localhost:50010/chat.js"></script>
       <Box paddingBlockEnd={"3200"}>
         <BlockStack gap={"300"}>
           {assistantId ? (

@@ -1,5 +1,5 @@
 import styles from "./styles.module.css";
-import { useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
 import SpriteIcon from "app/components/SpriteIcon";
 import { formDataToObject, mergeClassNames } from "app/helpers/utils";
@@ -83,6 +83,8 @@ const PublicChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
+  const navigation = useNavigation();
+  const fetcher = useFetcher();
 
   const handleOpen = async () => {
     let localChatId = localStorage.getItem("chatId");
@@ -125,14 +127,17 @@ const PublicChat = () => {
           className={styles.widgetIframe}
           width={"100%"}
           height={"100%"}
-          src={`http://localhost:51991/chat?shop=${shop}&chatId=${chatId}`}
+          src={`http://localhost:50010/chat?shop=${shop}&chatId=${chatId}`}
         ></iframe>
       ) : (
         <></>
       )}
       <div className={styles.widgetButtonFrame}>
         <button
-          className={styles.widgetButton}
+          className={mergeClassNames([
+            styles.widgetButton,
+            isLoading ? styles.loading : null,
+          ])}
           onClick={handleOpen}
           disabled={isLoading}
         >

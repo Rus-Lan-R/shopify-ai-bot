@@ -76,7 +76,7 @@ export const extractTextWithoutAnnotations = (data: MessageContent[]) => {
 
 export const simpleRequest = async (text: string) => {
   const response = await aiClient.chat.completions.create({
-    model: "gpt-4-turbo",
+    model: "gpt-4o",
     messages: [
       {
         role: "user",

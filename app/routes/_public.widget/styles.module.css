@@ -31,9 +31,24 @@
 }
 
 .widgetOpen {
-  width: 16rem;
+  width: 20rem;
 }
 
 .widgetIframe {
   border: none;
+  height: 30rem;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  animation: rotate 1s infinite linear;
+  transform-origin: center;
 }

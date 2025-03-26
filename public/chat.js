@@ -1,44 +1,38 @@
 (function () {
-  const chatBox = document.createElement("div");
-  chatBox.style.position = "fixed";
-  chatBox.style.bottom = "20px";
-  chatBox.style.right = "20px";
-  chatBox.style.width = "300px";
-  chatBox.style.height = "400px";
-  chatBox.style.background = "#fff";
-  chatBox.style.border = "1px solid #ccc";
-  chatBox.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
-  chatBox.style.padding = "10px";
-  chatBox.style.overflow = "hidden";
-  chatBox.style.fontFamily = "Arial, sans-serif";
+  const iframe = document.createElement("iframe");
+  iframe.id = "aiChatIframeId"
+  iframe.src = "http://localhost:50010/widget?shop=offline_nikasoul-store.myshopify.com"; 
+  iframe.style.position = "fixed";
+  iframe.style.bottom = "20px";
+  iframe.style.right = "20px";
+  iframe.style.border = "none"
+  iframe.style.width = '48px';
+  iframe.style.height = '48px';
+  iframe.style.overflow = "hidden"
 
-  const chatHeader = document.createElement("div");
-  chatHeader.textContent = "Чат поддержки ▼";
-  chatHeader.style.background = "#0078ff";
-  chatHeader.style.color = "#fff";
-  chatHeader.style.padding = "10px";
-  chatHeader.style.textAlign = "center";
-  chatHeader.style.cursor = "pointer";
+  function resizeIframe() {
+    const iframe = document.getElementById('myIframe');
+    if (iframe.contentWindow.document.body) {
+      console.log(iframe.contentWindow.document.body.scrollHeight)
+      iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+    }
+  }
 
-  chatHeader.addEventListener("click", () => {
-    chatBox.style.height = chatBox.style.height === "50px" ? "400px" : "50px";
-  });
+  document.getElementById('aiChatIframeId').onload = resizeIframe;
 
-  const chatMessages = document.createElement("div");
-  chatMessages.style.height = "300px";
-  chatMessages.style.overflowY = "auto";
-  chatMessages.style.padding = "10px";
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   document.body.appendChild(iframe);
+  // });
 
-  const chatInput = document.createElement("input");
-  chatInput.type = "text";
-  chatInput.placeholder = "Введите сообщение...";
-  chatInput.style.width = "calc(100% - 20px)";
-  chatInput.style.margin = "10px";
-  chatInput.style.padding = "8px";
-  chatInput.style.border = "1px solid #ccc";
+  // function resizeIFrameToFitContent( iFrame ) {
+  //   iFrame.width  = iFrame.contentWindow.document.body.scrollWidth;
+  //   iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
+  //   console.log(iFrame.contentWindow.document.body.scrollWidth, iFrame.contentWindow.document.body.scrollHeight )
+  // }
 
-  chatBox.appendChild(chatHeader);
-  chatBox.appendChild(chatMessages);
-  chatBox.appendChild(chatInput);
-  document.body.appendChild(chatBox);
+  // window.addEventListener('DOMContentLoaded', function(e) {
+  //   var iFrame = document.getElementById( 'aiChatIframeId' );
+  //   resizeIFrameToFitContent( iFrame );
+  // });
+
 })();
