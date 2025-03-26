@@ -1,5 +1,4 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { authenticate } from "app/shopify.server";
 import db from "../db.server";
 import { formDataToObject } from "app/helpers/utils";
 import { aiClient } from "app/services/openAi.server";
@@ -11,53 +10,102 @@ import {
 export type MainChatLoader = typeof loader;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
-  const shopSession = await db.session.findUnique({
-    where: { id: session.id },
-  });
+  const searchParams = new URL(request.url).searchParams;
 
-  try {
-    if (shopSession?.mainThreadId) {
-      const messages = await aiClient.beta.threads.messages.list(
-        shopSession?.mainThreadId,
-        { limit: 100 },
-      );
-      const preparedMessages = messages.data.map((item) => ({
-        role: item.role,
-        text: extractTextWithoutAnnotations(item.content),
-      }));
-      return { messages: preparedMessages };
-    }
-  } catch (error) {
-    console.log(error);
+  const [shop, chatId] = [searchParams.get("shop"), searchParams.get("chatId")];
+
+  if (!shop) {
+    throw new Response("Loader Bad Request", {
+      status: 400,
+    });
   }
 
-  return { messages: [] };
+  const shopSession = await db.session.findFirst({
+    where: { id: shop },
+  });
+
+  if (!shopSession) {
+    throw new Response("Shop not found", {
+      status: 404,
+    });
+  }
+
+  let preparedMessages;
+  if (chatId) {
+    const messages = await aiClient.beta.threads.messages.list(chatId, {
+      limit: 100,
+    });
+
+    preparedMessages = messages.data.map((item) => ({
+      role: item.role,
+      text: extractTextWithoutAnnotations(item.content),
+    }));
+  }
+
+  return {
+    chatId: chatId,
+    shop: shop,
+    messages: preparedMessages,
+    assistantName: shopSession.assistantName,
+  };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const { action, message } = formDataToObject(formData);
-  const { session } = await authenticate.admin(request);
+  const searchParams = new URL(request.url).searchParams;
+  const [shop, chatId] = [searchParams.get("shop"), searchParams.get("chatId")];
+
+  if (!shop) {
+    throw new Response("Chat bad request", {
+      status: 400,
+    });
+  }
+
   const shopSession = await db.session.findUnique({
-    where: { id: session.id },
+    where: { id: shop },
   });
 
+  if (!shopSession) {
+    throw new Response("Shop not found", {
+      status: 404,
+    });
+  }
+
   switch (action) {
+    case "init": {
+      if (shopSession?.assistantId) {
+        const thread = await aiClient.beta.threads.create();
+        return new Response(JSON.stringify({ chatId: thread.id }), {
+          headers: { "content-type": "application/json" },
+        });
+      }
+      // add error response
+    }
     case "message":
-      if (shopSession?.mainThreadId && shopSession?.assistantId) {
+      if (!chatId) {
+        throw new Response("Chat not found", {
+          status: 404,
+        });
+      }
+
+      if (shopSession?.assistantId) {
         const answer = await getOpenAIResponse({
           userText: message,
-          threadId: shopSession?.mainThreadId,
+          threadId: chatId,
           assistantId: shopSession?.assistantId,
         });
 
-        return { answer };
+        return new Response(JSON.stringify({ answer }), {
+          headers: { "content-type": "application/json" },
+        });
       }
+      // add error response
       break;
 
     default:
       break;
+    // add error respons
   }
 
   return {};

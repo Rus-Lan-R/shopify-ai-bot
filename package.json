@@ -2,7 +2,7 @@
   "name": "support-ai",
   "private": true,
   "scripts": {
-    "build": "remix vite:build",
+    "build": "npm run build:chat && remix vite:build",
     "dev": "shopify app dev",
     "config:link": "shopify app config link",
     "generate": "shopify app generate",
@@ -17,7 +17,8 @@
     "prisma": "prisma",
     "codegen": "graphql-codegen",
     "vite": "vite",
-    "sprite": "ts-node --require tsconfig-paths/register ./scripts/sprite.ts"
+    "sprite": "ts-node --require tsconfig-paths/register ./scripts/sprite.ts",
+    "build:chat": "node esbuild.config.js"
   },
   "type": "module",
   "engines": {
@@ -50,8 +51,11 @@
     "@types/node": "^22.2.0",
     "@types/react": "^18.2.31",
     "@types/react-dom": "^18.2.14",
+    "esbuild": "^0.25.1",
+    "esbuild-plugin-css-modules": "^0.3.0",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^10.0.1",
+    "fs": "^0.0.1-security",
     "happy-dom": "^17.4.4",
     "prettier": "^3.2.4",
     "typescript": "^5.2.2",

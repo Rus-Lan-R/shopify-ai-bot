@@ -114,3 +114,52 @@
   margin: 0;
   font-size: 12px;
 }
+
+.widgetButtonFrame {
+  margin-left: auto;
+}
+
+.widgetButton {
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5rem;
+  border-radius: 50%;
+  background-color: rgb(235, 235, 235);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.widget {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: fixed;
+  right: 0.5rem;
+  bottom: 0.5rem;
+}
+
+.widgetOpen {
+  width: 20rem;
+}
+
+.widgetIframe {
+  border: none;
+  height: 30rem;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  animation: rotate 1s infinite linear;
+  transform-origin: center;
+}

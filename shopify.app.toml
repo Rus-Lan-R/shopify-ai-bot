@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
-application_url = "https://copying-sn-pharmaceutical-perceived.trycloudflare.com"
+application_url = "https://transaction-lobby-scout-way.trycloudflare.com"
 embedded = true
 name = "Support AI"
 handle = "support-ai-5"
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://copying-sn-pharmaceutical-perceived.trycloudflare.com/auth/callback",
-  "https://copying-sn-pharmaceutical-perceived.trycloudflare.com/auth/shopify/callback",
-  "https://copying-sn-pharmaceutical-perceived.trycloudflare.com/api/auth/callback"
+  "https://transaction-lobby-scout-way.trycloudflare.com/auth/callback",
+  "https://transaction-lobby-scout-way.trycloudflare.com/auth/shopify/callback",
+  "https://transaction-lobby-scout-way.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]

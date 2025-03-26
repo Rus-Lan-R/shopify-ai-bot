@@ -38,6 +38,9 @@ if (host === "localhost") {
 }
 
 export default defineConfig({
+  // define: {
+  //   "import.meta.env.SSR": "false",
+  // },
   server: {
     allowedHosts: [host],
     cors: {
