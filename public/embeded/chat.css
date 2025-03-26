@@ -1,4 +1,4 @@
-/* ../../../../../../private/var/folders/d8/kn6sfphj67n572x21m44vz4r0000gn/T/tmp-50117-5yGZebRoJpuQ/Users/ruslan/my/shopify/apps/shopify-ai-bot/app/components/publicChat/styles.css */
+/* ../../../../../../private/var/folders/d8/kn6sfphj67n572x21m44vz4r0000gn/T/tmp-53928-rnTvNzjHGCw3/Users/ruslan/my/shopify/apps/shopify-ai-bot/app/components/publicChat/styles.css */
 *,
 ::after,
 ::before {
@@ -131,12 +131,10 @@
   right: 0.5rem;
   bottom: 0.5rem;
 }
-.h1ebe73e5a40cb040133478738637adb8 {
-  width: 20rem;
-}
 .h86d6ac27e9bb8ce24be7d51b4b0db496 {
   border: none;
   height: 30rem;
+  max-width: 22rem;
 }
 @keyframes rotate {
   0% {

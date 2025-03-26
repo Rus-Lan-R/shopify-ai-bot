@@ -2,7 +2,11 @@ import styles from "./styles.module.css";
 import { useEffect, useRef, useState } from "react";
 import SpriteIcon from "app/components/SpriteIcon";
 import { mergeClassNames } from "app/helpers/utils";
-import { IMessage } from "app/components/chat/ChatBody";
+
+export interface IMessage {
+  role: "assistant" | "user";
+  text: string;
+}
 
 const roleToStyleMap = {
   assistant: styles.chatMessage_assistant,
@@ -10,18 +14,24 @@ const roleToStyleMap = {
 };
 
 interface ILodaerData {
-  chatId: string;
-  assistantName: string;
+  assistantName?: string | null;
+  chatId?: string | null;
+  shop?: string | null;
 }
 
-const PublicChat = (props: { chatId?: string; shop?: string }) => {
+const PublicChat = (props: {
+  chatId?: string | null;
+  shop?: string | null;
+}) => {
   const { shop, chatId } = props;
-  console.log(chatId);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [loaderData, setLoaderData] = useState<Partial<ILodaerData>>();
+  const [loaderData, setLoaderData] = useState<Partial<ILodaerData>>({
+    chatId,
+    shop,
+  });
   const [messagesList, setMessagesList] = useState<IMessage[]>([]);
   const [message, setMessage] = useState("");
 
@@ -32,9 +42,8 @@ const PublicChat = (props: { chatId?: string; shop?: string }) => {
     try {
       setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
       setIsLoading(true);
-      setMessage("");
       const response = await fetch(
-        `/chat?_data=routes/_public.chat&shop=${shop}&chatId=${loaderData?.chatId}`,
+        `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
         {
           method: "POST",
           body: formData,
@@ -52,6 +61,27 @@ const PublicChat = (props: { chatId?: string; shop?: string }) => {
   };
 
   useEffect(() => {
+    (async () => {
+      const response = await fetch(
+        `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
+        {
+          method: "GET",
+        },
+      );
+      const data = (await response.json()) as {
+        assistantName: string;
+        messages: IMessage[];
+      };
+
+      setMessagesList(data.messages || []);
+      setLoaderData((prev) => ({
+        ...prev,
+        assistantName: data.assistantName,
+      }));
+    })();
+  }, []);
+
+  useEffect(() => {
     if (conversationRef.current) {
       conversationRef.current.scrollIntoView();
     }
@@ -67,23 +97,23 @@ const PublicChat = (props: { chatId?: string; shop?: string }) => {
 
   const handleOpen = async () => {
     setIsOpen((prev) => !prev);
-    const localChatId = localStorage.getItem("chatId");
+    const localChatId = localStorage.getItem("supportAiChatId");
     if (!localChatId) {
       const formData = new FormData();
       formData.append("action", "init");
 
       try {
         setIsLoading(true);
-
         const response = await fetch(
-          `/chat?_data=routes/_public.chat&shop=${shop}`,
+          `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
           {
             method: "POST",
             body: formData,
           },
         );
         const data = (await response.json()) as { chatId: string };
-        localStorage.setItem("chatId", data.chatId);
+        localStorage.setItem("supportAiChatId", data.chatId);
+        setLoaderData((prev) => ({ ...prev, chatId: data.chatId }));
       } catch (error) {
       } finally {
         setIsLoading(false);
@@ -92,12 +122,7 @@ const PublicChat = (props: { chatId?: string; shop?: string }) => {
   };
 
   return (
-    <div
-      className={mergeClassNames([
-        styles.widget,
-        isOpen ? styles.widgetOpen : null,
-      ])}
-    >
+    <div className={styles.widget}>
       {isOpen ? (
         <div className={styles.chatFrame}>
           <div className={styles.chatHeader}>{loaderData?.assistantName}</div>

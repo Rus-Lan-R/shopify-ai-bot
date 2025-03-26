@@ -3,17 +3,16 @@ import PublicChat from "app/components/publicChat/PublicChat";
 import ReactDOM from "react-dom";
 
 const renderComponent = () => {
-  const container = document.getElementById("remix-embed");
+  const container = document.getElementById("support-ai-chat-place");
   if (container) {
-    const url = new URL(window.location.href);
-
-    const shop = url.searchParams.get("shop");
-    const localChatId = localStorage.getItem("chatId");
+    const scriptTag = document.getElementById("support-ai-chat-id");
+    const shop = scriptTag?.getAttribute("data-shopId");
+    const localChatId = localStorage.getItem("supportAiChatId");
     ReactDOM.render(
       <>
         <link
           rel="stylesheet"
-          href="https://transaction-lobby-scout-way.trycloudflare.com/embeded/chat.css"
+          href={`https://shoulder-software-renaissance-rim.trycloudflare.com/embeded/chat.css`}
         />
         <div
           style={{

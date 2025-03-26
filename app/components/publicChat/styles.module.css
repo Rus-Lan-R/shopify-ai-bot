@@ -141,13 +141,10 @@
   bottom: 0.5rem;
 }
 
-.widgetOpen {
-  width: 20rem;
-}
-
 .widgetIframe {
   border: none;
   height: 30rem;
+  max-width: 22rem;
 }
 
 @keyframes rotate {

@@ -15,7 +15,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const [shop, chatId] = [searchParams.get("shop"), searchParams.get("chatId")];
 
   if (!shop) {
-    throw new Response("Loader Bad Request", {
+    throw new Response("Chat Loader Bad Request", {
       status: 400,
     });
   }
@@ -57,7 +57,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const [shop, chatId] = [searchParams.get("shop"), searchParams.get("chatId")];
 
   if (!shop) {
-    throw new Response("Chat bad request", {
+    throw new Response("Chat Action Bad Request", {
       status: 400,
     });
   }
@@ -67,7 +67,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   if (!shopSession) {
-    throw new Response("Shop not found", {
+    throw new Response("Shop Not Found", {
       status: 404,
     });
   }

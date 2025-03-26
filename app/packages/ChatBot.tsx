@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Chat } from "../components/chat/Chat";
 import { useFetcher } from "@remix-run/react";
-import { MainChatLoader } from "app/routes/main-chat";
-import { IMessage } from "app/components/chat/ChatBody";
+import { MainChatLoader } from "app/routes/chat";
+import { IMessage } from "app/components/publicChat/PublicChat";
 
-export const ChatBot = () => {
+export const ChatBot = (props: { shop: string; chatId: string }) => {
+  const { shop, chatId } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [messagesList, setMessagesList] = useState<IMessage[]>([]);
   const fetcher = useFetcher<MainChatLoader>();
@@ -16,7 +17,7 @@ export const ChatBot = () => {
     try {
       setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
       setIsLoading(true);
-      const response = await fetch("/main-chat", {
+      const response = await fetch(`/chat?shop=${shop}&chatId=${chatId}`, {
         method: "POST",
         body: formData,
       });
@@ -36,7 +37,7 @@ export const ChatBot = () => {
   }, [fetcher.data]);
 
   useEffect(() => {
-    fetcher.load("/main-chat");
+    fetcher.load(`/chat?shop=${shop}&chatId=${chatId}`);
   }, []);
 
   return (

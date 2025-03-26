@@ -24,21 +24,23 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     return {
       assistantId: shopAssistant?.assistantId,
+      chatId: shopAssistant?.mainThreadId,
+      shop: session.id,
       assistant: {
         assistantName: shopAssistant?.assistantName,
         assistantPrompt: shopAssistant?.assistantPrompt,
       },
     };
   } catch (error) {
-    return { assistantId: null, assistant: {} };
+    return { shop: session.id, chatId: "", assistantId: null, assistant: {} };
   }
 };
 
 export default function Index() {
-  const { assistantId, assistant } = useLoaderData<typeof loader>();
+  const { assistantId, assistant, shop, chatId } =
+    useLoaderData<typeof loader>();
   return (
     <Page>
-      <script src="http://localhost:50010/chat.js"></script>
       <Box paddingBlockEnd={"3200"}>
         <BlockStack gap={"300"}>
           {assistantId ? (
@@ -75,7 +77,7 @@ export default function Index() {
                 </BlockStack>
               </Card>
 
-              <ChatBot></ChatBot>
+              {chatId && shop ? <ChatBot shop={shop} chatId={chatId} /> : <></>}
             </>
           ) : (
             <EmptyState

@@ -1,9 +1,6 @@
 import { BlockStack, Box, Card, Scrollable, Text } from "@shopify/polaris";
+import { IMessage } from "../publicChat/PublicChat";
 
-export interface IMessage {
-  role: "assistant" | "user";
-  text: string;
-}
 export const ChatBody = (props: {
   messages: IMessage[];
   children: JSX.Element;

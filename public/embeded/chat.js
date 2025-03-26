@@ -24493,7 +24493,7 @@ var RemixEmbed = (() => {
   ] });
 
   // app/components/publicChat/styles.module.css
-  var result = { "chatFrame": "h774a4d1b28999b6f09bcfc77e355d140", "chatBody": "he6d66f9e6b46f78c33a25a2f4e2727db", "chatConversation": "hbcd11eadacf6e878cc5d088fd2dd1f18", "chatHeader": "hcb8000a2fdab8cbc4b8ca22a37187332", "chatFooter": "h3563e706d334b94921b3dc0e2907d927", "chatInput": "ha4bab7eeecaa91ea4f0872e7c318ac19", "chatButtonFrame": "hd78911af412047aaaeeec843fd207fee", "chatSendButton": "hca8b2f797f42681f53f75219f2a4dca4", "chatMessage": "h1c664af74b1049f05dbf4e19d3965286", "chatMessage_user": "h4757b482d98da7b7475a320b36312a38", "chatMessage_assistant": "h3c3c2c23d23e5e0743583b163d09c370", "chatMessage_text": "h5407e59bd301bb3c40f9471246cee170", "widgetButtonFrame": "hc2b46c210bc66e168d5c2e04d4f9e2bf", "widgetButton": "h8ee64ea3d8c80237a978f7c81fd439fb", "widget": "h785652ebe3b5309d4b56ed17aa4e07dc", "widgetOpen": "h1ebe73e5a40cb040133478738637adb8", "widgetIframe": "h86d6ac27e9bb8ce24be7d51b4b0db496", "loading": "hfe683dda8cf26d8ae47875b21719c4c4" };
+  var result = { "chatFrame": "h774a4d1b28999b6f09bcfc77e355d140", "chatBody": "he6d66f9e6b46f78c33a25a2f4e2727db", "chatConversation": "hbcd11eadacf6e878cc5d088fd2dd1f18", "chatHeader": "hcb8000a2fdab8cbc4b8ca22a37187332", "chatFooter": "h3563e706d334b94921b3dc0e2907d927", "chatInput": "ha4bab7eeecaa91ea4f0872e7c318ac19", "chatButtonFrame": "hd78911af412047aaaeeec843fd207fee", "chatSendButton": "hca8b2f797f42681f53f75219f2a4dca4", "chatMessage": "h1c664af74b1049f05dbf4e19d3965286", "chatMessage_user": "h4757b482d98da7b7475a320b36312a38", "chatMessage_assistant": "h3c3c2c23d23e5e0743583b163d09c370", "chatMessage_text": "h5407e59bd301bb3c40f9471246cee170", "widgetButtonFrame": "hc2b46c210bc66e168d5c2e04d4f9e2bf", "widgetButton": "h8ee64ea3d8c80237a978f7c81fd439fb", "widget": "h785652ebe3b5309d4b56ed17aa4e07dc", "widgetIframe": "h86d6ac27e9bb8ce24be7d51b4b0db496", "loading": "hfe683dda8cf26d8ae47875b21719c4c4" };
   var styles_default = result;
 
   // app/components/publicChat/PublicChat.tsx
@@ -24519,12 +24519,14 @@ var RemixEmbed = (() => {
   };
   var PublicChat = (props) => {
     const { shop, chatId } = props;
-    console.log(chatId);
     const textareaRef = (0, import_react.useRef)(null);
     const conversationRef = (0, import_react.useRef)(null);
     const [isLoading, setIsLoading] = (0, import_react.useState)(false);
     const [isOpen, setIsOpen] = (0, import_react.useState)(false);
-    const [loaderData, setLoaderData] = (0, import_react.useState)();
+    const [loaderData, setLoaderData] = (0, import_react.useState)({
+      chatId,
+      shop
+    });
     const [messagesList, setMessagesList] = (0, import_react.useState)([]);
     const [message, setMessage] = (0, import_react.useState)("");
     const handleSubmit = async (message2) => {
@@ -24534,9 +24536,8 @@ var RemixEmbed = (() => {
       try {
         setMessagesList((prev) => [{ role: "user", text: message2 }, ...prev]);
         setIsLoading(true);
-        setMessage("");
         const response = await fetch(
-          `/chat?_data=routes/_public.chat&shop=${shop}&chatId=${loaderData?.chatId}`,
+          `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
           {
             method: "POST",
             body: formData
@@ -24553,6 +24554,22 @@ var RemixEmbed = (() => {
       }
     };
     (0, import_react.useEffect)(() => {
+      (async () => {
+        const response = await fetch(
+          `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
+          {
+            method: "GET"
+          }
+        );
+        const data = await response.json();
+        setMessagesList(data.messages || []);
+        setLoaderData((prev) => ({
+          ...prev,
+          assistantName: data.assistantName
+        }));
+      })();
+    }, []);
+    (0, import_react.useEffect)(() => {
       if (conversationRef.current) {
         conversationRef.current.scrollIntoView();
       }
@@ -24566,97 +24583,89 @@ var RemixEmbed = (() => {
     };
     const handleOpen = async () => {
       setIsOpen((prev) => !prev);
-      const localChatId = localStorage.getItem("chatId");
+      const localChatId = localStorage.getItem("supportAiChatId");
       if (!localChatId) {
         const formData = new FormData();
         formData.append("action", "init");
         try {
           setIsLoading(true);
           const response = await fetch(
-            `/chat?_data=routes/_public.chat&shop=${shop}`,
+            `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
             {
               method: "POST",
               body: formData
             }
           );
           const data = await response.json();
-          localStorage.setItem("chatId", data.chatId);
+          localStorage.setItem("supportAiChatId", data.chatId);
+          setLoaderData((prev) => ({ ...prev, chatId: data.chatId }));
         } catch (error) {
         } finally {
           setIsLoading(false);
         }
       }
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
-      "div",
-      {
-        className: mergeClassNames([
-          styles_default.widget,
-          isOpen ? styles_default.widgetOpen : null
-        ]),
-        children: [
-          isOpen ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatFrame, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatHeader, children: loaderData?.assistantName }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatBody, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatConversation, children: messagesList.map((item, index) => {
-              return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-                "div",
-                {
-                  ref: !index ? conversationRef : null,
-                  className: mergeClassNames([
-                    styles_default.chatMessage,
-                    roleToStyleMap[item.role]
-                  ]),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: styles_default.chatMessage_text, children: item.text })
-                },
-                `${item.role}-${index}`
-              );
-            }) }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatFooter, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-                "textarea",
-                {
-                  ref: textareaRef,
-                  className: styles_default.chatInput,
-                  placeholder: "Type a message...",
-                  name: "chat-input",
-                  value: message,
-                  rows: 1,
-                  onChange: handleInput
-                }
-              ),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatButtonFrame, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-                "button",
-                {
-                  className: styles_default.chatSendButton,
-                  disabled: isLoading,
-                  onClick: () => message && handleSubmit(message),
-                  children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SpriteIcon_default, { name: "send-message", size: "1rem", color: "#000" })
-                }
-              ) })
-            ] })
-          ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, {}),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.widgetButtonFrame, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.widget, children: [
+      isOpen ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatFrame, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatHeader, children: loaderData?.assistantName }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatBody, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatConversation, children: messagesList.map((item, index) => {
+          return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            "div",
+            {
+              ref: !index ? conversationRef : null,
+              className: mergeClassNames([
+                styles_default.chatMessage,
+                roleToStyleMap[item.role]
+              ]),
+              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: styles_default.chatMessage_text, children: item.text })
+            },
+            `${item.role}-${index}`
+          );
+        }) }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatFooter, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            "textarea",
+            {
+              ref: textareaRef,
+              className: styles_default.chatInput,
+              placeholder: "Type a message...",
+              name: "chat-input",
+              value: message,
+              rows: 1,
+              onChange: handleInput
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatButtonFrame, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
             "button",
             {
-              className: mergeClassNames([
-                styles_default.widgetButton,
-                isLoading ? styles_default.loading : null
-              ]),
-              onClick: handleOpen,
+              className: styles_default.chatSendButton,
               disabled: isLoading,
-              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-                SpriteIcon_default,
-                {
-                  name: isOpen ? "cross" : "message",
-                  size: "1rem",
-                  color: "#000"
-                }
-              )
+              onClick: () => message && handleSubmit(message),
+              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SpriteIcon_default, { name: "send-message", size: "1rem", color: "#000" })
             }
           ) })
-        ]
-      }
-    );
+        ] })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.widgetButtonFrame, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        "button",
+        {
+          className: mergeClassNames([
+            styles_default.widgetButton,
+            isLoading ? styles_default.loading : null
+          ]),
+          onClick: handleOpen,
+          disabled: isLoading,
+          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            SpriteIcon_default,
+            {
+              name: isOpen ? "cross" : "message",
+              size: "1rem",
+              color: "#000"
+            }
+          )
+        }
+      ) })
+    ] });
   };
   var PublicChat_default = PublicChat;
 
@@ -24664,18 +24673,18 @@ var RemixEmbed = (() => {
   var import_react_dom = __toESM(require_react_dom(), 1);
   var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   var renderComponent = () => {
-    const container = document.getElementById("remix-embed");
+    const container = document.getElementById("support-ai-chat-place");
     if (container) {
-      const url = new URL(window.location.href);
-      const shop = url.searchParams.get("shop");
-      const localChatId = localStorage.getItem("chatId");
+      const scriptTag = document.getElementById("support-ai-chat-id");
+      const shop = scriptTag?.getAttribute("data-shopId");
+      const localChatId = localStorage.getItem("supportAiChatId");
       import_react_dom.default.render(
         /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "link",
             {
               rel: "stylesheet",
-              href: "https://transaction-lobby-scout-way.trycloudflare.com/embeded/chat.css"
+              href: `https://shoulder-software-renaissance-rim.trycloudflare.com/embeded/chat.css`
             }
           ),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
