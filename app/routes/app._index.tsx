@@ -26,19 +26,30 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       assistantId: shopAssistant?.assistantId,
       chatId: shopAssistant?.mainThreadId,
       shop: session.id,
+      data: {
+        totalRequests: shopAssistant?.totalAiRequests,
+        totalChats: shopAssistant?.totalChats,
+      },
       assistant: {
         assistantName: shopAssistant?.assistantName,
         assistantPrompt: shopAssistant?.assistantPrompt,
       },
     };
   } catch (error) {
-    return { shop: session.id, chatId: "", assistantId: null, assistant: {} };
+    return {
+      data: {},
+      shop: session.id,
+      chatId: "",
+      assistantId: null,
+      assistant: {},
+    };
   }
 };
 
 export default function Index() {
-  const { assistantId, assistant, shop, chatId } =
+  const { data, assistantId, assistant, shop, chatId } =
     useLoaderData<typeof loader>();
+
   return (
     <Page>
       <Box paddingBlockEnd={"3200"}>
@@ -53,7 +64,7 @@ export default function Index() {
                     align={"space-between"}
                   >
                     <Text as={"h2"} variant={"headingSm"}>
-                      Assistant
+                      Assistant Info
                     </Text>
                     <Button fullWidth={false} url={"/app/settings/assistant"}>
                       Edit
@@ -71,6 +82,17 @@ export default function Index() {
                           fontWeight={"bold"}
                         >{`Instruction: `}</Text>
                         <Text as="p">{assistant.assistantPrompt}</Text>
+                      </InlineStack>
+                      <InlineStack gap={"100"}>
+                        <Text as="p" fontWeight={"bold"}>{`Chats: `}</Text>
+                        <Text as="p">{data?.totalChats || 0}</Text>
+                      </InlineStack>
+                      <InlineStack gap={"100"}>
+                        <Text
+                          as="p"
+                          fontWeight={"bold"}
+                        >{`Total requests: `}</Text>
+                        <Text as="p">{data?.totalRequests || 0}</Text>
                       </InlineStack>
                     </BlockStack>
                   )}

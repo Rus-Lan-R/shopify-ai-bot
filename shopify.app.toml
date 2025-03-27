@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
-application_url = "https://shoulder-software-renaissance-rim.trycloudflare.com"
+application_url = "https://athletics-edge-cst-written.trycloudflare.com"
 embedded = true
 name = "Support AI"
 handle = "support-ai-5"
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://shoulder-software-renaissance-rim.trycloudflare.com/auth/callback",
-  "https://shoulder-software-renaissance-rim.trycloudflare.com/auth/shopify/callback",
-  "https://shoulder-software-renaissance-rim.trycloudflare.com/api/auth/callback"
+  "https://athletics-edge-cst-written.trycloudflare.com/auth/callback",
+  "https://athletics-edge-cst-written.trycloudflare.com/auth/shopify/callback",
+  "https://athletics-edge-cst-written.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]

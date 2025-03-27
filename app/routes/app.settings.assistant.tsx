@@ -18,12 +18,16 @@ import { FormProvider, useForm } from "react-hook-form";
 import { FormInput } from "../components/form/FormInput";
 import db from "../db.server";
 import { firstLetterUpperCase, formDataToObject } from "app/helpers/utils";
-import { useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
+import { useLoaderData, useSubmit } from "@remix-run/react";
 import { createGraphqlRequest } from "app/api/graphql";
 import { dataSync } from "app/modules/vectoreStoreSync";
 import { FileTypes, VsFile } from "app/modules/openAi/openAi.interfaces";
 import { assistantInit, assistantUpdate } from "app/modules/openAi/assistant";
-import { CREATE_SCRIPT, GET_SCRIPT_TAGS } from "app/api/scripts/scripts.gql";
+import {
+  CREATE_SCRIPT,
+  DELETE_SCRIPT,
+  GET_SCRIPT_TAGS,
+} from "app/api/scripts/scripts.gql";
 import { GetScriptTagsQuery } from "app/types/admin.generated";
 import { useLoading } from "app/helpers/useLoading";
 
@@ -69,6 +73,24 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               assistantName,
               assistantPrompt,
             });
+          let initAssistantFiles = Object.values(FileTypes).map((item) => ({
+            type: item,
+            fileId: "",
+          }));
+
+          const files = await Promise.all(
+            initAssistantFiles.map((item) => {
+              const promiseData = dataSync({
+                vsId: vectorStoreId,
+                type: item.type,
+                shopId: session.id,
+                vsFiles: initAssistantFiles,
+                graphqlRequest,
+              });
+              return promiseData;
+            }),
+          );
+
           await db.session.update({
             where: { id: session.id },
             data: {
@@ -77,10 +99,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               assistantVectorStoreId: vectorStoreId,
               assistantId,
               mainThreadId,
-              assistantFiles: Object.values(FileTypes).map((item) => ({
-                type: item,
-                fileId: "",
-              })),
+              assistantFiles: initAssistantFiles.map((item) => {
+                const uploadedFileId = files.find(
+                  (fileItem) => fileItem.newFile?.type === item.type,
+                );
+                return { ...item, fileId: uploadedFileId?.newFile?.fileId };
+              }),
             },
           });
         } catch (error) {
@@ -147,6 +171,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         console.log(response);
         break;
       }
+      case "delete-script": {
+        const scriptId = formData.get("scriptId");
+        await graphqlRequest(DELETE_SCRIPT, {
+          id: scriptId,
+        });
+        break;
+      }
 
       default:
         break;
@@ -195,8 +226,8 @@ export default function Index() {
 
   const deleteChat = (id: string) => {
     const formData = new FormData();
-    formData.append("action", "chat-init");
-    formData.append("chatId", id);
+    formData.append("action", "delete-script");
+    formData.append("scriptId", id);
     submit(formData, { method: "POST" });
   };
 

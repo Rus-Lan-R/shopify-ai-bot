@@ -19,7 +19,7 @@ const dataFunctionsMap = (
     }) =>
       new Promise((res) =>
         res({
-          orderNumber: "#9001",
+          orderNumber: "#EXAMPLE",
         }),
       ),
     [FileTypes.OTHER_INFO]: undefined,
@@ -42,16 +42,17 @@ export const dataSync = async ({
   if (type) {
     const data = await dataFunctionsMap(type)?.({ graphqlRequest });
     if (data) {
-      const { vsFiles: updatedVsFiles } = await populateVectorStoreInfo({
-        shopId,
-        vsId,
-        vsFiles,
-        type,
-        dataObject: data,
-      });
-      return { updatedVsFiles };
+      const { vsFiles: updatedVsFiles, newFile } =
+        await populateVectorStoreInfo({
+          shopId,
+          vsId,
+          vsFiles,
+          type,
+          dataObject: data,
+        });
+      return { updatedVsFiles, newFile };
     }
   }
 
-  return { updatedVsFiles: undefined };
+  return { updatedVsFiles: undefined, newFile: undefined };
 };

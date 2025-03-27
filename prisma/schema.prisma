@@ -40,4 +40,17 @@ model Session {
   assistantFiles          Json?
   totalAiRequests         Int?
   monthlyAiRequests       Int?
+  totalChats              Int?
+  chats                   Chat[]
+}
+
+model Chat {
+  id                      String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId               String
+  session                 Session  @relation(fields: [sessionId], references: [id]) 
+  messages                Json?    
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @default(now())
+  customerId              String?
+  threadId                String?
 }

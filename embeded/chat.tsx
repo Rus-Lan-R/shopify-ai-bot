@@ -8,12 +8,9 @@ const renderComponent = () => {
     const scriptTag = document.getElementById("support-ai-chat-id");
     const shop = scriptTag?.getAttribute("data-shopId");
     const localChatId = localStorage.getItem("supportAiChatId");
+
     ReactDOM.render(
       <>
-        <link
-          rel="stylesheet"
-          href={`https://shoulder-software-renaissance-rim.trycloudflare.com/embeded/chat.css`}
-        />
         <div
           style={{
             width: 0,

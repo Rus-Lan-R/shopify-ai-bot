@@ -39,11 +39,12 @@ const PublicChat = (props: {
     const formData = new FormData();
     formData.append("action", "message");
     formData.append("message", message);
+    setMessage("");
     try {
       setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
       setIsLoading(true);
       const response = await fetch(
-        `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
+        `https://athletics-edge-cst-written.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
         {
           method: "POST",
           body: formData,
@@ -63,7 +64,7 @@ const PublicChat = (props: {
   useEffect(() => {
     (async () => {
       const response = await fetch(
-        `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
+        `https://athletics-edge-cst-written.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
         {
           method: "GET",
         },
@@ -105,7 +106,7 @@ const PublicChat = (props: {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
+          `https://athletics-edge-cst-written.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
           {
             method: "POST",
             body: formData,
@@ -125,7 +126,9 @@ const PublicChat = (props: {
     <div className={styles.widget}>
       {isOpen ? (
         <div className={styles.chatFrame}>
-          <div className={styles.chatHeader}>{loaderData?.assistantName}</div>
+          <div className={styles.chatHeader}>
+            <p className={styles.chatTitle}>{loaderData?.assistantName}</p>
+          </div>
           <div className={styles.chatBody}>
             <div className={styles.chatConversation}>
               {messagesList.map((item, index) => {
@@ -160,7 +163,11 @@ const PublicChat = (props: {
                 disabled={isLoading}
                 onClick={() => message && handleSubmit(message)}
               >
-                <SpriteIcon name={"send-message"} size={"1rem"} color="#000" />
+                <SpriteIcon
+                  name={"send-message"}
+                  size={"1.5rem"}
+                  color="#000"
+                />
               </button>
             </div>
           </div>
@@ -179,7 +186,7 @@ const PublicChat = (props: {
         >
           <SpriteIcon
             name={isOpen ? "cross" : "message"}
-            size={"1rem"}
+            size={"2rem"}
             color="#000"
           />
         </button>

@@ -24493,7 +24493,7 @@ var RemixEmbed = (() => {
   ] });
 
   // app/components/publicChat/styles.module.css
-  var result = { "chatFrame": "h774a4d1b28999b6f09bcfc77e355d140", "chatBody": "he6d66f9e6b46f78c33a25a2f4e2727db", "chatConversation": "hbcd11eadacf6e878cc5d088fd2dd1f18", "chatHeader": "hcb8000a2fdab8cbc4b8ca22a37187332", "chatFooter": "h3563e706d334b94921b3dc0e2907d927", "chatInput": "ha4bab7eeecaa91ea4f0872e7c318ac19", "chatButtonFrame": "hd78911af412047aaaeeec843fd207fee", "chatSendButton": "hca8b2f797f42681f53f75219f2a4dca4", "chatMessage": "h1c664af74b1049f05dbf4e19d3965286", "chatMessage_user": "h4757b482d98da7b7475a320b36312a38", "chatMessage_assistant": "h3c3c2c23d23e5e0743583b163d09c370", "chatMessage_text": "h5407e59bd301bb3c40f9471246cee170", "widgetButtonFrame": "hc2b46c210bc66e168d5c2e04d4f9e2bf", "widgetButton": "h8ee64ea3d8c80237a978f7c81fd439fb", "widget": "h785652ebe3b5309d4b56ed17aa4e07dc", "widgetIframe": "h86d6ac27e9bb8ce24be7d51b4b0db496", "loading": "hfe683dda8cf26d8ae47875b21719c4c4" };
+  var result = { "chatFrame": "h774a4d1b28999b6f09bcfc77e355d140", "chatBody": "he6d66f9e6b46f78c33a25a2f4e2727db", "chatConversation": "hbcd11eadacf6e878cc5d088fd2dd1f18", "chatTitle": "hf9bbf5b4cef36333da1e1a0e5e52dac9", "chatHeader": "hcb8000a2fdab8cbc4b8ca22a37187332", "chatFooter": "h3563e706d334b94921b3dc0e2907d927", "chatInput": "ha4bab7eeecaa91ea4f0872e7c318ac19", "chatButtonFrame": "hd78911af412047aaaeeec843fd207fee", "chatSendButton": "hca8b2f797f42681f53f75219f2a4dca4", "chatMessage": "h1c664af74b1049f05dbf4e19d3965286", "chatMessage_user": "h4757b482d98da7b7475a320b36312a38", "chatMessage_assistant": "h3c3c2c23d23e5e0743583b163d09c370", "chatMessage_text": "h5407e59bd301bb3c40f9471246cee170", "widgetButtonFrame": "hc2b46c210bc66e168d5c2e04d4f9e2bf", "widgetButton": "h8ee64ea3d8c80237a978f7c81fd439fb", "widget": "h785652ebe3b5309d4b56ed17aa4e07dc", "loading": "hfe683dda8cf26d8ae47875b21719c4c4" };
   var styles_default = result;
 
   // app/components/publicChat/PublicChat.tsx
@@ -24533,11 +24533,12 @@ var RemixEmbed = (() => {
       const formData = new FormData();
       formData.append("action", "message");
       formData.append("message", message2);
+      setMessage("");
       try {
         setMessagesList((prev) => [{ role: "user", text: message2 }, ...prev]);
         setIsLoading(true);
         const response = await fetch(
-          `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
+          `https://athletics-edge-cst-written.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
           {
             method: "POST",
             body: formData
@@ -24556,7 +24557,7 @@ var RemixEmbed = (() => {
     (0, import_react.useEffect)(() => {
       (async () => {
         const response = await fetch(
-          `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
+          `https://athletics-edge-cst-written.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
           {
             method: "GET"
           }
@@ -24590,7 +24591,7 @@ var RemixEmbed = (() => {
         try {
           setIsLoading(true);
           const response = await fetch(
-            `https://shoulder-software-renaissance-rim.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
+            `https://athletics-edge-cst-written.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
             {
               method: "POST",
               body: formData
@@ -24607,7 +24608,7 @@ var RemixEmbed = (() => {
     };
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.widget, children: [
       isOpen ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatFrame, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatHeader, children: loaderData?.assistantName }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatHeader, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: styles_default.chatTitle, children: loaderData?.assistantName }) }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatBody, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatConversation, children: messagesList.map((item, index) => {
           return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
             "div",
@@ -24641,7 +24642,14 @@ var RemixEmbed = (() => {
               className: styles_default.chatSendButton,
               disabled: isLoading,
               onClick: () => message && handleSubmit(message),
-              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SpriteIcon_default, { name: "send-message", size: "1rem", color: "#000" })
+              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                SpriteIcon_default,
+                {
+                  name: "send-message",
+                  size: "1.5rem",
+                  color: "#000"
+                }
+              )
             }
           ) })
         ] })
@@ -24659,7 +24667,7 @@ var RemixEmbed = (() => {
             SpriteIcon_default,
             {
               name: isOpen ? "cross" : "message",
-              size: "1rem",
+              size: "2rem",
               color: "#000"
             }
           )
@@ -24680,13 +24688,6 @@ var RemixEmbed = (() => {
       const localChatId = localStorage.getItem("supportAiChatId");
       import_react_dom.default.render(
         /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
-            "link",
-            {
-              rel: "stylesheet",
-              href: `https://shoulder-software-renaissance-rim.trycloudflare.com/embeded/chat.css`
-            }
-          ),
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             "div",
             {

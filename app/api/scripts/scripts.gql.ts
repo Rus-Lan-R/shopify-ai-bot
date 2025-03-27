@@ -24,3 +24,13 @@ export const CREATE_SCRIPT = `#graphql
         }
     }
 }`;
+export const DELETE_SCRIPT = `#graphql
+  mutation ScriptTagDelete($id: ID!) {
+    scriptTagDelete(id: $id) {
+      deletedScriptTagId
+      userErrors {
+        field
+        message
+      }
+    }
+  }`;

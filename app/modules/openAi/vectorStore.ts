@@ -46,5 +46,6 @@ export const populateVectorStoreInfo = async ({
     : [...vsFiles, { type, fileId: uploadedFile.id }];
   return {
     vsFiles: newVsFile,
+    newFile: { type, fileId: uploadedFile.id },
   };
 };

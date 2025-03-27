@@ -76,6 +76,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "init": {
       if (shopSession?.assistantId) {
         const thread = await aiClient.beta.threads.create();
+        console.log("threadId", thread.id);
+        await db.chat.create({
+          data: {
+            sessionId: shopSession.id,
+            threadId: thread.id,
+          },
+        });
+        await db.session.update({
+          where: { id: shop },
+          data: {
+            totalChats: { increment: 1 },
+          },
+        });
+
         return new Response(JSON.stringify({ chatId: thread.id }), {
           headers: { "content-type": "application/json" },
         });
@@ -94,6 +108,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           userText: message,
           threadId: chatId,
           assistantId: shopSession?.assistantId,
+        });
+        await db.session.update({
+          where: { id: shop },
+          data: {
+            totalAiRequests: { increment: 1 },
+            monthlyAiRequests: { increment: 1 },
+          },
         });
 
         return new Response(JSON.stringify({ answer }), {
