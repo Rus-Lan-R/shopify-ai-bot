@@ -86,7 +86,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         await db.session.update({
           where: { id: shop },
           data: {
-            totalChats: { increment: 1 },
+            totalChats: (shopSession.totalChats || 0) + 1,
           },
         });
 
@@ -112,8 +112,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         await db.session.update({
           where: { id: shop },
           data: {
-            totalAiRequests: { increment: 1 },
-            monthlyAiRequests: { increment: 1 },
+            totalAiRequests: (shopSession.totalAiRequests || 0) + 1,
+            monthlyAiRequests: (shopSession.monthlyAiRequests || 0) + 1,
           },
         });
 

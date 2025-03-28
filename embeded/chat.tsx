@@ -21,7 +21,12 @@ const renderComponent = () => {
         >
           <Sprite />
         </div>
-        <PublicChat shop={shop} chatId={localChatId} />
+        <PublicChat
+          shop={shop}
+          chatId={
+            localChatId && localChatId !== "undefined" ? localChatId : null
+          }
+        />
       </>,
       container,
     );

@@ -18,6 +18,10 @@ interface ILodaerData {
   chatId?: string | null;
   shop?: string | null;
 }
+const defaulMessage: IMessage = {
+  text: "Hi, how can I help you?",
+  role: "assistant",
+};
 
 const PublicChat = (props: {
   chatId?: string | null;
@@ -32,7 +36,7 @@ const PublicChat = (props: {
     chatId,
     shop,
   });
-  const [messagesList, setMessagesList] = useState<IMessage[]>([]);
+  const [messagesList, setMessagesList] = useState<IMessage[]>([defaulMessage]);
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (message: string) => {
@@ -44,7 +48,7 @@ const PublicChat = (props: {
       setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
       setIsLoading(true);
       const response = await fetch(
-        `https://athletics-edge-cst-written.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
+        `https://ve-retail-allied-airlines.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
         {
           method: "POST",
           body: formData,
@@ -64,7 +68,7 @@ const PublicChat = (props: {
   useEffect(() => {
     (async () => {
       const response = await fetch(
-        `https://athletics-edge-cst-written.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
+        `https://ve-retail-allied-airlines.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
         {
           method: "GET",
         },
@@ -72,11 +76,13 @@ const PublicChat = (props: {
       const data = (await response.json()) as {
         assistantName: string;
         messages: IMessage[];
+        chatId: string;
       };
 
-      setMessagesList(data.messages || []);
+      setMessagesList(data.messages.length ? data.messages : [defaulMessage]);
       setLoaderData((prev) => ({
         ...prev,
+        chatId: data.chatId,
         assistantName: data.assistantName,
       }));
     })();
@@ -106,7 +112,7 @@ const PublicChat = (props: {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `https://athletics-edge-cst-written.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
+          `https://ve-retail-allied-airlines.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
           {
             method: "POST",
             body: formData,
@@ -127,10 +133,29 @@ const PublicChat = (props: {
       {isOpen ? (
         <div className={styles.chatFrame}>
           <div className={styles.chatHeader}>
-            <p className={styles.chatTitle}>{loaderData?.assistantName}</p>
+            <p className={styles.chatTitle}>
+              {loaderData?.assistantName || "Assistant chat"}
+            </p>
           </div>
           <div className={styles.chatBody}>
             <div className={styles.chatConversation}>
+              {!!isLoading ? (
+                <div
+                  className={mergeClassNames([
+                    styles.chatMessage,
+                    styles.chatMessage_assistant,
+                  ])}
+                >
+                  <div className={styles.typing}>
+                    <div className={styles.typingDot}></div>
+                    <div className={styles.typingDot}></div>
+                    <div className={styles.typingDot}></div>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+
               {messagesList.map((item, index) => {
                 return (
                   <div

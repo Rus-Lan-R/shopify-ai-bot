@@ -38,9 +38,9 @@ model Session {
   assistantVectorStoreId  String?
   mainThreadId            String?
   assistantFiles          Json?
-  totalAiRequests         Int?
-  monthlyAiRequests       Int?
-  totalChats              Int?
+  totalAiRequests         Int?       @default(0)
+  monthlyAiRequests       Int?       @default(0)
+  totalChats              Int?       @default(0)
   chats                   Chat[]
 }
 

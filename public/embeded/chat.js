@@ -24493,7 +24493,7 @@ var RemixEmbed = (() => {
   ] });
 
   // app/components/publicChat/styles.module.css
-  var result = { "chatFrame": "h774a4d1b28999b6f09bcfc77e355d140", "chatBody": "he6d66f9e6b46f78c33a25a2f4e2727db", "chatConversation": "hbcd11eadacf6e878cc5d088fd2dd1f18", "chatTitle": "hf9bbf5b4cef36333da1e1a0e5e52dac9", "chatHeader": "hcb8000a2fdab8cbc4b8ca22a37187332", "chatFooter": "h3563e706d334b94921b3dc0e2907d927", "chatInput": "ha4bab7eeecaa91ea4f0872e7c318ac19", "chatButtonFrame": "hd78911af412047aaaeeec843fd207fee", "chatSendButton": "hca8b2f797f42681f53f75219f2a4dca4", "chatMessage": "h1c664af74b1049f05dbf4e19d3965286", "chatMessage_user": "h4757b482d98da7b7475a320b36312a38", "chatMessage_assistant": "h3c3c2c23d23e5e0743583b163d09c370", "chatMessage_text": "h5407e59bd301bb3c40f9471246cee170", "widgetButtonFrame": "hc2b46c210bc66e168d5c2e04d4f9e2bf", "widgetButton": "h8ee64ea3d8c80237a978f7c81fd439fb", "widget": "h785652ebe3b5309d4b56ed17aa4e07dc", "loading": "hfe683dda8cf26d8ae47875b21719c4c4" };
+  var result = { "chatFrame": "h774a4d1b28999b6f09bcfc77e355d140", "chatBody": "he6d66f9e6b46f78c33a25a2f4e2727db", "chatConversation": "hbcd11eadacf6e878cc5d088fd2dd1f18", "chatTitle": "hf9bbf5b4cef36333da1e1a0e5e52dac9", "chatHeader": "hcb8000a2fdab8cbc4b8ca22a37187332", "chatFooter": "h3563e706d334b94921b3dc0e2907d927", "chatInput": "ha4bab7eeecaa91ea4f0872e7c318ac19", "chatButtonFrame": "hd78911af412047aaaeeec843fd207fee", "chatSendButton": "hca8b2f797f42681f53f75219f2a4dca4", "chatMessage": "h1c664af74b1049f05dbf4e19d3965286", "chatMessage_user": "h4757b482d98da7b7475a320b36312a38", "chatMessage_assistant": "h3c3c2c23d23e5e0743583b163d09c370", "chatMessage_text": "h5407e59bd301bb3c40f9471246cee170", "widgetButtonFrame": "hc2b46c210bc66e168d5c2e04d4f9e2bf", "widgetButton": "h8ee64ea3d8c80237a978f7c81fd439fb", "widget": "h785652ebe3b5309d4b56ed17aa4e07dc", "loading": "hfe683dda8cf26d8ae47875b21719c4c4", "typing": "hdd1350ad0287d035ed4062ed9a1369c5", "typingDot": "h1334828b8ea1795afd5a59ae0330c57b" };
   var styles_default = result;
 
   // app/components/publicChat/PublicChat.tsx
@@ -24517,6 +24517,10 @@ var RemixEmbed = (() => {
     assistant: styles_default.chatMessage_assistant,
     user: styles_default.chatMessage_user
   };
+  var defaulMessage = {
+    text: "Hi, how can I help you?",
+    role: "assistant"
+  };
   var PublicChat = (props) => {
     const { shop, chatId } = props;
     const textareaRef = (0, import_react.useRef)(null);
@@ -24527,7 +24531,7 @@ var RemixEmbed = (() => {
       chatId,
       shop
     });
-    const [messagesList, setMessagesList] = (0, import_react.useState)([]);
+    const [messagesList, setMessagesList] = (0, import_react.useState)([defaulMessage]);
     const [message, setMessage] = (0, import_react.useState)("");
     const handleSubmit = async (message2) => {
       const formData = new FormData();
@@ -24538,7 +24542,7 @@ var RemixEmbed = (() => {
         setMessagesList((prev) => [{ role: "user", text: message2 }, ...prev]);
         setIsLoading(true);
         const response = await fetch(
-          `https://athletics-edge-cst-written.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
+          `https://ve-retail-allied-airlines.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
           {
             method: "POST",
             body: formData
@@ -24557,15 +24561,16 @@ var RemixEmbed = (() => {
     (0, import_react.useEffect)(() => {
       (async () => {
         const response = await fetch(
-          `https://athletics-edge-cst-written.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
+          `https://ve-retail-allied-airlines.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
           {
             method: "GET"
           }
         );
         const data = await response.json();
-        setMessagesList(data.messages || []);
+        setMessagesList(data.messages.length ? data.messages : [defaulMessage]);
         setLoaderData((prev) => ({
           ...prev,
+          chatId: data.chatId,
           assistantName: data.assistantName
         }));
       })();
@@ -24591,7 +24596,7 @@ var RemixEmbed = (() => {
         try {
           setIsLoading(true);
           const response = await fetch(
-            `https://athletics-edge-cst-written.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
+            `https://ve-retail-allied-airlines.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
             {
               method: "POST",
               body: formData
@@ -24608,21 +24613,37 @@ var RemixEmbed = (() => {
     };
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.widget, children: [
       isOpen ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatFrame, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatHeader, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: styles_default.chatTitle, children: loaderData?.assistantName }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatBody, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatConversation, children: messagesList.map((item, index) => {
-          return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatHeader, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: styles_default.chatTitle, children: loaderData?.assistantName || "Assistant chat" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatBody, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatConversation, children: [
+          !!isLoading ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
             "div",
             {
-              ref: !index ? conversationRef : null,
               className: mergeClassNames([
                 styles_default.chatMessage,
-                roleToStyleMap[item.role]
+                styles_default.chatMessage_assistant
               ]),
-              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: styles_default.chatMessage_text, children: item.text })
-            },
-            `${item.role}-${index}`
-          );
-        }) }) }),
+              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.typing, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.typingDot }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.typingDot }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.typingDot })
+              ] })
+            }
+          ) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, {}),
+          messagesList.map((item, index) => {
+            return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              "div",
+              {
+                ref: !index ? conversationRef : null,
+                className: mergeClassNames([
+                  styles_default.chatMessage,
+                  roleToStyleMap[item.role]
+                ]),
+                children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: styles_default.chatMessage_text, children: item.text })
+              },
+              `${item.role}-${index}`
+            );
+          })
+        ] }) }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatFooter, children: [
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
             "textarea",
@@ -24700,7 +24721,13 @@ var RemixEmbed = (() => {
               children: /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Sprite_default, {})
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(PublicChat_default, { shop, chatId: localChatId })
+          /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+            PublicChat_default,
+            {
+              shop,
+              chatId: localChatId && localChatId !== "undefined" ? localChatId : null
+            }
+          )
         ] }),
         container
       );
