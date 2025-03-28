@@ -24522,14 +24522,14 @@ var RemixEmbed = (() => {
     role: "assistant"
   };
   var PublicChat = (props) => {
-    const { shop, chatId } = props;
+    const { shopName, chatId } = props;
     const textareaRef = (0, import_react.useRef)(null);
     const conversationRef = (0, import_react.useRef)(null);
     const [isLoading, setIsLoading] = (0, import_react.useState)(false);
     const [isOpen, setIsOpen] = (0, import_react.useState)(false);
     const [loaderData, setLoaderData] = (0, import_react.useState)({
       chatId,
-      shop
+      shopName
     });
     const [messagesList, setMessagesList] = (0, import_react.useState)([defaulMessage]);
     const [message, setMessage] = (0, import_react.useState)("");
@@ -24542,7 +24542,7 @@ var RemixEmbed = (() => {
         setMessagesList((prev) => [{ role: "user", text: message2 }, ...prev]);
         setIsLoading(true);
         const response = await fetch(
-          `https://ve-retail-allied-airlines.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
+          `https://data-gulf-slideshow-midnight.trycloudflare.com/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
           {
             method: "POST",
             body: formData
@@ -24559,21 +24559,23 @@ var RemixEmbed = (() => {
       }
     };
     (0, import_react.useEffect)(() => {
-      (async () => {
-        const response = await fetch(
-          `https://ve-retail-allied-airlines.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
-          {
-            method: "GET"
-          }
-        );
-        const data = await response.json();
-        setMessagesList(data.messages.length ? data.messages : [defaulMessage]);
-        setLoaderData((prev) => ({
-          ...prev,
-          chatId: data.chatId,
-          assistantName: data.assistantName
-        }));
-      })();
+      if (chatId) {
+        (async () => {
+          const response = await fetch(
+            `https://data-gulf-slideshow-midnight.trycloudflare.com/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+            {
+              method: "GET"
+            }
+          );
+          const data = await response.json();
+          setMessagesList(data.messages.length ? data.messages : [defaulMessage]);
+          setLoaderData((prev) => ({
+            ...prev,
+            chatId: data.chatId,
+            assistantName: data.assistantName
+          }));
+        })();
+      }
     }, []);
     (0, import_react.useEffect)(() => {
       if (conversationRef.current) {
@@ -24596,7 +24598,7 @@ var RemixEmbed = (() => {
         try {
           setIsLoading(true);
           const response = await fetch(
-            `https://ve-retail-allied-airlines.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
+            `https://data-gulf-slideshow-midnight.trycloudflare.com/chat?_data=routes/chat&shopName=${loaderData?.shopName}`,
             {
               method: "POST",
               body: formData
@@ -24704,8 +24706,7 @@ var RemixEmbed = (() => {
   var renderComponent = () => {
     const container = document.getElementById("support-ai-chat-place");
     if (container) {
-      const scriptTag = document.getElementById("support-ai-chat-id");
-      const shop = scriptTag?.getAttribute("data-shopId");
+      const shopName = container?.getAttribute("data-shopName");
       const localChatId = localStorage.getItem("supportAiChatId");
       import_react_dom.default.render(
         /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
@@ -24724,7 +24725,7 @@ var RemixEmbed = (() => {
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
             PublicChat_default,
             {
-              shop,
+              shopName,
               chatId: localChatId && localChatId !== "undefined" ? localChatId : null
             }
           )

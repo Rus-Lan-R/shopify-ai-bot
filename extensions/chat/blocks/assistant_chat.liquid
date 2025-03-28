@@ -1,21 +1,15 @@
-<div id="support-ai-chat-place" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 10000"  data-shop="{{ shop.id }}"></div>
+<div data-shopName="{{ shop.permanent_domain }}" id="support-ai-chat-place" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 10000" data-shopId="{{ shop.id }}"></div>
 <link
   rel="stylesheet"
-  href="https://ve-retail-allied-airlines.trycloudflare.com/embeded/chat.css"
+  href="https://data-gulf-slideshow-midnight.trycloudflare.com/embeded/chat.css"
 />
 <script
+ 
   id="support-ai-chat-id"
   type="module"
-  data-customer="{{ customer.id }}"
-  data-shopId="offline_nikasoul-store.myshopify.com"
-  src="https://ve-retail-allied-airlines.trycloudflare.com/embeded/chat.js"
+  src="https://data-gulf-slideshow-midnight.trycloudflare.com/embeded/chat.js"
   defer
 ></script>
-{% if customer %}
-  <script type="text/javascript">
-   window.customerId = "{{ customer.id }}";   
-  </script>
-{% endif %}
 
 {% schema %}
   {

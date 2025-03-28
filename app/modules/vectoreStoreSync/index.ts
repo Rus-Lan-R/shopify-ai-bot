@@ -3,6 +3,7 @@ import { GraphqlRequest } from "app/api/graphql";
 import { getShopInfo } from "../shop/getShopInfo";
 import { FileTypes, VsFile } from "../openAi/openAi.interfaces";
 import { populateVectorStoreInfo } from "../openAi/vectorStore";
+import { getAllLocations } from "../locations/getLocations";
 
 const dataFunctionsMap = (
   type: FileTypes,
@@ -12,16 +13,7 @@ const dataFunctionsMap = (
   return {
     [FileTypes.PRODUCTS]: getAllProducts,
     [FileTypes.SHOP]: getShopInfo,
-    [FileTypes.ORDES]: ({
-      graphqlRequest,
-    }: {
-      graphqlRequest: GraphqlRequest;
-    }) =>
-      new Promise((res) =>
-        res({
-          orderNumber: "#EXAMPLE",
-        }),
-      ),
+    [FileTypes.LOCATIONS]: getAllLocations,
     [FileTypes.OTHER_INFO]: undefined,
   }[type];
 };

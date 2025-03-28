@@ -5,6 +5,11 @@ query getProducts($first: Int, $last: Int, $query: String, $sortKey: ProductSort
             id
             title
             description
+            onlineStoreUrl
+            isGiftCard
+            productType
+            status
+            totalInventory
             seo {
                 description
                 title

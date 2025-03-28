@@ -6,6 +6,6 @@ export interface VsFile {
 export enum FileTypes {
   SHOP = "shop",
   PRODUCTS = "produts",
-  ORDES = "orders",
+  LOCATIONS = "locatinos",
   OTHER_INFO = "other-info",
 }

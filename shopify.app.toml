@@ -1,10 +1,10 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
-application_url = "https://ve-retail-allied-airlines.trycloudflare.com"
+application_url = "https://data-gulf-slideshow-midnight.trycloudflare.com"
 embedded = true
 name = "Support AI"
-handle = "support-ai-5"
+handle = "support-ai-assistant"
 
 [build]
 include_config_on_deploy = true
@@ -24,14 +24,14 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://ve-retail-allied-airlines.trycloudflare.com/auth/callback",
-  "https://ve-retail-allied-airlines.trycloudflare.com/auth/shopify/callback",
-  "https://ve-retail-allied-airlines.trycloudflare.com/api/auth/callback"
+  "https://data-gulf-slideshow-midnight.trycloudflare.com/auth/callback",
+  "https://data-gulf-slideshow-midnight.trycloudflare.com/auth/shopify/callback",
+  "https://data-gulf-slideshow-midnight.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_customers,read_orders,read_products,read_returns,write_products,write_script_tags"
+scopes = "read_customers,read_orders,read_products,read_returns,write_products,write_script_tags,read_locations"
 
 [pos]
 embedded = false

@@ -16,7 +16,7 @@ const roleToStyleMap = {
 interface ILodaerData {
   assistantName?: string | null;
   chatId?: string | null;
-  shop?: string | null;
+  shopName?: string | null;
 }
 const defaulMessage: IMessage = {
   text: "Hi, how can I help you?",
@@ -25,17 +25,18 @@ const defaulMessage: IMessage = {
 
 const PublicChat = (props: {
   chatId?: string | null;
-  shop?: string | null;
+  shopName?: string | null;
 }) => {
-  const { shop, chatId } = props;
+  const { shopName, chatId } = props;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [loaderData, setLoaderData] = useState<Partial<ILodaerData>>({
     chatId,
-    shop,
+    shopName,
   });
+
   const [messagesList, setMessagesList] = useState<IMessage[]>([defaulMessage]);
   const [message, setMessage] = useState("");
 
@@ -48,7 +49,7 @@ const PublicChat = (props: {
       setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
       setIsLoading(true);
       const response = await fetch(
-        `https://ve-retail-allied-airlines.trycloudflare.com/chat?shop=${loaderData.shop}&chatId=${chatId}`,
+        `https://data-gulf-slideshow-midnight.trycloudflare.com/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
         {
           method: "POST",
           body: formData,
@@ -66,26 +67,28 @@ const PublicChat = (props: {
   };
 
   useEffect(() => {
-    (async () => {
-      const response = await fetch(
-        `https://ve-retail-allied-airlines.trycloudflare.com/chat?shop=${loaderData?.shop}&chatId=${loaderData?.chatId}`,
-        {
-          method: "GET",
-        },
-      );
-      const data = (await response.json()) as {
-        assistantName: string;
-        messages: IMessage[];
-        chatId: string;
-      };
+    if (chatId) {
+      (async () => {
+        const response = await fetch(
+          `https://data-gulf-slideshow-midnight.trycloudflare.com/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+          {
+            method: "GET",
+          },
+        );
+        const data = (await response.json()) as {
+          assistantName: string;
+          messages: IMessage[];
+          chatId: string;
+        };
 
-      setMessagesList(data.messages.length ? data.messages : [defaulMessage]);
-      setLoaderData((prev) => ({
-        ...prev,
-        chatId: data.chatId,
-        assistantName: data.assistantName,
-      }));
-    })();
+        setMessagesList(data.messages.length ? data.messages : [defaulMessage]);
+        setLoaderData((prev) => ({
+          ...prev,
+          chatId: data.chatId,
+          assistantName: data.assistantName,
+        }));
+      })();
+    }
   }, []);
 
   useEffect(() => {
@@ -112,7 +115,7 @@ const PublicChat = (props: {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `https://ve-retail-allied-airlines.trycloudflare.com/chat?_data=routes/chat&shop=${loaderData?.shop}`,
+          `https://data-gulf-slideshow-midnight.trycloudflare.com/chat?_data=routes/chat&shopName=${loaderData?.shopName}`,
           {
             method: "POST",
             body: formData,

@@ -5,8 +5,7 @@ import ReactDOM from "react-dom";
 const renderComponent = () => {
   const container = document.getElementById("support-ai-chat-place");
   if (container) {
-    const scriptTag = document.getElementById("support-ai-chat-id");
-    const shop = scriptTag?.getAttribute("data-shopId");
+    const shopName = container?.getAttribute("data-shopName");
     const localChatId = localStorage.getItem("supportAiChatId");
 
     ReactDOM.render(
@@ -22,7 +21,7 @@ const renderComponent = () => {
           <Sprite />
         </div>
         <PublicChat
-          shop={shop}
+          shopName={shopName}
           chatId={
             localChatId && localChatId !== "undefined" ? localChatId : null
           }

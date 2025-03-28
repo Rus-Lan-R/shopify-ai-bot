@@ -12,16 +12,20 @@ export type MainChatLoader = typeof loader;
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const searchParams = new URL(request.url).searchParams;
 
-  const [shop, chatId] = [searchParams.get("shop"), searchParams.get("chatId")];
+  const [shop, chatId, shopName] = [
+    searchParams.get("shop"),
+    searchParams.get("chatId"),
+    searchParams.get("shopName"),
+  ];
 
-  if (!shop) {
+  if ((!shop && !shopName) || !chatId) {
     throw new Response("Chat Loader Bad Request", {
       status: 400,
     });
   }
 
   const shopSession = await db.session.findFirst({
-    where: { id: shop },
+    where: shopName ? { shop: shopName } : { id: shop! },
   });
 
   if (!shopSession) {
@@ -43,6 +47,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   return {
+    shopId: shopSession.id,
     chatId: chatId,
     shop: shop,
     messages: preparedMessages,
@@ -54,16 +59,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const { action, message } = formDataToObject(formData);
   const searchParams = new URL(request.url).searchParams;
-  const [shop, chatId] = [searchParams.get("shop"), searchParams.get("chatId")];
+  const [shop, chatId, shopName] = [
+    searchParams.get("shop"),
+    searchParams.get("chatId"),
+    searchParams.get("shopName"),
+  ];
 
-  if (!shop) {
+  if (!shop && !shopName) {
     throw new Response("Chat Action Bad Request", {
       status: 400,
     });
   }
 
-  const shopSession = await db.session.findUnique({
-    where: { id: shop },
+  const shopSession = await db.session.findFirst({
+    where: shopName ? { shop: shopName } : { id: shop! },
   });
 
   if (!shopSession) {
@@ -76,7 +85,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "init": {
       if (shopSession?.assistantId) {
         const thread = await aiClient.beta.threads.create();
-        console.log("threadId", thread.id);
+
         await db.chat.create({
           data: {
             sessionId: shopSession.id,
@@ -84,7 +93,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           },
         });
         await db.session.update({
-          where: { id: shop },
+          where: { id: shopSession.id },
           data: {
             totalChats: (shopSession.totalChats || 0) + 1,
           },
@@ -110,7 +119,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           assistantId: shopSession?.assistantId,
         });
         await db.session.update({
-          where: { id: shop },
+          where: { id: shopSession.id },
           data: {
             totalAiRequests: (shopSession.totalAiRequests || 0) + 1,
             monthlyAiRequests: (shopSession.monthlyAiRequests || 0) + 1,

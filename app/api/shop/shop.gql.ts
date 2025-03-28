@@ -8,6 +8,7 @@ export const GET_SHOP = `#graphql
         primaryDomain {
             url
         }
+        ianaTimezone
         shipsToCountries
     }
   }`;

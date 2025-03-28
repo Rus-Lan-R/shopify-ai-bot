@@ -31,7 +31,7 @@ export default async function handleRequest(
           responseHeaders.set("Content-Type", "text/html");
           responseHeaders.set(
             "Content-Security-Policy",
-            "frame-ancestors 'self' http://localhost",
+            "frame-ancestors 'self'",
           );
           responseHeaders.set("X-Frame-Options", "ALLOWALL");
           responseHeaders.set("Content-Security-Policy", "frame-ancestors *");
