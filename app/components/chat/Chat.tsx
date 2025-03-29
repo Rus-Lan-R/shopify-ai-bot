@@ -1,6 +1,7 @@
 import { Box, Button, Card, InlineStack, TextField } from "@shopify/polaris";
-import { ChatBody, IMessage } from "./ChatBody";
+import { ChatBody } from "./ChatBody";
 import { useState } from "react";
+import { IMessage } from "../publicChat/PublicChat";
 
 export const Chat = (props: {
   isLoading: boolean;
@@ -11,8 +12,10 @@ export const Chat = (props: {
   const [message, setMessage] = useState("");
 
   const handleSubmit = () => {
-    setMessage("");
-    onSend(message);
+    if (!!message.trim()) {
+      setMessage("");
+      onSend(message);
+    }
   };
 
   return (

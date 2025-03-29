@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
-application_url = "https://data-gulf-slideshow-midnight.trycloudflare.com"
+application_url = "https://senior-point-salon-method.trycloudflare.com"
 embedded = true
 name = "Support AI"
 handle = "support-ai-assistant"
@@ -24,14 +24,14 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://data-gulf-slideshow-midnight.trycloudflare.com/auth/callback",
-  "https://data-gulf-slideshow-midnight.trycloudflare.com/auth/shopify/callback",
-  "https://data-gulf-slideshow-midnight.trycloudflare.com/api/auth/callback"
+  "https://senior-point-salon-method.trycloudflare.com/auth/callback",
+  "https://senior-point-salon-method.trycloudflare.com/auth/shopify/callback",
+  "https://senior-point-salon-method.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_customers,read_orders,read_products,read_returns,write_products,write_script_tags,read_locations"
+scopes = "read_customers,read_orders,read_products,read_returns,write_products,write_script_tags,read_locations,read_themes"
 
 [pos]
 embedded = false

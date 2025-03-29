@@ -23,13 +23,9 @@ import { createGraphqlRequest } from "app/api/graphql";
 import { dataSync } from "app/modules/vectoreStoreSync";
 import { FileTypes, VsFile } from "app/modules/openAi/openAi.interfaces";
 import { assistantInit, assistantUpdate } from "app/modules/openAi/assistant";
-import {
-  CREATE_SCRIPT,
-  DELETE_SCRIPT,
-  GET_SCRIPT_TAGS,
-} from "app/api/scripts/scripts.gql";
-import { GetScriptTagsQuery } from "app/types/admin.generated";
+import { CREATE_SCRIPT, DELETE_SCRIPT } from "app/api/scripts/scripts.gql";
 import { useLoading } from "app/helpers/useLoading";
+import { getMainTheme } from "app/modules/themes/getThemes";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
@@ -39,15 +35,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     where: { id: session.id },
   });
 
-  const {
-    data: { scriptTags },
-  } = await graphqlRequest<{ data: GetScriptTagsQuery }>(GET_SCRIPT_TAGS, {
-    src: `${process.env.SHOPIFY_APP_URL}/chat.js`,
-  });
-
+  const { mainTheme } = await getMainTheme({ graphqlRequest });
   return {
-    scriptTag: scriptTags?.nodes?.[0],
     files: shopSession?.assistantFiles as { type: FileTypes; fileId: string }[],
+    mainTheme,
     assistant: {
       id: shopSession?.assistantId,
       assistantName: shopSession?.assistantName,
@@ -188,7 +179,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Index() {
-  const { assistant, files, scriptTag } = useLoaderData<typeof loader>();
+  const { assistant, files, mainTheme } = useLoaderData<typeof loader>();
   const { isLoading, checkIsLoading, setLoadingSlug } = useLoading<
     FileTypes | "widget" | "main"
   >();
@@ -217,20 +208,7 @@ export default function Index() {
     submit(formData, { method: "POST" });
   };
 
-  const initChat = () => {
-    setLoadingSlug("widget");
-    const formData = new FormData();
-    formData.append("action", "chat-init");
-    submit(formData, { method: "POST" });
-  };
-
-  const deleteChat = (id: string) => {
-    const formData = new FormData();
-    formData.append("action", "delete-script");
-    formData.append("scriptId", id);
-    submit(formData, { method: "POST" });
-  };
-
+  console.log(mainTheme);
   return (
     <Page
       title="Settings"
@@ -315,36 +293,25 @@ export default function Index() {
                     </Text>
                   ) : (
                     <Text as="p" variant="bodyMd">
-                      To add a widget to the page, fill in the blockith
-                      "Assistant Settings"
+                      Enable "AI Assistant widget" in the theme settings
                     </Text>
                   )}
-                  <Text as="p" variant="bodyMd">
-                    {scriptTag?.createdAt}
-                  </Text>
                 </InlineStack>
                 <ButtonGroup>
-                  {scriptTag?.id ? (
-                    <Button
-                      disabled={isLoading}
-                      fullWidth={false}
-                      variant={"primary"}
-                      tone={"critical"}
-                      onClick={() => deleteChat(scriptTag.id)}
-                    >
-                      Delete chat tag
-                    </Button>
-                  ) : (
-                    <Button
-                      disabled={isLoading || !assistant.id}
-                      loading={checkIsLoading("widget")}
-                      fullWidth={false}
-                      variant={"primary"}
-                      onClick={initChat}
-                    >
-                      Init chat
-                    </Button>
-                  )}
+                  <Button
+                    disabled={isLoading || !assistant.id}
+                    fullWidth={false}
+                    variant={"primary"}
+                    onClick={() => {
+                      const id = mainTheme?.id.split("/").at(-1);
+                      open(
+                        `shopify:admin/themes/${id}/editor?context=apps`,
+                        "_top",
+                      );
+                    }}
+                  >
+                    Enable widget
+                  </Button>
                 </ButtonGroup>
               </BlockStack>
             </Card>

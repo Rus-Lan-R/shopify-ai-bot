@@ -24542,7 +24542,7 @@ var RemixEmbed = (() => {
         setMessagesList((prev) => [{ role: "user", text: message2 }, ...prev]);
         setIsLoading(true);
         const response = await fetch(
-          `https://data-gulf-slideshow-midnight.trycloudflare.com/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+          `https://packard-tr-cn-filtering.trycloudflare.com/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
           {
             method: "POST",
             body: formData
@@ -24562,7 +24562,7 @@ var RemixEmbed = (() => {
       if (chatId) {
         (async () => {
           const response = await fetch(
-            `https://data-gulf-slideshow-midnight.trycloudflare.com/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+            `https://packard-tr-cn-filtering.trycloudflare.com/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
             {
               method: "GET"
             }
@@ -24598,7 +24598,7 @@ var RemixEmbed = (() => {
         try {
           setIsLoading(true);
           const response = await fetch(
-            `https://data-gulf-slideshow-midnight.trycloudflare.com/chat?_data=routes/chat&shopName=${loaderData?.shopName}`,
+            `https://packard-tr-cn-filtering.trycloudflare.com/chat?_data=routes/chat&shopName=${loaderData?.shopName}`,
             {
               method: "POST",
               body: formData

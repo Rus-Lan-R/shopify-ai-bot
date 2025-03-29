@@ -1,6 +1,9 @@
 import { authenticate } from "app/shopify.server";
 
-export type GraphqlRequest = <T>(query: string, variables?: {}) => Promise<T>;
+export type GraphqlRequest = <T, V extends {}>(
+  query: string,
+  variables?: V,
+) => Promise<T>;
 
 export const createGraphqlRequest = async (
   request: Request,
