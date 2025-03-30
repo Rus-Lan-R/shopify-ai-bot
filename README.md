@@ -6,5 +6,7 @@ docker push registry.heroku.com/chat-assistant-app/web
 
 ---
 
+docker buildx build --provenance false --platform linux/amd64 -t registry.heroku.com/chat-assistant-app/web
+
 docker tag shopify-app registry.heroku.com/chat-assistant-app/web
 docker push registry.heroku.com/chat-assistant-app/web
