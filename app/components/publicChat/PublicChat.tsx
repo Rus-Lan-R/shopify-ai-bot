@@ -23,7 +23,7 @@ const defaulMessage: IMessage = {
   role: "assistant",
 };
 
-const CHAT_API = process.env.SHOPIFY_APP_URL;
+const CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
 
 const PublicChat = (props: {
   chatId?: string | null;
