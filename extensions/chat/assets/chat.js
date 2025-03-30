@@ -24521,7 +24521,7 @@ var RemixEmbed = (() => {
     text: "Hi, how can I help you?",
     role: "assistant"
   };
-  var CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/";
+  var CHAT_API = process.env.SHOPIFY_APP_URL;
   var PublicChat = (props) => {
     const { shopName, chatId } = props;
     const textareaRef = (0, import_react.useRef)(null);
