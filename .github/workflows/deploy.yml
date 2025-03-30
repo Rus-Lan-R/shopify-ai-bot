@@ -1,4 +1,16 @@
-- name: Docker build
-  uses: docker/build-push-action@v3
-  with:
-    provenance: false
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Docker build
+        uses: docker/build-push-action@v3
+        with:
+          provenance: false
