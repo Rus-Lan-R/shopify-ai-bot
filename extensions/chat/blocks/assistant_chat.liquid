@@ -1,12 +1,13 @@
 <div data-shopName="{{ shop.permanent_domain }}" id="support-ai-chat-place" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 10000" data-shopId="{{ shop.id }}"></div>
 <link
   rel="stylesheet"
-  href="{{ shop.url }}/apps/chat?file=chat.js"
+  href="{{ "chat.css" | asset_url }}"
 />
 <script
   id="support-ai-chat-id"
   type="module"
-  src="{{ shop.url }}/apps/chat?file=chat.css"
+  src="{{ "chat.js" | asset_url }}"
+
   defer
 ></script>
 
