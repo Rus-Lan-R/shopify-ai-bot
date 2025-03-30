@@ -64,7 +64,7 @@ export default function Index() {
                     align={"space-between"}
                   >
                     <Text as={"h2"} variant={"headingSm"}>
-                      Assistant Info
+                      Ai Assistant Info
                     </Text>
                     <Button fullWidth={false} url={"/app/settings/assistant"}>
                       Edit

@@ -24521,6 +24521,7 @@ var RemixEmbed = (() => {
     text: "Hi, how can I help you?",
     role: "assistant"
   };
+  var CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/";
   var PublicChat = (props) => {
     const { shopName, chatId } = props;
     const textareaRef = (0, import_react.useRef)(null);
@@ -24542,7 +24543,7 @@ var RemixEmbed = (() => {
         setMessagesList((prev) => [{ role: "user", text: message2 }, ...prev]);
         setIsLoading(true);
         const response = await fetch(
-          `https://packard-tr-cn-filtering.trycloudflare.com/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+          `${CHAT_API}/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
           {
             method: "POST",
             body: formData
@@ -24562,7 +24563,7 @@ var RemixEmbed = (() => {
       if (chatId) {
         (async () => {
           const response = await fetch(
-            `https://packard-tr-cn-filtering.trycloudflare.com/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+            `${CHAT_API}/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
             {
               method: "GET"
             }
@@ -24598,7 +24599,7 @@ var RemixEmbed = (() => {
         try {
           setIsLoading(true);
           const response = await fetch(
-            `https://packard-tr-cn-filtering.trycloudflare.com/chat?_data=routes/chat&shopName=${loaderData?.shopName}`,
+            `${CHAT_API}/chat?_data=routes/chat&shopName=${loaderData?.shopName}`,
             {
               method: "POST",
               body: formData
