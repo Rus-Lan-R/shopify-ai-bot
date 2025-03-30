@@ -1,12 +1,12 @@
 <div data-shopName="{{ shop.permanent_domain }}" id="support-ai-chat-place" style="position: fixed; bottom: 1rem; right: 1rem; z-index: 10000" data-shopId="{{ shop.id }}"></div>
 <link
   rel="stylesheet"
-  href="https://chat-assistant-app-b47c5af582bc.herokuapp.com/embeded/chat.css"
+  href="{{ shop.url }}/apps/chat?file=chat.js"
 />
 <script
   id="support-ai-chat-id"
   type="module"
-  src="https://chat-assistant-app-b47c5af582bc.herokuapp.com/embeded/chat.js"
+  src="{{ shop.url }}/apps/chat?file=chat.css"
   defer
 ></script>
 
