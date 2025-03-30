@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
-application_url = "https://closure-canberra-guatemala-value.trycloudflare.com"
+application_url = "https://chat-assistant-app-b47c5af582bc.herokuapp.com"
 embedded = true
 name = "Support AI"
 handle = "support-ai-assistant"
@@ -24,14 +24,19 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://closure-canberra-guatemala-value.trycloudflare.com/auth/callback",
-  "https://closure-canberra-guatemala-value.trycloudflare.com/auth/shopify/callback",
-  "https://closure-canberra-guatemala-value.trycloudflare.com/api/auth/callback"
+  "https://chat-assistant-app-b47c5af582bc.herokuapp.com/auth/callback",
+  "https://chat-assistant-app-b47c5af582bc.herokuapp.com/auth/shopify/callback",
+  "https://chat-assistant-app-b47c5af582bc.herokuapp.com/api/auth/callback"
 ]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 scopes = "read_orders,read_products,read_locations,read_themes"
+
+[app_proxy]
+url = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/api/proxy"
+subpath = "chat"
+prefix = "apps"
 
 [pos]
 embedded = false
