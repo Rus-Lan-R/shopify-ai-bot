@@ -1,0 +1,4 @@
+- name: Docker build
+  uses: docker/build-push-action@v3
+  with:
+    provenance: false

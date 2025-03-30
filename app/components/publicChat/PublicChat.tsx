@@ -23,6 +23,8 @@ const defaulMessage: IMessage = {
   role: "assistant",
 };
 
+const CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/";
+
 const PublicChat = (props: {
   chatId?: string | null;
   shopName?: string | null;
@@ -49,7 +51,7 @@ const PublicChat = (props: {
       setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
       setIsLoading(true);
       const response = await fetch(
-        `https://packard-tr-cn-filtering.trycloudflare.com/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+        `${CHAT_API}/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
         {
           method: "POST",
           body: formData,
@@ -70,7 +72,7 @@ const PublicChat = (props: {
     if (chatId) {
       (async () => {
         const response = await fetch(
-          `https://packard-tr-cn-filtering.trycloudflare.com/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+          `${CHAT_API}/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
           {
             method: "GET",
           },
@@ -115,7 +117,7 @@ const PublicChat = (props: {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `https://packard-tr-cn-filtering.trycloudflare.com/chat?_data=routes/chat&shopName=${loaderData?.shopName}`,
+          `${CHAT_API}/chat?_data=routes/chat&shopName=${loaderData?.shopName}`,
           {
             method: "POST",
             body: formData,

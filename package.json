@@ -10,7 +10,7 @@
     "config:use": "shopify app config use",
     "env": "shopify app env",
     "start": "remix-serve ./build/server/index.js",
-    "docker-start": "npm run setup && npm run start",
+    "docker:start": "npm run build:chat && npm run setup && npm run start",
     "setup": "prisma generate && prisma db push",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "shopify": "shopify",
@@ -18,7 +18,8 @@
     "codegen": "graphql-codegen",
     "vite": "vite",
     "sprite": "ts-node --require tsconfig-paths/register ./scripts/sprite.ts",
-    "build:chat": "node esbuild.config.js"
+    "build:chat": "node esbuild.config.js",
+    "heroku": "heroku container:login && heroku container:push web --app chat-assistant-app && heroku container:release web --app chat-assistant-app"
   },
   "type": "module",
   "engines": {
@@ -35,6 +36,8 @@
     "@shopify/polaris": "^12.0.0",
     "@shopify/shopify-app-remix": "^3.7.0",
     "@shopify/shopify-app-session-storage-prisma": "^6.0.0",
+    "esbuild": "^0.25.1",
+    "esbuild-plugin-css-modules": "^0.3.0",
     "isbot": "^5.1.0",
     "openai": "^4.87.3",
     "prisma": "^6.2.1",
@@ -51,8 +54,6 @@
     "@types/node": "^22.2.0",
     "@types/react": "^18.2.31",
     "@types/react-dom": "^18.2.14",
-    "esbuild": "^0.25.1",
-    "esbuild-plugin-css-modules": "^0.3.0",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^10.0.1",
     "fs": "^0.0.1-security",

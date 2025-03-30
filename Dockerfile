@@ -16,6 +16,7 @@ RUN npm remove @shopify/cli
 
 COPY . .
 
-RUN npm run build
-
-CMD ["npm", "run", "docker-start"]
+RUN chmod +x .docker/entrypoint.sh && \
+    mv .docker/entrypoint.sh /usr/local/bin/entrypoint
+    
+ENTRYPOINT ["entrypoint"]

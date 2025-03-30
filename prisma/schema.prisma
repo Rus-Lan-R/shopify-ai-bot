@@ -15,42 +15,45 @@ datasource db {
 }
 
 
-model Session {
-  session_id              String    @id @default(auto()) @map("_id") @db.ObjectId
-  id                      String    @unique
-  shop                    String
-  state                   String
-  isOnline                Boolean   @default(false)
-  scope                   String?
-  expires                 DateTime?
-  accessToken             String
-  userId                  String?
-  firstName               String?
-  lastName                String?
-  email                   String?
-  accountOwner            Boolean   @default(false)
-  locale                  String?
-  collaborator            Boolean?  @default(false)
-  emailVerified           Boolean?  @default(false)
-  assistantId             String?
-  assistantName           String?
-  assistantPrompt         String?
-  assistantVectorStoreId  String?
-  mainThreadId            String?
-  assistantFiles          Json?
-  totalAiRequests         Int?       @default(0)
-  monthlyAiRequests       Int?       @default(0)
-  totalChats              Int?       @default(0)
-  chats                   Chat[]
+model Session { 
+  session_id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  id                       String    @unique
+  shop                     String
+  state                    String
+  isOnline                 Boolean   @default(false)
+  scope                    String?
+  expires                  DateTime?
+  accessToken              String
+  userId                   String?
+  firstName                String?
+  lastName                 String?
+  email                    String?
+  accountOwner             Boolean   @default(false)
+  locale                   String?
+  collaborator             Boolean?  @default(false)
+  emailVerified            Boolean?  @default(false)
+  assistantId              String?
+  assistantName            String?
+  assistantPrompt          String?
+  assistantVectorStoreId   String?
+  mainThreadId             String?
+  assistantFiles           Json?
+  totalAiRequests          Int?       @default(0)
+  monthlyAiRequests        Int?       @default(0)
+  totalChats               Int?       @default(0)
+  chats                    Chat[]
+  isDeleted                Boolean    @default(false)
 }
 
 model Chat {
-  id                      String   @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId               String
-  session                 Session  @relation(fields: [sessionId], references: [id]) 
-  messages                Json?    
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @default(now())
-  customerId              String?
-  threadId                String?
+  id                       String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId                String
+  session                  Session  @relation(fields: [sessionId], references: [id]) 
+  messages                 Json?    
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @default(now())
+  customerId               String?
+  threadId                 String?
+  isArchived               Boolean    @default(false)
+  isDeleted                Boolean    @default(false)
 }

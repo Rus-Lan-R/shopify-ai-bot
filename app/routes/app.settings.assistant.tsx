@@ -85,8 +85,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           await db.session.update({
             where: { id: session.id },
             data: {
-              assistantName,
-              assistantPrompt,
+              assistantName: assistantName || "",
+              assistantPrompt: assistantPrompt || "",
               assistantVectorStoreId: vectorStoreId,
               assistantId,
               mainThreadId,
