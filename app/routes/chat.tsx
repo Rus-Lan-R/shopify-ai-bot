@@ -76,6 +76,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }
+
   const formData = await request.formData();
   const { action, message } = formDataToObject(formData);
   const searchParams = new URL(request.url).searchParams;
@@ -86,8 +96,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   ];
 
   if (!shop && !shopName) {
-    throw new Response("Chat Action Bad Request", {
+    return new Response(JSON.stringify({ error: "Chat Action Bad Request" }), {
       status: 400,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
     });
   }
 
@@ -96,8 +111,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   if (!shopSession) {
-    throw new Response("Shop Not Found", {
+    return new Response(JSON.stringify({ error: "Shop Not Found" }), {
       status: 404,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
     });
   }
 
@@ -112,6 +132,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             threadId: thread.id,
           },
         });
+
         await db.session.update({
           where: { id: shopSession.id },
           data: {
@@ -121,19 +142,33 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
         return new Response(JSON.stringify({ chatId: thread.id }), {
           headers: {
-            "content-type": "application/json",
+            "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type",
           },
         });
       }
-      // add error response
+
+      return new Response(JSON.stringify({ error: "Assistant ID missing" }), {
+        status: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      });
     }
-    case "message":
+
+    case "message": {
       if (!chatId) {
-        throw new Response("Chat not found", {
+        return new Response(JSON.stringify({ error: "Chat not found" }), {
           status: 404,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          },
         });
       }
 
@@ -143,6 +178,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           threadId: chatId,
           assistantId: shopSession?.assistantId,
         });
+
         await db.session.update({
           where: { id: shopSession.id },
           data: {
@@ -153,20 +189,32 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
         return new Response(JSON.stringify({ answer }), {
           headers: {
-            "content-type": "application/json",
+            "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type",
           },
         });
       }
-      // add error response
-      break;
+
+      return new Response(JSON.stringify({ error: "Assistant ID missing" }), {
+        status: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      });
+    }
 
     default:
-      break;
-    // add error respons
+      return new Response(JSON.stringify({ error: "Invalid action" }), {
+        status: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      });
   }
-
-  return {};
 };
