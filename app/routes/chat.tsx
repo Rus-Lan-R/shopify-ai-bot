@@ -51,10 +51,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       limit: 100,
     });
 
-    preparedMessages = messages.data.map((item) => ({
-      role: item.role,
-      text: extractTextWithoutAnnotations(item.content),
-    }));
+    preparedMessages = [
+      {
+        role: "assistant",
+        text: shopSession.welcomeMessage || "Hi, how can I help you?",
+      },
+      ...messages.data.map((item) => ({
+        role: item.role,
+        text: extractTextWithoutAnnotations(item.content),
+      })),
+    ];
   }
 
   return json(

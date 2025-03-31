@@ -18,10 +18,6 @@ interface ILodaerData {
   chatId?: string | null;
   shopName?: string | null;
 }
-const defaulMessage: IMessage = {
-  text: "Hi, how can I help you?",
-  role: "assistant",
-};
 
 const CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
 
@@ -39,7 +35,7 @@ const PublicChat = (props: {
     shopName,
   });
 
-  const [messagesList, setMessagesList] = useState<IMessage[]>([defaulMessage]);
+  const [messagesList, setMessagesList] = useState<IMessage[]>([]);
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (message: string) => {
@@ -83,7 +79,7 @@ const PublicChat = (props: {
           chatId: string;
         };
 
-        setMessagesList(data.messages.length ? data.messages : [defaulMessage]);
+        setMessagesList(data.messages.length ? data.messages : []);
         setLoaderData((prev) => ({
           ...prev,
           chatId: data.chatId,

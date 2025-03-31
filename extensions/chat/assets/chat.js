@@ -24517,10 +24517,6 @@ var RemixEmbed = (() => {
     assistant: styles_default.chatMessage_assistant,
     user: styles_default.chatMessage_user
   };
-  var defaulMessage = {
-    text: "Hi, how can I help you?",
-    role: "assistant"
-  };
   var CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
   var PublicChat = (props) => {
     const { shopName, chatId } = props;
@@ -24532,7 +24528,7 @@ var RemixEmbed = (() => {
       chatId,
       shopName
     });
-    const [messagesList, setMessagesList] = (0, import_react.useState)([defaulMessage]);
+    const [messagesList, setMessagesList] = (0, import_react.useState)([]);
     const [message, setMessage] = (0, import_react.useState)("");
     const handleSubmit = async (message2) => {
       const formData = new FormData();
@@ -24569,7 +24565,7 @@ var RemixEmbed = (() => {
             }
           );
           const data = await response.json();
-          setMessagesList(data.messages.length ? data.messages : [defaulMessage]);
+          setMessagesList(data.messages.length ? data.messages : []);
           setLoaderData((prev) => ({
             ...prev,
             chatId: data.chatId,

@@ -42,6 +42,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     assistant: {
       id: shopSession?.assistantId,
       assistantName: shopSession?.assistantName,
+      welcomeMessage: shopSession?.welcomeMessage,
       assistantPrompt: shopSession?.assistantPrompt,
     },
   };
@@ -50,7 +51,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin, session } = await authenticate.admin(request);
   const formData = await request.formData();
-  const { action, assistantPrompt, assistantName, fileType } =
+  const { action, assistantPrompt, assistantName, welcomeMessage, fileType } =
     formDataToObject(formData);
   const graphqlRequest = await createGraphqlRequest(request);
 
@@ -88,6 +89,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               assistantName: assistantName || "",
               assistantPrompt: assistantPrompt || "",
               assistantVectorStoreId: vectorStoreId,
+              welcomeMessage: welcomeMessage || "",
               assistantId,
               mainThreadId,
               assistantFiles: initAssistantFiles.map((item) => {
@@ -117,8 +119,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             await db.session.update({
               where: { id: session.id },
               data: {
-                assistantName,
-                assistantPrompt,
+                assistantName: assistantName || "",
+                assistantPrompt: assistantPrompt || "",
+                welcomeMessage: welcomeMessage || "",
               },
             });
           }
@@ -244,6 +247,13 @@ export default function Index() {
                       name={"assistantName"}
                       label="Name"
                       autoComplete="on"
+                    />
+                    <FormInput
+                      name={"welcomeMessage"}
+                      label="Welcome message"
+                      autoComplete="on"
+                      ariaExpanded={true}
+                      multiline={2}
                     />
                     <FormInput
                       name={"assistantPrompt"}

@@ -34,6 +34,7 @@ model Session {
   emailVerified            Boolean?  @default(false)
   assistantId              String?
   assistantName            String?
+  welcomeMessage           String?
   assistantPrompt          String?
   assistantVectorStoreId   String?
   mainThreadId             String?
