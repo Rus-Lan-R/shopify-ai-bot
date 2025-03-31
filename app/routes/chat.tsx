@@ -1,4 +1,8 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  HeadersFunction,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
 import db from "../db.server";
 import { formDataToObject } from "app/helpers/utils";
 import { aiClient } from "app/services/openAi.server";
@@ -8,6 +12,12 @@ import {
 } from "app/modules/openAi/request";
 
 export type MainChatLoader = typeof loader;
+
+export const headers: HeadersFunction = ({}) => ({
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+});
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const searchParams = new URL(request.url).searchParams;
