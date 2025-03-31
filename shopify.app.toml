@@ -15,12 +15,12 @@ dev_store_url = "nikasoul-store.myshopify.com"
 api_version = "2025-01"
 
   [[webhooks.subscriptions]]
-  topics = [ "app/uninstalled" ]
-  uri = "/webhooks"
+  topics = [ "app/uninstalled", "app/scopes_update" ]
+  uri = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/webhooks"
 
   [[webhooks.subscriptions]]
-  topics = [ "app/scopes_update" ]
-  uri = "/webhooks"
+  compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
+  uri = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/webhooks"
 
 [auth]
 redirect_urls = [
