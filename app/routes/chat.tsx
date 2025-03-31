@@ -1,6 +1,7 @@
 import {
   ActionFunctionArgs,
   HeadersFunction,
+  json,
   LoaderFunctionArgs,
 } from "@remix-run/node";
 import db from "../db.server";
@@ -56,13 +57,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }));
   }
 
-  return {
-    shopId: shopSession.id,
-    chatId: chatId,
-    shop: shop,
-    messages: preparedMessages,
-    assistantName: shopSession.assistantName,
-  };
+  return json(
+    {
+      shopId: shopSession.id,
+      chatId: chatId,
+      shop: shop,
+      messages: preparedMessages,
+      assistantName: shopSession.assistantName,
+    },
+    {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    },
+  );
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -110,7 +120,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         });
 
         return new Response(JSON.stringify({ chatId: thread.id }), {
-          headers: { "content-type": "application/json" },
+          headers: {
+            "content-type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          },
         });
       }
       // add error response
@@ -137,7 +152,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         });
 
         return new Response(JSON.stringify({ answer }), {
-          headers: { "content-type": "application/json" },
+          headers: {
+            "content-type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          },
         });
       }
       // add error response
