@@ -22,13 +22,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       where: { id: session.id },
     });
 
+    const totalChats = await db.chat.count({
+      where: { sessionId: session.id },
+    });
+
     return {
       assistantId: shopAssistant?.assistantId,
       chatId: shopAssistant?.mainThreadId,
       shop: session.id,
       data: {
         totalRequests: shopAssistant?.totalAiRequests,
-        totalChats: 0,
+        totalChats: totalChats,
       },
       assistant: {
         assistantName: shopAssistant?.assistantName,

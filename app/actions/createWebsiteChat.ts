@@ -19,13 +19,13 @@ export const createWebsiteChat = async (
       },
     });
 
-    let websitePlatform = await db.platform.findUnique({
-      where: { name: "Website" },
+    let websitePlatform = await db.platform.findFirst({
+      where: { sessionId: sessionId },
     });
 
     if (!websitePlatform) {
       websitePlatform = await db.platform.create({
-        data: { name: "Website" },
+        data: { sessionId, name: "Website" },
       });
     }
 

@@ -42,11 +42,12 @@ model Session {
   monthlyAiRequests      Int?      @default(0)
   isDeleted              Boolean   @default(false)
 
-  chats                  Chat[]
-  platformChats          PlatformChat[]
-  telegram               Telegram[]
-  instagram              Instagram[]
-  website                Website[]
+  chats         Chat[]
+  platformChats PlatformChat[]
+  telegram      Telegram[]
+  instagram     Instagram[]
+  website       Website[]
+  Platform      Platform[]
 }
 
 model Chat {
@@ -79,7 +80,9 @@ model PlatformChat {
 
 model Platform {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name         String         @unique
+  name         String
+  sessionId    String         
+  session      Session        @relation(fields: [sessionId], references: [id])
   telegram     Telegram?      @relation(fields: [telegramId], references: [id])
   instagram    Instagram?     @relation(fields: [instagramId], references: [id])
   website      Website?       @relation(fields: [websiteId], references: [id])
