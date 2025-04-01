@@ -7,5 +7,5 @@ export enum FileTypes {
   SHOP = "shop",
   PRODUCTS = "produts",
   LOCATIONS = "locatinos",
-  OTHER_INFO = "other-info",
+  // OTHER_INFO = "other-info",
 }
