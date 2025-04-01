@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["mongodb"]
 }
 
@@ -14,47 +14,107 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Session {
+  session_id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  id                     String    @unique
+  shop                   String
+  state                  String
+  isOnline               Boolean   @default(false)
+  scope                  String?
+  expires                DateTime?
+  accessToken            String
+  userId                 String?
+  firstName              String?
+  lastName               String?
+  email                  String?
+  accountOwner           Boolean   @default(false)
+  locale                 String?
+  collaborator           Boolean?  @default(false)
+  emailVerified          Boolean?  @default(false)
+  assistantId            String?
+  assistantName          String?
+  welcomeMessage         String?
+  assistantPrompt        String?
+  assistantVectorStoreId String?
+  mainThreadId           String?
+  assistantFiles         Json?
+  totalAiRequests        Int?      @default(0)
+  monthlyAiRequests      Int?      @default(0)
+  isDeleted              Boolean   @default(false)
 
-model Session { 
-  session_id               String    @id @default(auto()) @map("_id") @db.ObjectId
-  id                       String    @unique
-  shop                     String
-  state                    String
-  isOnline                 Boolean   @default(false)
-  scope                    String?
-  expires                  DateTime?
-  accessToken              String
-  userId                   String?
-  firstName                String?
-  lastName                 String?
-  email                    String?
-  accountOwner             Boolean   @default(false)
-  locale                   String?
-  collaborator             Boolean?  @default(false)
-  emailVerified            Boolean?  @default(false)
-  assistantId              String?
-  assistantName            String?
-  welcomeMessage           String?
-  assistantPrompt          String?
-  assistantVectorStoreId   String?
-  mainThreadId             String?
-  assistantFiles           Json?
-  totalAiRequests          Int?       @default(0)
-  monthlyAiRequests        Int?       @default(0)
-  totalChats               Int?       @default(0)
-  chats                    Chat[]
-  isDeleted                Boolean    @default(false)
+  chats                  Chat[]
+  platformChats          PlatformChat[]
+  telegram               Telegram[]
+  instagram              Instagram[]
+  website                Website[]
 }
 
 model Chat {
-  id                       String   @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId                String
-  session                  Session  @relation(fields: [sessionId], references: [id]) 
-  messages                 Json?    
-  createdAt                DateTime @default(now())
-  updatedAt                DateTime @default(now())
-  customerId               String?
-  threadId                 String?
-  isArchived               Boolean    @default(false)
-  isDeleted                Boolean    @default(false)
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId  String
+  session    Session  @relation(fields: [sessionId], references: [id])
+  messages   Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  customerId String?
+  threadId   String?
+  isArchived Boolean  @default(false)
+  isDeleted  Boolean  @default(false)
+
+  platformChats PlatformChat[]
+  website       Website?
+  telegram      Telegram?
+  instagram     Instagram?
+}
+
+model PlatformChat {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  chatId     String   @unique @db.ObjectId
+  chat       Chat     @relation(fields: [chatId], references: [id])
+  sessionId  String
+  session    Session  @relation(fields: [sessionId], references: [id])
+  platformId String   @db.ObjectId
+  platform   Platform @relation(fields: [platformId], references: [id])
+}
+
+model Platform {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String         @unique
+  telegram     Telegram?      @relation(fields: [telegramId], references: [id])
+  instagram    Instagram?     @relation(fields: [instagramId], references: [id])
+  website      Website?       @relation(fields: [websiteId], references: [id])
+  platformChat PlatformChat[]
+  telegramId   String?        @db.ObjectId
+  instagramId  String?        @db.ObjectId
+  websiteId    String?        @db.ObjectId
+}
+
+model Website {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  chatId    String     @unique @db.ObjectId
+  chat      Chat       @relation(fields: [chatId], references: [id])
+  sessionId String
+  session   Session    @relation(fields: [sessionId], references: [id])
+  platform  Platform[]
+}
+
+model Telegram {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  username    String?
+  phoneNumber String?
+  chatId      String     @unique @db.ObjectId
+  chat        Chat       @relation(fields: [chatId], references: [id])
+  sessionId   String
+  session     Session    @relation(fields: [sessionId], references: [id])
+  platform    Platform[]
+}
+
+model Instagram {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  username  String?
+  chatId    String     @unique @db.ObjectId
+  chat      Chat       @relation(fields: [chatId], references: [id])
+  sessionId String
+  session   Session    @relation(fields: [sessionId], references: [id])
+  platform  Platform[]
 }

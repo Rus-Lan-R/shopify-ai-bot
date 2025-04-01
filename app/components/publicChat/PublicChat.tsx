@@ -47,7 +47,7 @@ const PublicChat = (props: {
       setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
       setIsLoading(true);
       const response = await fetch(
-        `${CHAT_API}/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+        `${CHAT_API}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
         {
           method: "POST",
           body: formData,
@@ -65,10 +65,10 @@ const PublicChat = (props: {
   };
 
   useEffect(() => {
-    if (chatId) {
+    if (loaderData.chatId) {
       (async () => {
         const response = await fetch(
-          `${CHAT_API}/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+          `${CHAT_API}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
           {
             method: "GET",
           },
@@ -87,7 +87,7 @@ const PublicChat = (props: {
         }));
       })();
     }
-  }, []);
+  }, [loaderData.chatId]);
 
   useEffect(() => {
     if (conversationRef.current) {
@@ -113,7 +113,7 @@ const PublicChat = (props: {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `${CHAT_API}/chat?_data=routes/chat&shopName=${loaderData?.shopName}`,
+          `${CHAT_API}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
           {
             method: "POST",
             body: formData,

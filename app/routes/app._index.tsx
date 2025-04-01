@@ -28,7 +28,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       shop: session.id,
       data: {
         totalRequests: shopAssistant?.totalAiRequests,
-        totalChats: shopAssistant?.totalChats,
+        totalChats: 0,
       },
       assistant: {
         assistantName: shopAssistant?.assistantName,

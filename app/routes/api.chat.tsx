@@ -11,6 +11,7 @@ import {
   extractTextWithoutAnnotations,
   getOpenAIResponse,
 } from "app/modules/openAi/request";
+import { createWebsiteChat } from "app/actions/createWebsiteChat";
 
 export type MainChatLoader = typeof loader;
 
@@ -131,19 +132,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       if (shopSession?.assistantId) {
         const thread = await aiClient.beta.threads.create();
 
-        await db.chat.create({
-          data: {
-            sessionId: shopSession.id,
-            threadId: thread.id,
-          },
-        });
-
-        await db.session.update({
-          where: { id: shopSession.id },
-          data: {
-            totalChats: (shopSession.totalChats || 0) + 1,
-          },
-        });
+        await createWebsiteChat(shopSession.id, thread.id);
 
         return new Response(JSON.stringify({ chatId: thread.id }), {
           headers: {
