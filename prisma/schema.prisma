@@ -79,17 +79,19 @@ model PlatformChat {
 }
 
 model Platform {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  sessionId    String         
-  session      Session        @relation(fields: [sessionId], references: [id])
-  telegram     Telegram?      @relation(fields: [telegramId], references: [id])
-  instagram    Instagram?     @relation(fields: [instagramId], references: [id])
-  website      Website?       @relation(fields: [websiteId], references: [id])
-  platformChat PlatformChat[]
-  telegramId   String?        @db.ObjectId
-  instagramId  String?        @db.ObjectId
-  websiteId    String?        @db.ObjectId
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  isEnabled     Boolean        @default(true)
+  primaryApiKey String?
+  sessionId     String
+  session       Session        @relation(fields: [sessionId], references: [id])
+  telegram      Telegram?      @relation(fields: [telegramId], references: [id])
+  instagram     Instagram?     @relation(fields: [instagramId], references: [id])
+  website       Website?       @relation(fields: [websiteId], references: [id])
+  platformChat  PlatformChat[]
+  telegramId    String?        @db.ObjectId
+  instagramId   String?        @db.ObjectId
+  websiteId     String?        @db.ObjectId
 }
 
 model Website {

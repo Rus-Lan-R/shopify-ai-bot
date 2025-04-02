@@ -38,6 +38,6 @@ export const createWebsiteChat = async (
     });
     return {};
   } catch (error) {
-    console.error("Error create Telegram:", error);
+    console.error("Error create Website:", error);
   }
 };

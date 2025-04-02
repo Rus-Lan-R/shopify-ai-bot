@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b78f49118baa15c77d8adf447c933901"
-application_url = "https://grain-cry-germany-diana.trycloudflare.com"
+application_url = "https://spokesman-simultaneously-offset-place.trycloudflare.com"
 embedded = true
 name = "Dev ChatPilot"
 handle = "dev-chatpilot"
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://grain-cry-germany-diana.trycloudflare.com/auth/callback",
-  "https://grain-cry-germany-diana.trycloudflare.com/auth/shopify/callback",
-  "https://grain-cry-germany-diana.trycloudflare.com/api/auth/callback"
+  "https://spokesman-simultaneously-offset-place.trycloudflare.com/auth/callback",
+  "https://spokesman-simultaneously-offset-place.trycloudflare.com/auth/shopify/callback",
+  "https://spokesman-simultaneously-offset-place.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]

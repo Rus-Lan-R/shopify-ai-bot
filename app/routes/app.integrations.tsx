@@ -9,67 +9,86 @@ import {
   Text,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
-import { useForm } from "react-hook-form";
 import db from "../db.server";
 import { formDataToObject } from "app/helpers/utils";
-import { useLoaderData, useSubmit } from "@remix-run/react";
-import { createGraphqlRequest } from "app/api/graphql";
-import { FileTypes } from "app/modules/openAi/openAi.interfaces";
-import { useLoading } from "app/helpers/useLoading";
-import { getMainTheme } from "app/modules/themes/getThemes";
+import { useLoaderData } from "@remix-run/react";
+import { TelegramFormIntegrations } from "app/components/integrations/TelegramFormIntegration";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
-  const graphqlRequest = await createGraphqlRequest(request);
 
-  const shopSession = await db.session.findFirst({
-    where: { id: session.id },
+  const telegramPlatform = await db.platform.findFirst({
+    where: { sessionId: session.id, name: "Telegram" },
   });
 
-  const { mainTheme } = await getMainTheme({ graphqlRequest });
   return {
-    files: shopSession?.assistantFiles as { type: FileTypes; fileId: string }[],
-    mainTheme,
-    assistant: {
-      id: shopSession?.assistantId,
-      assistantName: shopSession?.assistantName,
-      welcomeMessage: shopSession?.welcomeMessage,
-      assistantPrompt: shopSession?.assistantPrompt,
+    telegram: {
+      name: telegramPlatform?.name,
+      isEnabled: telegramPlatform?.isEnabled,
+      primaryApiKey: telegramPlatform?.primaryApiKey,
     },
   };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { admin, session } = await authenticate.admin(request);
+  const { session } = await authenticate.admin(request);
   const formData = await request.formData();
-  const { action, assistantPrompt, assistantName, welcomeMessage, fileType } =
-    formDataToObject(formData);
-  const graphqlRequest = await createGraphqlRequest(request);
+  const {
+    action,
+    primaryApiKey,
+    platform: platformName,
+    status,
+  } = formDataToObject(formData);
+
+  switch (action) {
+    case "init-telegram":
+      const telegramPlatform = await db.platform.findFirst({
+        where: { sessionId: session.id, name: "Telegram" },
+      });
+
+      if (!telegramPlatform) {
+        await db.platform.create({
+          data: {
+            sessionId: session.id,
+            name: "Telegram",
+            primaryApiKey: primaryApiKey,
+          },
+        });
+      } else {
+        await db.platform.update({
+          where: {
+            id: telegramPlatform.id,
+          },
+          data: {
+            primaryApiKey: primaryApiKey,
+          },
+        });
+      }
+      break;
+
+    case "toggle-connect":
+      console.log(status);
+      await db.platform.updateMany({
+        where: {
+          name: platformName,
+          sessionId: session.id,
+        },
+        data: {
+          isEnabled: status === "connect" ? true : false,
+        },
+      });
+
+      break;
+
+    default:
+      break;
+  }
 
   return {};
 };
 
 export default function Index() {
-  const { assistant, files, mainTheme } = useLoaderData<typeof loader>();
-  const { isLoading, checkIsLoading, setLoadingSlug } = useLoading<
-    FileTypes | "widget" | "main"
-  >();
-  const form = useForm({
-    defaultValues: {
-      ...assistant,
-    },
-  });
-  const submit = useSubmit();
-
-  const onSubmit = form.handleSubmit((data) => {
-    setLoadingSlug("main");
-    const formData = new FormData();
-    formData.append("action", assistant.id ? "update" : "init");
-    Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, String(value));
-    });
-    submit(formData, { method: "POST" });
-  });
+  const { telegram } = useLoaderData<typeof loader>();
 
   return (
     <Page
@@ -95,7 +114,12 @@ export default function Index() {
                 </Text>
               </BlockStack>
             </Box>
-            <Card roundedAbove="sm"></Card>
+            <Card roundedAbove="sm">
+              <TelegramFormIntegrations
+                primaryApiKey={telegram.primaryApiKey}
+                isEnabled={telegram.isEnabled}
+              />
+            </Card>
           </InlineGrid>
           <Divider />
         </BlockStack>
