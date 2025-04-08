@@ -55,7 +55,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     formDataToObject(formData);
   const graphqlRequest = await createGraphqlRequest(request);
 
-  if (admin) {
+  const shopSession = await db.session.findFirst({
+    where: { id: session.id },
+  });
+
+  if (admin && shopSession) {
     switch (action) {
       case "init":
         try {
@@ -84,7 +88,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           );
 
           await db.session.update({
-            where: { id: session.id },
+            where: { id: shopSession.session_id },
             data: {
               assistantName: assistantName || "",
               assistantPrompt: assistantPrompt || "",
@@ -107,7 +111,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       case "update":
         try {
           const shop = await db.session.findUnique({
-            where: { id: session.id },
+            where: { id: shopSession.session_id },
           });
 
           if (shop?.assistantId) {
@@ -117,7 +121,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               assistantPrompt,
             });
             await db.session.update({
-              where: { id: session.id },
+              where: { id: shopSession.session_id },
               data: {
                 assistantName: assistantName || "",
                 assistantPrompt: assistantPrompt || "",
@@ -132,7 +136,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
       case "sync": {
         const shop = await db.session.findUnique({
-          where: { id: session.id },
+          where: { id: shopSession.session_id },
         });
 
         if (fileType && shop?.assistantVectorStoreId) {
@@ -145,7 +149,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           });
           if (!!updatedVsFiles?.length) {
             await db.session.update({
-              where: { id: session.id },
+              where: { id: shopSession.session_id },
               data: {
                 assistantFiles: JSON.parse(JSON.stringify(updatedVsFiles)),
               },

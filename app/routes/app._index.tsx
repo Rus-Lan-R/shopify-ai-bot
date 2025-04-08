@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
 
     const totalChats = await db.chat.count({
-      where: { sessionId: session.id },
+      where: { sessionId: shopAssistant?.session_id },
     });
 
     return {

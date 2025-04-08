@@ -14,7 +14,7 @@ const dataFunctionsMap = (
     [FileTypes.PRODUCTS]: getAllProducts,
     [FileTypes.SHOP]: getShopInfo,
     [FileTypes.LOCATIONS]: getAllLocations,
-    [FileTypes.OTHER_INFO]: undefined,
+    // [FileTypes.OTHER_INFO]: undefined,
   }[type];
 };
 

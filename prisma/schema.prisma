@@ -42,84 +42,32 @@ model Session {
   monthlyAiRequests      Int?      @default(0)
   isDeleted              Boolean   @default(false)
 
-  chats         Chat[]
-  platformChats PlatformChat[]
-  telegram      Telegram[]
-  instagram     Instagram[]
-  website       Website[]
-  Platform      Platform[]
+  chats    Chat[]
+  Platform Platform[]
 }
 
 model Chat {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId  String
-  session    Session  @relation(fields: [sessionId], references: [id])
-  messages   Json?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-  customerId String?
-  threadId   String?
-  isArchived Boolean  @default(false)
-  isDeleted  Boolean  @default(false)
-
-  platformChats PlatformChat[]
-  website       Website?
-  telegram      Telegram?
-  instagram     Instagram?
-}
-
-model PlatformChat {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  chatId     String   @unique @db.ObjectId
-  chat       Chat     @relation(fields: [chatId], references: [id])
-  sessionId  String
-  session    Session  @relation(fields: [sessionId], references: [id])
-  platformId String   @db.ObjectId
-  platform   Platform @relation(fields: [platformId], references: [id])
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId      String   @db.ObjectId
+  session        Session  @relation(fields: [sessionId], references: [session_id])
+  messages       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+  customerId     String?
+  threadId       String?
+  isArchived     Boolean  @default(false)
+  isDeleted      Boolean  @default(false)
+  externalChatId String?
+  platformId     String   @db.ObjectId
+  platform       Platform @relation(fields: [platformId], references: [id])
 }
 
 model Platform {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  isEnabled     Boolean        @default(true)
+  isEnabled     Boolean @default(true)
   primaryApiKey String?
-  sessionId     String
-  session       Session        @relation(fields: [sessionId], references: [id])
-  telegram      Telegram?      @relation(fields: [telegramId], references: [id])
-  instagram     Instagram?     @relation(fields: [instagramId], references: [id])
-  website       Website?       @relation(fields: [websiteId], references: [id])
-  platformChat  PlatformChat[]
-  telegramId    String?        @db.ObjectId
-  instagramId   String?        @db.ObjectId
-  websiteId     String?        @db.ObjectId
-}
-
-model Website {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  chatId    String     @unique @db.ObjectId
-  chat      Chat       @relation(fields: [chatId], references: [id])
-  sessionId String
-  session   Session    @relation(fields: [sessionId], references: [id])
-  platform  Platform[]
-}
-
-model Telegram {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  username    String?
-  phoneNumber String?
-  chatId      String     @unique @db.ObjectId
-  chat        Chat       @relation(fields: [chatId], references: [id])
-  sessionId   String
-  session     Session    @relation(fields: [sessionId], references: [id])
-  platform    Platform[]
-}
-
-model Instagram {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  username  String?
-  chatId    String     @unique @db.ObjectId
-  chat      Chat       @relation(fields: [chatId], references: [id])
-  sessionId String
-  session   Session    @relation(fields: [sessionId], references: [id])
-  platform  Platform[]
+  sessionId     String  @db.ObjectId
+  session       Session @relation(fields: [sessionId], references: [session_id])
+  chats         Chat[]
 }

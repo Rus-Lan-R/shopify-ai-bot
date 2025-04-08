@@ -25,7 +25,11 @@ const deleteShop = async (shop: string) => {
     console.log("Vector store files deleted");
 
     const allShopChats = await db.chat.findMany({
-      where: { sessionId: shopSession.id },
+      where: { sessionId: shopSession.session_id },
+    });
+
+    await db.platform.deleteMany({
+      where: { sessionId: shopSession.session_id },
     });
 
     console.log("Shop deleted");
@@ -44,8 +48,13 @@ const deleteShop = async (shop: string) => {
     } catch (error) {
       console.error(`Assistant delete error: ${error}`);
     }
+    await db.chat.deleteMany({
+      where: { sessionId: shopSession.session_id },
+    });
+
+    await db.session.delete({ where: { session_id: shopSession.session_id } });
   }
-  await db.session.deleteMany({ where: { shop } });
+
   console.log("SHOP FULLY DELETED");
 };
 
@@ -54,7 +63,9 @@ const deleteShop = async (shop: string) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { topic, shop, session, admin, payload } =
     await authenticate.webhook(request);
-
+  const shopSession = await db.session.findUnique({
+    where: { id: session?.id },
+  });
   if (!admin) {
     // The admin context isn't returned if the webhook fired after a shop was uninstalled.
     throw new Response();
@@ -70,7 +81,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const current = payload.current as string[];
       await db.session.update({
         where: {
-          id: session.id,
+          id: shopSession?.session_id,
         },
         data: {
           scope: current.toString(),

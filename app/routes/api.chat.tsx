@@ -132,7 +132,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       if (shopSession?.assistantId) {
         const thread = await aiClient.beta.threads.create();
 
-        await createWebsiteChat(shopSession.id, thread.id);
+        await createWebsiteChat(shopSession.session_id, thread.id);
 
         return new Response(JSON.stringify({ chatId: thread.id }), {
           headers: {
@@ -174,7 +174,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         });
 
         await db.session.update({
-          where: { id: shopSession.id },
+          where: { id: shopSession.session_id },
           data: {
             totalAiRequests: (shopSession.totalAiRequests || 0) + 1,
             monthlyAiRequests: (shopSession.monthlyAiRequests || 0) + 1,

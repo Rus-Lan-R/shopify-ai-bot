@@ -17,8 +17,12 @@ import { TelegramFormIntegrations } from "app/components/integrations/TelegramFo
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
 
+  const shopSession = await db.session.findFirst({
+    where: { id: session.id },
+  });
+
   const telegramPlatform = await db.platform.findFirst({
-    where: { sessionId: session.id, name: "Telegram" },
+    where: { sessionId: shopSession?.session_id, name: "Telegram" },
   });
 
   return {
@@ -40,16 +44,24 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     status,
   } = formDataToObject(formData);
 
+  const shopSession = await db.session.findFirst({
+    where: { id: session.id },
+  });
+
+  if (!shopSession) {
+    throw { message: "Session not found" };
+  }
+
   switch (action) {
     case "init-telegram":
       const telegramPlatform = await db.platform.findFirst({
-        where: { sessionId: session.id, name: "Telegram" },
+        where: { sessionId: shopSession?.session_id, name: "Telegram" },
       });
 
       if (!telegramPlatform) {
         await db.platform.create({
           data: {
-            sessionId: session.id,
+            sessionId: shopSession?.session_id!,
             name: "Telegram",
             primaryApiKey: primaryApiKey,
           },
@@ -71,7 +83,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       await db.platform.updateMany({
         where: {
           name: platformName,
-          sessionId: session.id,
+          sessionId: shopSession.session_id,
         },
         data: {
           isEnabled: status === "connect" ? true : false,
