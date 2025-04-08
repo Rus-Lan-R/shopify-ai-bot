@@ -18,25 +18,25 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
 
   try {
-    const shopAssistant = await db.session.findUnique({
+    const shopSession = await db.session.findUnique({
       where: { id: session.id },
     });
 
     const totalChats = await db.chat.count({
-      where: { sessionId: shopAssistant?.session_id },
+      where: { sessionId: shopSession?.session_id },
     });
 
     return {
-      assistantId: shopAssistant?.assistantId,
-      chatId: shopAssistant?.mainThreadId,
+      assistantId: shopSession?.assistantId,
+      chatId: shopSession?.mainThreadId,
       shop: session.id,
       data: {
-        totalRequests: shopAssistant?.totalAiRequests,
+        totalRequests: shopSession?.totalAiRequests,
         totalChats: totalChats,
       },
       assistant: {
-        assistantName: shopAssistant?.assistantName,
-        assistantPrompt: shopAssistant?.assistantPrompt,
+        assistantName: shopSession?.assistantName,
+        assistantPrompt: shopSession?.assistantPrompt,
       },
     };
   } catch (error) {

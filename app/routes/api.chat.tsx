@@ -174,7 +174,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         });
 
         await db.session.update({
-          where: { id: shopSession.session_id },
+          where: { session_id: shopSession.session_id },
           data: {
             totalAiRequests: (shopSession.totalAiRequests || 0) + 1,
             monthlyAiRequests: (shopSession.monthlyAiRequests || 0) + 1,

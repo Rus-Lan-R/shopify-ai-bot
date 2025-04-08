@@ -81,7 +81,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const current = payload.current as string[];
       await db.session.update({
         where: {
-          id: shopSession?.session_id,
+          session_id: shopSession?.session_id,
         },
         data: {
           scope: current.toString(),

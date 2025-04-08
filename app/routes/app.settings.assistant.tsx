@@ -88,7 +88,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           );
 
           await db.session.update({
-            where: { id: shopSession.session_id },
+            where: { session_id: shopSession.session_id },
             data: {
               assistantName: assistantName || "",
               assistantPrompt: assistantPrompt || "",
@@ -110,18 +110,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         break;
       case "update":
         try {
-          const shop = await db.session.findUnique({
-            where: { id: shopSession.session_id },
-          });
-
-          if (shop?.assistantId) {
+          if (shopSession && !!shopSession?.assistantId) {
             await assistantUpdate({
-              assistantId: shop?.assistantId,
+              assistantId: shopSession.assistantId,
               assistantName,
               assistantPrompt,
             });
             await db.session.update({
-              where: { id: shopSession.session_id },
+              where: { session_id: shopSession.session_id },
               data: {
                 assistantName: assistantName || "",
                 assistantPrompt: assistantPrompt || "",
@@ -135,21 +131,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         break;
 
       case "sync": {
-        const shop = await db.session.findUnique({
-          where: { id: shopSession.session_id },
-        });
-
-        if (fileType && shop?.assistantVectorStoreId) {
+        if (fileType && shopSession?.assistantVectorStoreId) {
           const { updatedVsFiles } = await dataSync({
-            vsId: shop.assistantVectorStoreId,
+            vsId: shopSession?.assistantVectorStoreId,
             type: fileType as FileTypes,
-            shopId: shop.id,
-            vsFiles: shop.assistantFiles as VsFile[],
+            shopId: shopSession.id,
+            vsFiles: shopSession.assistantFiles as VsFile[],
             graphqlRequest,
           });
           if (!!updatedVsFiles?.length) {
             await db.session.update({
-              where: { id: shopSession.session_id },
+              where: { session_id: shopSession.session_id },
               data: {
                 assistantFiles: JSON.parse(JSON.stringify(updatedVsFiles)),
               },
@@ -166,7 +158,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             src: `${process.env.SHOPIFY_APP_URL}/chat.js`,
           },
         });
-        console.log(response);
+
         break;
       }
       case "delete-script": {
@@ -215,7 +207,7 @@ export default function Index() {
     submit(formData, { method: "POST" });
   };
 
-  console.log(mainTheme);
+  // console.log(mainTheme);
   return (
     <Page
       title="Settings"
