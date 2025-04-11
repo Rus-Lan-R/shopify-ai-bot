@@ -13,6 +13,9 @@ import db from "../db.server";
 import { formDataToObject } from "app/helpers/utils";
 import { useLoaderData } from "@remix-run/react";
 import { TelegramFormIntegrations } from "app/components/integrations/TelegramFormIntegration";
+import { WhatsAppFormIntegration } from "app/components/integrations/WhatsAppFormIntegration";
+import { useMemo } from "react";
+import { Platform, PlatformName } from "@prisma/client";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
@@ -21,16 +24,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     where: { id: session.id },
   });
 
-  const telegramPlatform = await db.platform.findFirst({
-    where: { sessionId: shopSession?.session_id, name: "Telegram" },
+  const platforms = await db.platform.findMany({
+    where: { sessionId: shopSession?.session_id },
   });
 
   return {
-    telegram: {
-      name: telegramPlatform?.name,
-      isEnabled: telegramPlatform?.isEnabled,
-      primaryApiKey: telegramPlatform?.primaryApiKey,
-    },
+    platforms,
   };
 };
 
@@ -51,28 +50,30 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (!shopSession) {
     throw { message: "Session not found" };
   }
-
+  console.log(status);
   switch (action) {
-    case "init-telegram":
-      const telegramPlatform = await db.platform.findFirst({
-        where: { sessionId: shopSession?.session_id, name: "Telegram" },
+    case "init-platform":
+      const platformModule = await db.platform.findFirst({
+        where: { sessionId: shopSession?.session_id, name: platformName },
       });
 
-      if (!telegramPlatform) {
+      if (!platformModule) {
         await db.platform.create({
           data: {
+            name: platformName as PlatformName,
             sessionId: shopSession?.session_id!,
-            name: "Telegram",
             primaryApiKey: primaryApiKey,
+            integrationStatus: status,
           },
         });
       } else {
         await db.platform.update({
           where: {
-            id: telegramPlatform.id,
+            id: platformModule.id,
           },
           data: {
             primaryApiKey: primaryApiKey,
+            integrationStatus: status,
           },
         });
       }
@@ -86,7 +87,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           sessionId: shopSession.session_id,
         },
         data: {
-          isEnabled: status === "connect" ? true : false,
+          integrationStatus: status,
         },
       });
 
@@ -99,8 +100,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return {};
 };
 
+// const availablePlatforms: PlatformName[] = [
+//   PlatformName.Telegram,
+//   PlatformName.WhatsApp,
+// ];
+
 export default function Index() {
-  const { telegram } = useLoaderData<typeof loader>();
+  const { platforms } = useLoaderData<typeof loader>();
+
+  const platformsBySlug = useMemo(() => {
+    return platforms.reduce<Partial<{ [key in PlatformName]: Platform }>>(
+      (acc, item) => {
+        return { ...acc, [item.name]: item };
+      },
+      {},
+    );
+  }, [platforms]);
 
   return (
     <Page
@@ -128,12 +143,34 @@ export default function Index() {
             </Box>
             <Card roundedAbove="sm">
               <TelegramFormIntegrations
-                primaryApiKey={telegram.primaryApiKey}
-                isEnabled={telegram.isEnabled}
+                primaryApiKey={platformsBySlug?.Telegram?.primaryApiKey}
+                status={platformsBySlug?.Telegram?.integrationStatus!}
               />
             </Card>
           </InlineGrid>
           <Divider />
+          <InlineGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="400">
+            <Box
+              as="section"
+              paddingInlineStart={{ xs: "400", sm: "0" }}
+              paddingInlineEnd={{ xs: "400", sm: "0" }}
+            >
+              <BlockStack gap="400">
+                <Text as="h3" variant="headingMd">
+                  WhatsApp
+                </Text>
+                <Text as="p" variant="bodyMd">
+                  Interation with WhatsApp chatbot
+                </Text>
+              </BlockStack>
+            </Box>
+            <Card roundedAbove="sm">
+              <WhatsAppFormIntegration
+                status={platformsBySlug?.WhatsApp?.integrationStatus!}
+                primaryApiKey={platformsBySlug.WhatsApp?.primaryApiKey}
+              />
+            </Card>
+          </InlineGrid>
         </BlockStack>
       </Box>
     </Page>

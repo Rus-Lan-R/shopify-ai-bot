@@ -62,12 +62,28 @@ model Chat {
   platform       Platform @relation(fields: [platformId], references: [id])
 }
 
+enum IntegrationStatus {
+  NEW
+  ACTIVE
+  CONNECTION
+  CONNECTING
+  DISCONNECTED
+}
+
+enum PlatformName {
+  Telegram
+  Instagram
+  WhatsApp
+  Websiite
+}
+
 model Platform {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  isEnabled     Boolean @default(true)
-  primaryApiKey String?
-  sessionId     String  @db.ObjectId
-  session       Session @relation(fields: [sessionId], references: [session_id])
-  chats         Chat[]
+  id                String             @id @default(auto()) @map("_id") @db.ObjectId
+  isEnabled         Boolean            @default(true)
+  primaryApiKey     String?
+  sessionId         String             @db.ObjectId
+  session           Session            @relation(fields: [sessionId], references: [session_id])
+  chats             Chat[]
+  name              PlatformName
+  integrationStatus IntegrationStatus?
 }

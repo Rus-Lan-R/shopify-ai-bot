@@ -3,16 +3,17 @@ import { FormInput } from "../form/FormInput";
 import { BlockStack, Button, ButtonGroup, Form } from "@shopify/polaris";
 import { useSubmit } from "@remix-run/react";
 import { useLoading } from "app/helpers/useLoading";
+import { IntegrationStatus } from "@prisma/client";
 
 export const TelegramFormIntegrations = (props: {
   primaryApiKey?: string | null;
-  isEnabled?: boolean;
+  status?: IntegrationStatus;
 }) => {
   const { isLoading, checkIsLoading, setLoadingSlug } = useLoading<
     "telegram" | "telegram-connection"
   >();
   const submit = useSubmit();
-  const { primaryApiKey, isEnabled } = props;
+  const { primaryApiKey, status } = props;
 
   const form = useForm({
     defaultValues: {
@@ -23,7 +24,9 @@ export const TelegramFormIntegrations = (props: {
   const onSubmit = form.handleSubmit((data) => {
     setLoadingSlug("telegram");
     const fomrData = new FormData();
-    fomrData.append("action", "init-telegram");
+    fomrData.append("action", "init-platform");
+    fomrData.append("platform", "Telegram");
+    fomrData.append("status", "ACTIVE");
     Object.entries(data).forEach(([key, value]) => {
       fomrData.append(key, String(value));
     });
@@ -35,7 +38,7 @@ export const TelegramFormIntegrations = (props: {
     const fomrData = new FormData();
     fomrData.append("action", "toggle-connect");
     fomrData.append("platform", "Telegram");
-    fomrData.append("status", isEnabled ? "diconnect" : "connect");
+    fomrData.append("status", status === "ACTIVE" ? "DISCONNECTED" : "ACTIVE");
     submit(fomrData, { method: "POST" });
   };
   return (
@@ -56,7 +59,7 @@ export const TelegramFormIntegrations = (props: {
                 variant={"secondary"}
                 onClick={handleDisconnect}
               >
-                {isEnabled ? "Disconnect" : "Connect"}
+                {status === "ACTIVE" ? "Disconnect" : "Connect"}
               </Button>
             ) : (
               <></>
@@ -68,7 +71,7 @@ export const TelegramFormIntegrations = (props: {
               fullWidth={false}
               variant={"primary"}
             >
-              {primaryApiKey ? "Save" : "Connect"}
+              {primaryApiKey ? "Update" : "Connect"}
             </Button>
           </ButtonGroup>
         </BlockStack>

@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b78f49118baa15c77d8adf447c933901"
-application_url = "https://oz-disaster-first-francisco.trycloudflare.com"
+application_url = "https://elimination-contest-pursue-flat.trycloudflare.com"
 embedded = true
 name = "Dev ChatPilot"
 handle = "dev-chatpilot"
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://oz-disaster-first-francisco.trycloudflare.com/auth/callback",
-  "https://oz-disaster-first-francisco.trycloudflare.com/auth/shopify/callback",
-  "https://oz-disaster-first-francisco.trycloudflare.com/api/auth/callback"
+  "https://elimination-contest-pursue-flat.trycloudflare.com/auth/callback",
+  "https://elimination-contest-pursue-flat.trycloudflare.com/auth/shopify/callback",
+  "https://elimination-contest-pursue-flat.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]
