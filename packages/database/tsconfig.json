@@ -7,5 +7,5 @@
     "types": ["node"],
     "noEmit": false
   },
-  "include": ["src/**/*"]
+  "include": ["src"]
 }
