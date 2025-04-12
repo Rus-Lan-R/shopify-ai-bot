@@ -1,8 +1,8 @@
 {
   "name": "@internal/services",
   "version": "1.0.0",
-  "main": "index.ts",
-  "types": "index.ts",
+  "main": "dist/index.js",       
+  "types": "dist/index.d.ts",    
   "private": true,
   "dependencies": {
     "node-telegram-bot-api": "^0.66.0",
@@ -11,5 +11,8 @@
   },
   "devDependencies": {
     "@types/node-telegram-bot-api": "^0.64.8"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json"
   }
 }
