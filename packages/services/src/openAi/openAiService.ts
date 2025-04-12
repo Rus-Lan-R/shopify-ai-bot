@@ -37,17 +37,14 @@ export class AiClient {
     //   assistant_id: assistantId,
     // });
 
-    await aiClient.aiClient.beta.threads.messages.create(threadId, {
+    await this.aiClient.beta.threads.messages.create(threadId, {
       role: "user",
       content: userText,
     });
 
-    const run = await aiClient.aiClient.beta.threads.runs.createAndPoll(
-      threadId,
-      {
-        assistant_id: assistantId,
-      }
-    );
+    const run = await this.aiClient.beta.threads.runs.createAndPoll(threadId, {
+      assistant_id: assistantId,
+    });
 
     const message = await this.handleRunStatus(run, threadId);
     console.dir(message?.content, { depth: 5 });
@@ -68,12 +65,9 @@ export class AiClient {
   ): Promise<Message | undefined> {
     // Check if the run is completed
     if (run.status === "completed") {
-      let messages = await aiClient.aiClient.beta.threads.messages.list(
-        threadId,
-        {
-          limit: 1,
-        }
-      );
+      let messages = await this.aiClient.beta.threads.messages.list(threadId, {
+        limit: 1,
+      });
       return messages?.data?.[0];
     } else if (run.status === "requires_action") {
       console.log(run.status);
@@ -101,13 +95,12 @@ export class AiClient {
 
       // Submit all tool outputs at once after collecting them in a list
       if (toolOutputs?.length > 0 && toolOutputs) {
-        run =
-          await aiClient.aiClient.beta.threads.runs.submitToolOutputsAndPoll(
-            threadId,
-            run.id,
+        run = await this.aiClient.beta.threads.runs.submitToolOutputsAndPoll(
+          threadId,
+          run.id,
 
-            { tool_outputs: toolOutputs.filter((item) => !!item) }
-          );
+          { tool_outputs: toolOutputs.filter((item) => !!item) }
+        );
         console.log("Tool outputs submitted successfully.");
       } else {
         console.log("No tool outputs to submit.");
@@ -118,5 +111,3 @@ export class AiClient {
     }
   }
 }
-
-export const aiClient = new AiClient();

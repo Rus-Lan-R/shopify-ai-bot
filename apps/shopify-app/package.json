@@ -74,5 +74,9 @@
   "overrides": {
     "@graphql-tools/url-loader": "8.0.16"
   },
-  "author": "ruslan"
+  "author": "ruslan",
+  "_moduleAliases": {
+    "@internal/services": "packages/services/dist",
+    "@internal/database": "packages/database/dist"
+  }
 }

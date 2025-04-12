@@ -1,6 +1,6 @@
-import { AiClient } from "@internal/services";
 import { extractTextWithoutAnnotations } from "../openAi/ai.helpers";
 import { Chats, IPlatform, ISession } from "@internal/database";
+import { AiClient } from "../openAi/openAiService";
 
 export class ChatService extends AiClient {
   public platform: IPlatform;

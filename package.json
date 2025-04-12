@@ -8,7 +8,7 @@
   "scripts": {
     "dev:shopify": "shopify app dev --path=apps/shopify-app",
     "dev": "concurrently \"pnpm --filter shopify-app dev\" \"pnpm --filter bots dev:telegram\"  \"pnpm --filter bots dev:wa\"",
-    "build": "pnpm -r build",
+    "build": "pnpm --filter @internal/database build && pnpm --filter @internal/services build && pnpm -r build",
     "lint": "pnpm -r lint"
   },
   "dependencies": {

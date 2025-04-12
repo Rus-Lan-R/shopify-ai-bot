@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b78f49118baa15c77d8adf447c933901"
-application_url = "https://kevin-stockholm-james-isolation.trycloudflare.com"
+application_url = "https://shelf-canada-legislative-equation.trycloudflare.com"
 embedded = true
 name = "Dev ChatPilot"
 handle = "dev-chatpilot"
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://kevin-stockholm-james-isolation.trycloudflare.com/auth/callback",
-  "https://kevin-stockholm-james-isolation.trycloudflare.com/auth/shopify/callback",
-  "https://kevin-stockholm-james-isolation.trycloudflare.com/api/auth/callback"
+  "https://shelf-canada-legislative-equation.trycloudflare.com/auth/callback",
+  "https://shelf-canada-legislative-equation.trycloudflare.com/auth/shopify/callback",
+  "https://shelf-canada-legislative-equation.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]

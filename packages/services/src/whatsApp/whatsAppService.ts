@@ -4,9 +4,10 @@ import {
   IntegrationStatus,
   Platforms,
 } from "@internal/database";
-import { ChatService, logerFunction } from "@internal/services";
 
 import { Client, LocalAuth } from "whatsapp-web.js";
+import { logerFunction } from "../helpers";
+import { ChatService } from "../chat/chatService";
 
 export class WhatsAppBot extends ChatService {
   private bot: Client;

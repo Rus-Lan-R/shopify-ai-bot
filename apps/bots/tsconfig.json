@@ -3,12 +3,13 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "declaration": false,
+    "declaration": true,
     "types": ["node"],
     "noEmit": false,
     "moduleResolution": "Node",
     "target": "ES2021",
     "module": "CommonJS"
   },
-  "include": ["src"]
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

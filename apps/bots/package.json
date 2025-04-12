@@ -19,5 +19,9 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
+  },
+  "_moduleAliases": {
+    "@internal/services": "packages/services/dist",
+    "@internal/database": "packages/database/dist"
   }
 }
