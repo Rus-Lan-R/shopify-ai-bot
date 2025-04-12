@@ -1,21 +1,29 @@
-import { aiClient } from "app/services/openAi.server";
-import { createWebsiteChat } from "app/actions/createWebsiteChat";
+import { IPlatform, ISession, Platforms } from "@internal/database";
+import { AiClient, ChatService } from "@internal/services";
 
 const devPromopt = `vector storage files contain information about products`;
 export const assistantInit = async ({
-  shopId,
+  shopSession,
   assistantName,
   assistantPrompt,
 }: {
-  shopId: string;
+  shopSession: ISession;
   assistantName: string;
   assistantPrompt: string;
 }) => {
-  const vs = await aiClient.vectorStores.create({
-    name: shopId,
+  const openAi = new AiClient();
+  const platform = await Platforms.findOne<IPlatform>({
+    name: "Website",
+    sessionId: shopSession.id,
   });
 
-  const assistant = await aiClient.beta.assistants.create({
+  const chatService = new ChatService(platform!, shopSession);
+
+  const vs = await openAi.aiClient.vectorStores.create({
+    name: shopSession.id,
+  });
+
+  const assistant = await openAi.aiClient.beta.assistants.create({
     model: "gpt-4o",
     name: assistantName,
     instructions: assistantPrompt + " /n " + devPromopt,
@@ -46,9 +54,8 @@ export const assistantInit = async ({
     ],
   });
 
-  const thread = await aiClient.beta.threads.create();
-
-  await createWebsiteChat(shopId, thread.id);
+  const thread = await openAi.createThread();
+  await chatService.createChat();
 
   return {
     assistantId: assistant.id,
@@ -66,7 +73,8 @@ export const assistantUpdate = async ({
   assistantName: string;
   assistantPrompt: string;
 }) => {
-  await aiClient.beta.assistants.update(assistantId, {
+  const openAi = new AiClient();
+  await openAi.aiClient.beta.assistants.update(assistantId, {
     name: assistantName,
     instructions: assistantPrompt + " /n " + devPromopt,
   });

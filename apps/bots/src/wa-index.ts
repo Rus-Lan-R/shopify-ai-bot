@@ -1,12 +1,13 @@
-import { connectDb } from "@database/index";
 import {
-  IntegrationStatus,
-  IPlatform,
-  PlatformName,
   Platforms,
-} from "@database/platforms";
-import { ISession, Sessions } from "@database/sessions";
-import { WhatsAppBot } from "@services/whatsApp/whatsAppBot";
+  PlatformName,
+  IPlatform,
+  Sessions,
+  ISession,
+  IntegrationStatus,
+  connectDb,
+} from "@internal/database";
+import { WhatsAppBot } from "@internal/services";
 
 const botsList = async () => {
   const whatsAppPlatforms = await Platforms.find<IPlatform>({

@@ -9,20 +9,24 @@ import {
   Text,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
-import db from "../db.server";
-import { formDataToObject } from "app/helpers/utils";
+
 import { useLoaderData } from "@remix-run/react";
-import { TelegramFormIntegrations } from "app/components/integrations/TelegramFormIntegration";
-import { WhatsAppFormIntegration } from "app/components/integrations/WhatsAppFormIntegration";
+
 import { useMemo } from "react";
-import { Platform, PlatformName } from "@prisma/client";
+import {
+  IPlatform,
+  PlatformName,
+  Platforms,
+  Sessions,
+} from "@internal/database";
+import { formDataToObject } from "../helpers/utils";
+import { TelegramFormIntegrations } from "../components/integrations/TelegramFormIntegration";
+import { WhatsAppFormIntegration } from "../components/integrations/WhatsAppFormIntegration";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
 
-  const platforms = await db.platform.findMany({
-    where: { sessionId: session?.id },
-  });
+  const platforms = await Platforms.find({ sessionId: session?.id });
 
   return {
     platforms,
@@ -39,9 +43,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     status,
   } = formDataToObject(formData);
 
-  const shopSession = await db.session.findFirst({
-    where: { id: session.id },
-  });
+  const shopSession = await Sessions.findById(session.id);
 
   if (!shopSession) {
     throw { message: "Session not found" };
@@ -49,42 +51,41 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   switch (action) {
     case "init-platform":
-      const platformModule = await db.platform.findFirst({
-        where: { sessionId: shopSession?.id, name: platformName },
+      const platformModule = await Platforms.findOne({
+        sessionId: shopSession?.id,
+        name: platformName,
       });
 
       if (!platformModule) {
-        await db.platform.create({
-          data: {
-            name: platformName as PlatformName,
-            sessionId: shopSession?.id,
-            primaryApiKey: primaryApiKey,
-            integrationStatus: status,
-          },
+        await Platforms.create({
+          name: platformName,
+          sessionId: shopSession?.id,
+          primaryApiKey: primaryApiKey,
+          integrationStatus: status,
         });
       } else {
-        await db.platform.update({
-          where: {
+        await Platforms.updateOne(
+          {
             id: platformModule.id,
           },
-          data: {
+          {
             primaryApiKey: primaryApiKey,
             integrationStatus: status,
           },
-        });
+        );
       }
       break;
 
     case "toggle-connect":
-      await db.platform.updateMany({
-        where: {
+      await Platforms.updateOne(
+        {
           name: platformName,
           sessionId: shopSession.id,
         },
-        data: {
+        {
           integrationStatus: status,
         },
-      });
+      );
 
       break;
 
@@ -104,7 +105,7 @@ export default function Index() {
   const { platforms } = useLoaderData<typeof loader>();
 
   const platformsBySlug = useMemo(() => {
-    return platforms.reduce<Partial<{ [key in PlatformName]: Platform }>>(
+    return platforms.reduce<Partial<{ [key in PlatformName]: IPlatform }>>(
       (acc, item) => {
         return { ...acc, [item.name]: item };
       },

@@ -1,8 +1,7 @@
-import { IPlatform } from "@database/platforms";
-import { ISession } from "@database/sessions";
-import { ChatService } from "@services/chat";
-import { logerFunction } from "apps/bots/src/helpers/loger";
 import TgBot, { Message } from "node-telegram-bot-api";
+import { ChatService } from "@internal/services";
+import { IPlatform, ISession } from "@internal/database";
+import { logerFunction } from "../helpers";
 
 export class TelegramBot extends ChatService {
   private bot: TgBot;
@@ -24,7 +23,7 @@ export class TelegramBot extends ChatService {
         if (!existChat) {
           await this.createChat(chatId);
           const welcomeMessage = this.welcomeMessage;
-          await this.bot.sendMessage(chatId, welcomeMessage);
+          await this.bot.sendMessage(chatId, welcomeMessage || "");
         } else {
           await this.bot.sendMessage(chatId, "Chat already exist");
         }

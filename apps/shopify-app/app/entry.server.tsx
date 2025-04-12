@@ -7,11 +7,11 @@ import {
 } from "@remix-run/node";
 import { isbot } from "isbot";
 import { addDocumentResponseHeaders } from "./shopify.server";
-import { connect } from "./database";
+import { connectDb } from "@internal/database";
 
 export const streamTimeout = 5000;
 
-connect().then(() => {
+connectDb().then(() => {
   console.log("MongoDB Connected!");
 });
 

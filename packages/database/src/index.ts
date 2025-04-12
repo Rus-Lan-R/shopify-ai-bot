@@ -1,9 +1,22 @@
-import mongoose from "mongoose";
+import { connectDb } from "./connection";
+import { Chats } from "./chats";
+import { Messages } from "./messages";
+import {
+  Platforms,
+  type IPlatform,
+  PlatformName,
+  IntegrationStatus,
+} from "./platforms";
+import { Sessions, type ISession } from "./sessions";
 
-const dbConnectionURL = process.env.DATABASE_URL || "";
-
-export const connectDb = () => mongoose.connect(dbConnectionURL, {});
-
-export const disconnect = () => {
-  mongoose.disconnect();
+export {
+  connectDb,
+  Chats,
+  Messages,
+  Platforms,
+  Sessions,
+  IPlatform,
+  PlatformName,
+  IntegrationStatus,
+  ISession,
 };

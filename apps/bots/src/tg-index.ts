@@ -1,7 +1,12 @@
-import { connectDb } from "@database/index";
-import { IPlatform, PlatformName, Platforms } from "@database/platforms";
-import { ISession, Sessions } from "@database/sessions";
-import { TelegramBot } from "@services/telegram/tgBot";
+import {
+  connectDb,
+  ISession,
+  Sessions,
+  IPlatform,
+  PlatformName,
+  Platforms,
+} from "@internal/database";
+import { TelegramBot } from "@internal/services";
 
 const run = async () => {
   await connectDb();

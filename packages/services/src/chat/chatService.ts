@@ -1,7 +1,6 @@
-import { Chats } from "@database/chats";
-import { IPlatform } from "@database/platforms";
-import { ISession } from "@database/sessions";
-import { AiClient } from "@services/openAi/openAi";
+import { AiClient } from "@internal/services";
+import { extractTextWithoutAnnotations } from "../openAi/ai.helpers";
+import { Chats, IPlatform, ISession } from "@internal/database";
 
 export class ChatService extends AiClient {
   public platform: IPlatform;
@@ -21,7 +20,7 @@ export class ChatService extends AiClient {
     return chat;
   }
 
-  async createChat(externalChatId: string) {
+  async createChat(externalChatId?: string) {
     const thread = await this.createThread();
     const chat = await Chats.create({
       _id: thread.id,
@@ -57,5 +56,23 @@ export class ChatService extends AiClient {
     } else {
       return "Setup required";
     }
+  }
+
+  async getAllMessages(chatId: string) {
+    const messages = await this.aiClient.beta.threads.messages.list(chatId, {
+      limit: 100,
+    });
+
+    let preparedMessages = messages.data.map((item) => ({
+      role: item.role,
+      text: extractTextWithoutAnnotations(item.content),
+    }));
+
+    preparedMessages.push({
+      role: "assistant",
+      text: this.session.welcomeMessage || "Hi, how can I help you?",
+    });
+
+    return preparedMessages;
   }
 }

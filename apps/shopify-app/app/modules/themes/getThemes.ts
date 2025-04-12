@@ -4,7 +4,6 @@ import {
   GetThemesQuery,
   GetThemesQueryVariables,
 } from "app/types/admin.generated";
-import { ThemeRole } from "app/types/admin.types";
 
 export const getMainTheme = async ({
   graphqlRequest,

@@ -1,9 +1,13 @@
-import { IntegrationStatus, IPlatform, Platforms } from "@database/platforms";
+import {
+  type IPlatform,
+  type ISession,
+  IntegrationStatus,
+  Platforms,
+} from "@internal/database";
+import { ChatService } from "@internal/services";
 
-import { ChatService } from "../chat";
 import { Client, LocalAuth } from "whatsapp-web.js";
-import { logerFunction } from "apps/bots/src/helpers/loger";
-import { ISession } from "@database/sessions";
+import { logerFunction } from "../helpers";
 
 export class WhatsAppBot extends ChatService {
   private bot: Client;
@@ -49,7 +53,7 @@ export class WhatsAppBot extends ChatService {
       logerFunction(async (msg) => {
         if (!msg.fromMe) {
           const chat = await this.findOrCreateChat(msg.from);
-          if (!!chat) {
+          if (!!chat && !!chat.externalChatId) {
             const aiResponse = await this.getAiAnswer(
               msg.body,
               chat.externalChatId

@@ -26,9 +26,9 @@ var RemixEmbed = (() => {
     mod
   ));
 
-  // node_modules/react/cjs/react.development.js
+  // ../../node_modules/.pnpm/react@18.3.1/node_modules/react/cjs/react.development.js
   var require_react_development = __commonJS({
-    "node_modules/react/cjs/react.development.js"(exports, module) {
+    "../../node_modules/.pnpm/react@18.3.1/node_modules/react/cjs/react.development.js"(exports, module) {
       "use strict";
       if (true) {
         (function() {
@@ -1900,9 +1900,9 @@ var RemixEmbed = (() => {
     }
   });
 
-  // node_modules/react/index.js
+  // ../../node_modules/.pnpm/react@18.3.1/node_modules/react/index.js
   var require_react = __commonJS({
-    "node_modules/react/index.js"(exports, module) {
+    "../../node_modules/.pnpm/react@18.3.1/node_modules/react/index.js"(exports, module) {
       "use strict";
       if (false) {
         module.exports = null;
@@ -1912,9 +1912,9 @@ var RemixEmbed = (() => {
     }
   });
 
-  // node_modules/react/cjs/react-jsx-runtime.development.js
+  // ../../node_modules/.pnpm/react@18.3.1/node_modules/react/cjs/react-jsx-runtime.development.js
   var require_react_jsx_runtime_development = __commonJS({
-    "node_modules/react/cjs/react-jsx-runtime.development.js"(exports) {
+    "../../node_modules/.pnpm/react@18.3.1/node_modules/react/cjs/react-jsx-runtime.development.js"(exports) {
       "use strict";
       if (true) {
         (function() {
@@ -2805,9 +2805,9 @@ var RemixEmbed = (() => {
     }
   });
 
-  // node_modules/react/jsx-runtime.js
+  // ../../node_modules/.pnpm/react@18.3.1/node_modules/react/jsx-runtime.js
   var require_jsx_runtime = __commonJS({
-    "node_modules/react/jsx-runtime.js"(exports, module) {
+    "../../node_modules/.pnpm/react@18.3.1/node_modules/react/jsx-runtime.js"(exports, module) {
       "use strict";
       if (false) {
         module.exports = null;
@@ -2817,9 +2817,9 @@ var RemixEmbed = (() => {
     }
   });
 
-  // node_modules/scheduler/cjs/scheduler.development.js
+  // ../../node_modules/.pnpm/scheduler@0.23.2/node_modules/scheduler/cjs/scheduler.development.js
   var require_scheduler_development = __commonJS({
-    "node_modules/scheduler/cjs/scheduler.development.js"(exports) {
+    "../../node_modules/.pnpm/scheduler@0.23.2/node_modules/scheduler/cjs/scheduler.development.js"(exports) {
       "use strict";
       if (true) {
         (function() {
@@ -3267,9 +3267,9 @@ var RemixEmbed = (() => {
     }
   });
 
-  // node_modules/scheduler/index.js
+  // ../../node_modules/.pnpm/scheduler@0.23.2/node_modules/scheduler/index.js
   var require_scheduler = __commonJS({
-    "node_modules/scheduler/index.js"(exports, module) {
+    "../../node_modules/.pnpm/scheduler@0.23.2/node_modules/scheduler/index.js"(exports, module) {
       "use strict";
       if (false) {
         module.exports = null;
@@ -3279,9 +3279,9 @@ var RemixEmbed = (() => {
     }
   });
 
-  // node_modules/react-dom/cjs/react-dom.development.js
+  // ../../node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js
   var require_react_dom_development = __commonJS({
-    "node_modules/react-dom/cjs/react-dom.development.js"(exports) {
+    "../../node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/cjs/react-dom.development.js"(exports) {
       "use strict";
       if (true) {
         (function() {
@@ -24443,9 +24443,9 @@ var RemixEmbed = (() => {
     }
   });
 
-  // node_modules/react-dom/index.js
+  // ../../node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/index.js
   var require_react_dom = __commonJS({
-    "node_modules/react-dom/index.js"(exports, module) {
+    "../../node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/index.js"(exports, module) {
       "use strict";
       if (false) {
         checkDCE();
@@ -24493,7 +24493,7 @@ var RemixEmbed = (() => {
   ] });
 
   // app/components/publicChat/styles.module.css
-  var result = { "chatFrame": "hdde05858262e5c78bb1994606b1838a5", "chatBody": "hf163778e6e6cce786c84ded6b1d8dad0", "chatConversation": "h7247d51e19156787dd6b28594ba97ac8", "chatTitle": "h1994c55324e8a1df71e89c725209c10d", "chatHeader": "hb8254dd228291bf23f006762a02b16ca", "chatFooter": "h1dc107ee04e7f30f759b8e49b1d1c65c", "chatInput": "h5678e29c06937a2ae27ae29d1638aff1", "chatButtonFrame": "h41c5b395e27d5b11e6cdd6772e96f3fe", "chatSendButton": "hf43a58eb5338a6163f5483d3e78a948e", "chatMessage": "he29d5a3f5edada362cf9c76ae8ee74f4", "chatMessage_user": "h8476b1b5469e89b9df1fb13f67e04f87", "chatMessage_assistant": "h925c97b370796d7a9715591b89d860b2", "chatMessage_text": "h58db78869c4846ef8e747b69f48876d1", "widgetButtonFrame": "h4a253e8b80988cd9461cc95bad0c989f", "widgetButton": "h8a17a3d7ef7c5a2b60cbbeb9767a94c8", "widget": "h09d57c3afe2435fbe8d277abc7e3c9c7", "loading": "h598bc54c6da0ebd4a3c95a370ae1c4af", "typing": "hf00afea26de915219b423fc19abf17ae", "typingDot": "ha548977bd48cd7237aa74345176dd2ae" };
+  var result = { "chatFrame": "h0fc93b4ee9264f1642003e7c44a51b91", "chatBody": "h9b46deb2b8bf38be0cbcaf76ee696ddc", "chatConversation": "h00a3fc58acf17b2976aa046afe78debf", "chatTitle": "h5b6f597c9d90f588ad9b567baf64a6b7", "chatHeader": "hf080b3d143755990f027758abe9a4266", "chatFooter": "h4ceabac5bceea131688dab1117fb5019", "chatInput": "hef75644761b5430b68cc29865c530529", "chatButtonFrame": "hcb50499c85a4442cb7b27fa1684527e3", "chatSendButton": "h70c62086bbc437fdda3fcae7681c6891", "chatMessage": "h41662b2cded8da2e914640335b7fdd75", "chatMessage_user": "he55f5fed8e058b681c2a94462a021008", "chatMessage_assistant": "h6e606d6d3926a2f4c5b511529d997359", "chatMessage_text": "h0875056dfa38f290f224740fe3fc6021", "widgetButtonFrame": "h0ee59a59e8f24b86ea01df4f6cd92c4a", "widgetButton": "hb50ce5c4efffb5b6cda5bf1c8d7b59d5", "widget": "hbe2b0cbe00f79547016c8887e39944ac", "loading": "hfa82c56bf6a5162d3eba8c1c19d46adb", "typing": "h452cf0a5f76c208553a277ee49b22956", "typingDot": "ha5c0c3aaaf86f96a4f77d179ef8390f2" };
   var styles_default = result;
 
   // app/components/publicChat/PublicChat.tsx

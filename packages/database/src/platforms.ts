@@ -22,7 +22,7 @@ export interface IPlatform extends Document {
 }
 
 // 🔌 Platforms
-const PlatformSchema = new Schema(
+const PlatformSchema = new Schema<IPlatform>(
   {
     primaryApiKey: { type: String },
     sessionId: { type: String, required: true, ref: "Sessions" },

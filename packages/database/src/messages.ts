@@ -12,7 +12,7 @@ const MessageSchema = new Schema(
     direction: { type: String, enum: MessageRole, required: true },
     text: { type: String, required: true },
   },
-  { timestamps: true, collection: "Messages" },
+  { timestamps: true, collection: "Messages" }
 );
 
 export const Messages = model("Messages", MessageSchema);

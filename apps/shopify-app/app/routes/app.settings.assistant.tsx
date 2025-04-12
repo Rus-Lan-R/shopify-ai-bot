@@ -16,24 +16,22 @@ import {
 import { authenticate } from "../shopify.server";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormInput } from "../components/form/FormInput";
-import db from "../db.server";
-import { firstLetterUpperCase, formDataToObject } from "app/helpers/utils";
 import { useLoaderData, useSubmit } from "@remix-run/react";
-import { createGraphqlRequest } from "app/api/graphql";
-import { dataSync } from "app/modules/vectoreStoreSync";
-import { FileTypes, VsFile } from "app/modules/openAi/openAi.interfaces";
-import { assistantInit, assistantUpdate } from "app/modules/openAi/assistant";
-import { CREATE_SCRIPT, DELETE_SCRIPT } from "app/api/scripts/scripts.gql";
-import { useLoading } from "app/helpers/useLoading";
-import { getMainTheme } from "app/modules/themes/getThemes";
+import { ISession, Sessions } from "@internal/database";
+import { createGraphqlRequest } from "../api/graphql";
+import { getMainTheme } from "../modules/themes/getThemes";
+import { FileTypes, VsFile } from "../modules/openAi/openAi.interfaces";
+import { assistantInit, assistantUpdate } from "../modules/openAi/assistant";
+import { dataSync } from "../modules/vectoreStoreSync";
+import { CREATE_SCRIPT, DELETE_SCRIPT } from "../api/scripts/scripts.gql";
+import { useLoading } from "../helpers/useLoading";
+import { firstLetterUpperCase, formDataToObject } from "../helpers/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
   const graphqlRequest = await createGraphqlRequest(request);
 
-  const shopSession = await db.session.findFirst({
-    where: { id: session.id },
-  });
+  const shopSession = await Sessions.findById(session.id);
 
   const { mainTheme } = await getMainTheme({ graphqlRequest });
   return {
@@ -54,14 +52,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { action, assistantPrompt, assistantName, welcomeMessage, fileType } =
     formDataToObject(formData);
   const graphqlRequest = await createGraphqlRequest(request);
+  const shopSession = await Sessions.findById<ISession>(session.id);
 
-  if (admin && session.id) {
+  if (!shopSession) {
+    return new Response(JSON.stringify({ error: "Session not found" }), {
+      status: 404,
+      headers: {},
+    });
+  }
+  if (admin && session.id && shopSession) {
     switch (action) {
       case "init":
         try {
           const { assistantId, vectorStoreId, mainChatId } =
             await assistantInit({
-              shopId: session.id,
+              shopSession,
               assistantName,
               assistantPrompt,
             });
@@ -83,9 +88,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             }),
           );
 
-          await db.session.update({
-            where: { id: session.id },
-            data: {
+          await Sessions.updateOne(
+            { _id: session.id },
+            {
               assistantName: assistantName || "",
               assistantPrompt: assistantPrompt || "",
               assistantVectorStoreId: vectorStoreId,
@@ -99,15 +104,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 return { ...item, fileId: uploadedFileId?.newFile?.fileId };
               }),
             },
-          });
+          );
         } catch (error) {
           console.log(error);
         }
         break;
       case "update":
-        const shopSession = await db.session.findUnique({
-          where: { id: session.id },
-        });
         try {
           if (session.id && !!shopSession?.assistantId) {
             await assistantUpdate({
@@ -115,14 +117,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               assistantName,
               assistantPrompt,
             });
-            await db.session.update({
-              where: { id: shopSession.id },
-              data: {
+            await Sessions.updateOne(
+              { id: shopSession.id },
+              {
                 assistantName: assistantName || "",
                 assistantPrompt: assistantPrompt || "",
                 welcomeMessage: welcomeMessage || "",
               },
-            });
+            );
           }
         } catch (error) {
           console.log(error);
@@ -130,9 +132,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         break;
 
       case "sync": {
-        const shopSession = await db.session.findUnique({
-          where: { id: session.id },
-        });
         if (fileType && shopSession?.assistantVectorStoreId) {
           const { updatedVsFiles } = await dataSync({
             vsId: shopSession?.assistantVectorStoreId,
@@ -142,12 +141,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             graphqlRequest,
           });
           if (!!updatedVsFiles?.length) {
-            await db.session.update({
-              where: { id: shopSession.id },
-              data: {
+            await Sessions.updateOne(
+              { id: shopSession.id },
+              {
                 assistantFiles: JSON.parse(JSON.stringify(updatedVsFiles)),
               },
-            });
+            );
           }
         }
 

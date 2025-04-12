@@ -6,15 +6,19 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"pnpm --filter remix-app dev\" \"pnpm --filter chat-worker dev\"",
+    "dev:shopify": "shopify app dev --path=apps/shopify-app",
+    "dev": "concurrently \"pnpm --filter shopify-app dev\" \"pnpm --filter bots dev:telegram\"  \"pnpm --filter bots dev:wa\"",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "module-alias": "^2.2.3"
   },
   "devDependencies": {
+    "@types/node": "^22.2.0",
     "concurrently": "^8.0.0",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.0"
   }
 }

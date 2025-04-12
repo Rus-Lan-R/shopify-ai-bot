@@ -1,6 +1,7 @@
 {
-  "name": "support-ai",
+  "name": "shopify-app",
   "private": true,
+  "main": "index.js",
   "scripts": {
     "build": "npm run build:chat && remix vite:build",
     "dev": "shopify app dev",
@@ -14,7 +15,9 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "shopify": "shopify",
     "codegen": "graphql-codegen",
+    "dev:remix": "remix dev",
     "vite": "vite",
+    "vite:dev": "vite",
     "sprite": "ts-node --require tsconfig-paths/register ./scripts/sprite.ts",
     "build:chat": "node esbuild.config.js",
     "heroku": "heroku container:login && heroku container:push web --app chat-assistant-app && heroku container:release web --app chat-assistant-app"
@@ -24,6 +27,8 @@
     "node": "^18.20 || ^20.10 || >=21.0.0"
   },
   "dependencies": {
+    "@internal/database": "workspace:*",
+    "@internal/services": "workspace:*",
     "@remix-run/dev": "^2.15.0",
     "@remix-run/fs-routes": "^2.15.0",
     "@remix-run/node": "^2.15.0",

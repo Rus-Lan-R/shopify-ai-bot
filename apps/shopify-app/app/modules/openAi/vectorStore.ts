@@ -1,7 +1,7 @@
-import { createFileFromObject } from "app/helpers/createFileFromObject";
+import { createFileFromObject } from "../../helpers/createFileFromObject";
 import { FileTypes, VsFile } from "./openAi.interfaces";
-import { aiClient } from "app/services/openAi.server";
-
+import { AiClient } from "@internal/services";
+const openAi = new AiClient();
 export const populateVectorStoreInfo = async ({
   shopId,
   vsId,
@@ -24,14 +24,14 @@ export const populateVectorStoreInfo = async ({
   if (storedFile?.fileId) {
     console.log(storedFile.fileId);
     try {
-      await aiClient.vectorStores.files.del(vsId, storedFile?.fileId);
+      await openAi.aiClient.vectorStores.files.del(vsId, storedFile?.fileId);
     } catch (error) {}
     try {
-      await aiClient.files.del(storedFile?.fileId);
+      await openAi.aiClient.files.del(storedFile?.fileId);
     } catch (error) {}
   }
 
-  const uploadedFile = await aiClient.vectorStores.files.uploadAndPoll(
+  const uploadedFile = await openAi.aiClient.vectorStores.files.uploadAndPoll(
     vsId,
     ordersFile,
   );

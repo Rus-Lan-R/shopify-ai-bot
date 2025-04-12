@@ -4,14 +4,9 @@ import {
   json,
   LoaderFunctionArgs,
 } from "@remix-run/node";
-import db from "../db.server";
-import { formDataToObject } from "app/helpers/utils";
-import { aiClient } from "app/services/openAi.server";
-import {
-  extractTextWithoutAnnotations,
-  getOpenAIResponse,
-} from "app/modules/openAi/request";
-import { createWebsiteChat } from "app/actions/createWebsiteChat";
+import { IPlatform, ISession, Platforms, Sessions } from "@internal/database";
+import { ChatService, AiClient } from "@internal/services";
+import { formDataToObject } from "../helpers/utils";
 
 export type MainChatLoader = typeof loader;
 
@@ -36,31 +31,24 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
   }
 
-  const shopSession = await db.session.findFirst({
-    where: shopName ? { shop: shopName } : { id: shop! },
-  });
+  const shopSession = await Sessions.findOne<ISession>(
+    shopName ? { shop: shopName } : { id: shop! },
+  );
 
   if (!shopSession) {
     throw new Response("Shop not found", {
       status: 404,
     });
   }
+  const platform = await Platforms.findOne<IPlatform>({
+    name: "Website",
+    sessionId: shopSession.id,
+  });
+  const chatService = new ChatService(platform!, shopSession);
 
   let preparedMessages;
   if (chatId) {
-    const messages = await aiClient.beta.threads.messages.list(chatId, {
-      limit: 100,
-    });
-
-    preparedMessages = messages.data.map((item) => ({
-      role: item.role,
-      text: extractTextWithoutAnnotations(item.content),
-    }));
-
-    preparedMessages.push({
-      role: "assistant",
-      text: shopSession.welcomeMessage || "Hi, how can I help you?",
-    });
+    preparedMessages = await chatService.getAllMessages(chatId);
   }
 
   return json(
@@ -112,9 +100,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   }
 
-  const shopSession = await db.session.findFirst({
-    where: shopName ? { shop: shopName } : { id: shop! },
-  });
+  const shopSession = await Sessions.findOne<ISession>(
+    shopName ? { shop: shopName } : { id: shop! },
+  );
 
   if (!shopSession) {
     return new Response(JSON.stringify({ error: "Shop Not Found" }), {
@@ -127,12 +115,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   }
 
+  const platform = await Platforms.findOne<IPlatform>({
+    name: "Website",
+    sessionId: shopSession.id,
+  });
+
+  const chatService = new ChatService(platform!, shopSession);
+
   switch (action) {
     case "init": {
       if (shopSession?.assistantId) {
-        const thread = await aiClient.beta.threads.create();
+        const aiClient = new AiClient();
 
-        await createWebsiteChat(shopSession.id, thread.id);
+        const thread = await aiClient.createThread();
+        await chatService.createChat();
 
         return new Response(JSON.stringify({ chatId: thread.id }), {
           headers: {
@@ -167,29 +163,25 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
 
       if (shopSession?.assistantId) {
-        await db.message.create({
-          data: {
-            chatId: chatId,
-            text: message,
-            direction: "user",
-          },
-        });
+        // TODO replace on service
+        // await Messages.create({
+        //   chatId: chatId,
+        //   text: message,
+        //   direction: "user",
+        // });
 
-        const answer = await getOpenAIResponse({
-          userText: message,
-          threadId: chatId,
-          assistantId: shopSession?.assistantId,
-        });
+        // const answer = await getOpenAIResponse({
+        //   userText: message,
+        //   threadId: chatId,
+        //   assistantId: shopSession?.assistantId,
+        // });
+        // await Messages.create({
+        //   chatId: chatId,
+        //   text: answer,
+        //   direction: "assistant",
+        // });
 
-        await db.message.create({
-          data: {
-            chatId: chatId,
-            text: answer,
-            direction: "assistant",
-          },
-        });
-
-        return new Response(JSON.stringify({ answer }), {
+        return new Response(JSON.stringify({ answer: "" }), {
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",

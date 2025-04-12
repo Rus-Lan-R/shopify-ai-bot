@@ -1,21 +1,18 @@
-import { Session } from "@shopify/shopify-app-remix/server";
-import { Sessions } from "./sessions";
+import { Sessions } from "@internal/database";
+import { Session } from "@shopify/shopify-app-remix";
 
 export class SessionStorage {
   async storeSession(session: Session): Promise<boolean> {
     const findById = await Sessions.findById(session.id);
     if (findById) {
-      await Sessions.findByIdAndUpdate(
-        { _id: session.id },
-        {
-          shop: session.shop,
-          state: session.state,
-          isOnline: session.isOnline,
-          scope: session.scope,
-          expires: session.expires,
-          accessToken: session.accessToken,
-        },
-      );
+      await Sessions.findByIdAndUpdate(session.id, {
+        shop: session.shop,
+        state: session.state,
+        isOnline: session.isOnline,
+        scope: session.scope,
+        expires: session.expires,
+        accessToken: session.accessToken,
+      });
     } else {
       await Sessions.create({
         _id: session.id,
@@ -35,6 +32,7 @@ export class SessionStorage {
    * @param id Id of the session to load
    */
   async loadSession(id: string): Promise<Session | undefined> {
+    console.log("LOAD");
     const session = await Sessions.findById<Session>(id);
     return !session ? undefined : session;
   }
