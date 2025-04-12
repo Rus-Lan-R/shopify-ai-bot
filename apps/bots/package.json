@@ -1,0 +1,16 @@
+{
+  "name": "ai-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "dev:telegram": "nodemon src/tg-index.ts",
+    "dev:wa": "nodemon src/wa-index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

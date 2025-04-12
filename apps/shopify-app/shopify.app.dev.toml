@@ -1,0 +1,37 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "b78f49118baa15c77d8adf447c933901"
+application_url = "https://brisbane-grey-namibia-parallel.trycloudflare.com"
+embedded = true
+name = "Dev ChatPilot"
+handle = "dev-chatpilot"
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
+dev_store_url = "nikasoul-store.myshopify.com"
+
+[webhooks]
+api_version = "2025-01"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled", "app/scopes_update" ]
+  uri = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/webhooks"
+
+  [[webhooks.subscriptions]]
+  compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
+  uri = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/webhooks"
+
+[auth]
+redirect_urls = [
+  "https://brisbane-grey-namibia-parallel.trycloudflare.com/auth/callback",
+  "https://brisbane-grey-namibia-parallel.trycloudflare.com/auth/shopify/callback",
+  "https://brisbane-grey-namibia-parallel.trycloudflare.com/api/auth/callback"
+]
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_orders,read_products,read_locations,read_themes"
+
+[pos]
+embedded = false
