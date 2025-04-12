@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 export enum MessageRole {
   ASSISTANT = "assistant",
@@ -15,4 +15,5 @@ const MessageSchema = new Schema(
   { timestamps: true, collection: "Messages" }
 );
 
-export const Messages = model("Messages", MessageSchema);
+export const Messages =
+  mongoose.models.Messages || model("Messages", MessageSchema);

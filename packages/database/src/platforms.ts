@@ -1,4 +1,4 @@
-import { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, model, Document } from "mongoose";
 
 export enum IntegrationStatus {
   NEW = "NEW",
@@ -35,4 +35,5 @@ const PlatformSchema = new Schema<IPlatform>(
   }
 );
 
-export const Platforms = model("Platforms", PlatformSchema);
+export const Platforms =
+  mongoose.models.Platforms || model("Platforms", PlatformSchema);

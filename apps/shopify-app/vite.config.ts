@@ -1,5 +1,6 @@
 import { vitePlugin as remix } from "@remix-run/dev";
 import { installGlobals } from "@remix-run/node";
+import path from "path";
 import { defineConfig, type UserConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -41,6 +42,18 @@ export default defineConfig({
   // define: {
   //   "import.meta.env.SSR": "false",
   // },
+  resolve: {
+    alias: {
+      "@internal/database": path.resolve(
+        __dirname,
+        "../../packages/database/dist",
+      ),
+      "@internal/services": path.resolve(
+        __dirname,
+        "../../packages/services/dist",
+      ),
+    },
+  },
   server: {
     allowedHosts: [host],
     cors: {

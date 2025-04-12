@@ -11,7 +11,7 @@ import {
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import { useLoaderData } from "@remix-run/react";
-import { Chats, Sessions } from "@internal/database";
+import { Sessions } from "@internal/database";
 import { ChatBot } from "../packages/ChatBot";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

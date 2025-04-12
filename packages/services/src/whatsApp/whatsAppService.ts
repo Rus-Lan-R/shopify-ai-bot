@@ -4,18 +4,17 @@ import {
   IntegrationStatus,
   Platforms,
 } from "@internal/database";
-
-import { Client, LocalAuth } from "whatsapp-web.js";
-import { logerFunction } from "../helpers";
 import { ChatService } from "../chat/chatService";
+import { logerFunction } from "../helpers";
+import whatsapp from "whatsapp-web.js";
 
 export class WhatsAppBot extends ChatService {
-  private bot: Client;
+  private bot: whatsapp.Client;
 
   constructor(platform: IPlatform, session: ISession) {
     super(platform, session);
-    this.bot = new Client({
-      authStrategy: new LocalAuth({ clientId: session._id }),
+    this.bot = new whatsapp.Client({
+      authStrategy: new whatsapp.LocalAuth({ clientId: session._id }),
     });
   }
 
