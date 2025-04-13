@@ -21,27 +21,35 @@ const SessionSchema = new Schema(
   {
     _id: { type: String, required: true },
     shop: { type: String, required: true },
-    accessToken: { type: String, required: true },
-    scope: { type: String },
+    state: { type: String, required: true, default: "active" },
     isOnline: { type: Boolean, default: false },
-    state: { type: String },
-    expires: { type: Date },
+    scope: { type: String },
+    accessToken: { type: String, required: true },
+    expires: { type: Date, default: null },
+
+    // Shopify Admin user fields (optional)
     userId: { type: String },
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String },
     accountOwner: { type: Boolean, default: false },
     locale: { type: String },
-    collaborator: { type: Boolean, default: false },
-    emailVerified: { type: Boolean, default: false },
+    collaborator: { type: Boolean },
+    emailVerified: { type: Boolean },
+
+    isDeleted: { type: Boolean, default: false },
+
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+
+    // Assistant-related (опционально)
     assistantId: { type: String },
     assistantName: { type: String },
     welcomeMessage: { type: String },
     assistantPrompt: { type: String },
     assistantVectorStoreId: { type: String },
     mainChatId: { type: String },
-    assistantFiles: { type: Schema.Types.Mixed },
-    isDeleted: { type: Boolean, default: false },
+    assistantFiles: { type: mongoose.Schema.Types.Mixed },
   },
   { timestamps: true, collection: "Sessions" }
 );

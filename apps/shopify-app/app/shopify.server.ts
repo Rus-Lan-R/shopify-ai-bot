@@ -1,10 +1,11 @@
 import "@shopify/shopify-app-remix/adapters/node";
+
+import { SessionStorage } from "./modules/sessionStorage";
 import {
   ApiVersion,
   AppDistribution,
   shopifyApp,
 } from "@shopify/shopify-app-remix/server";
-import { SessionStorage } from "./modules/sessionStorage";
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,

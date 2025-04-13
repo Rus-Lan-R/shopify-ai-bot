@@ -32,7 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   const shopSession = await Sessions.findOne<ISession>(
-    shopName ? { shop: shopName } : { id: shop! },
+    shopName ? { shop: shopName } : { _id: shop! },
   );
 
   if (!shopSession) {
@@ -101,7 +101,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const shopSession = await Sessions.findOne<ISession>(
-    shopName ? { shop: shopName } : { id: shop! },
+    shopName ? { shop: shopName } : { _id: shop! },
   );
 
   if (!shopSession) {

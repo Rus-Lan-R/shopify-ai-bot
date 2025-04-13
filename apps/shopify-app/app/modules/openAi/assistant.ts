@@ -1,4 +1,9 @@
-import { IPlatform, ISession, Platforms } from "@internal/database";
+import {
+  IntegrationStatus,
+  IPlatform,
+  ISession,
+  Platforms,
+} from "@internal/database";
 import { AiClient, ChatService } from "@internal/services";
 
 const devPromopt = `vector storage files contain information about products`;
@@ -12,11 +17,19 @@ export const assistantInit = async ({
   assistantPrompt: string;
 }) => {
   const openAi = new AiClient();
-  const platform = await Platforms.findOne<IPlatform>({
+  let platform = await Platforms.findOne<IPlatform>({
     name: "Website",
     sessionId: shopSession.id,
+    integrationStatus: IntegrationStatus.ACTIVE,
   });
 
+  if (!platform) {
+    platform = await Platforms.create<IPlatform>({
+      name: "Website",
+      sessionId: shopSession.id,
+      integrationStatus: IntegrationStatus.ACTIVE,
+    });
+  }
   const chatService = new ChatService(platform!, shopSession);
 
   const vs = await openAi.aiClient.vectorStores.create({
