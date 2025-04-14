@@ -11,36 +11,35 @@ import {
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import { useLoaderData } from "@remix-run/react";
-import { Sessions } from "@internal/database";
 import { ChatBot } from "../packages/ChatBot";
+import { ExtendedSession } from "app/modules/sessionStorage";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const authData = await authenticate.admin(request);
+  const session = authData.session as ExtendedSession;
 
   try {
-    const shopSession = await Sessions.findById(session.id);
-
     // const totalChats = await Chats.count({
     //   where: { _id: session?.id },
     // });
 
     return {
-      assistantId: shopSession?.assistantId,
-      chatId: shopSession?.mainChatId,
-      shop: session.id,
+      assistantId: session?.assistantId,
+      chatId: session?.mainChatId,
+      shop: session._id,
       data: {
         totalRequests: 0,
         totalChats: 0,
       },
       assistant: {
-        assistantName: shopSession?.assistantName,
-        assistantPrompt: shopSession?.assistantPrompt,
+        assistantName: session?.assistantName,
+        assistantPrompt: session?.assistantPrompt,
       },
     };
   } catch (error) {
     return {
       data: {},
-      shop: session.id,
+      shop: session._id,
       chatId: "",
       assistantId: null,
       assistant: {},

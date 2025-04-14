@@ -42,7 +42,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
   const platform = await Platforms.findOne<IPlatform>({
     name: "Website",
-    sessionId: shopSession.id,
+    sessionId: shopSession._id,
   });
   const chatService = new ChatService(platform!, shopSession);
 
@@ -53,7 +53,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return json(
     {
-      shopId: shopSession.id,
+      shopId: shopSession._id,
       chatId: chatId,
       shop: shop,
       messages: preparedMessages,
@@ -117,7 +117,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const platform = await Platforms.findOne<IPlatform>({
     name: "Website",
-    sessionId: shopSession.id,
+    sessionId: shopSession._id,
   });
 
   const chatService = new ChatService(platform!, shopSession);

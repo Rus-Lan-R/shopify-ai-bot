@@ -7,13 +7,8 @@ import {
 } from "@remix-run/node";
 import { isbot } from "isbot";
 import { addDocumentResponseHeaders } from "./shopify.server";
-import { connectDb } from "@internal/database";
 
 export const streamTimeout = 5000;
-
-connectDb().then(() => {
-  console.log("MongoDB Connected!");
-});
 
 export default async function handleRequest(
   request: Request,

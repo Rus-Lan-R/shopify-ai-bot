@@ -6,6 +6,16 @@ export interface ISession extends Document {
   accessToken: string;
   scope: string;
   isOnline: boolean;
+  state: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  accountOwner: boolean;
+  locale: string;
+  collaborator: boolean;
+  emailVerified: boolean;
+
   // ---------------------
   assistantId?: string;
   assistantName?: string;

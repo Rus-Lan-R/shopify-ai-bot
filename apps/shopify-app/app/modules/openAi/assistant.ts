@@ -19,21 +19,21 @@ export const assistantInit = async ({
   const openAi = new AiClient();
   let platform = await Platforms.findOne<IPlatform>({
     name: "Website",
-    sessionId: shopSession.id,
+    sessionId: shopSession._id,
     integrationStatus: IntegrationStatus.ACTIVE,
   });
 
   if (!platform) {
     platform = await Platforms.create<IPlatform>({
       name: "Website",
-      sessionId: shopSession.id,
+      sessionId: shopSession._id,
       integrationStatus: IntegrationStatus.ACTIVE,
     });
   }
   const chatService = new ChatService(platform!, shopSession);
 
   const vs = await openAi.aiClient.vectorStores.create({
-    name: shopSession.id,
+    name: shopSession._id,
   });
 
   const assistant = await openAi.aiClient.beta.assistants.create({

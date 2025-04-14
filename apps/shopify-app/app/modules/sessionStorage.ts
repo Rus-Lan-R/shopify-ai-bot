@@ -1,88 +1,60 @@
-import { Sessions } from "@internal/database";
+import { SessionStorage } from "@shopify/shopify-app-session-storage";
 import { Session } from "@shopify/shopify-app-remix/server";
+import { connectDb, ISession, Sessions } from "@internal/database";
 
-export class SessionStorage {
-  async storeSession(session: Session): Promise<boolean> {
-    try {
-      const findById = await Sessions.findById(session.id);
+export type ExtendedSession = Session & ISession;
+export interface MongoDBSessionStorageOptions {
+  sessionCollectionName: string;
+}
 
-      if (findById) {
-        console.log("Update");
+export class MongoDBSessionStorage implements SessionStorage {
+  public ready: Promise<void>;
 
-        await Sessions.findByIdAndUpdate(session.id, {
-          ...session,
-          state: "active",
-        });
-      } else {
-        await Sessions.create({
-          _id: session.id,
-          ...session,
-          state: "active",
-        });
-      }
-      return true;
-    } catch (error) {
-      return false;
-    }
+  constructor() {
+    this.ready = this.init();
   }
-  /**
-   * Loads a session from storage.
-   *
-   * @param id Id of the session to load
-   */
-  async loadSession(id: string): Promise<Session | undefined> {
-    console.log("LoadSession", id);
-    try {
-      const session = await Sessions.findById<Session>(id);
-      const sessionInstance = !session
-        ? undefined
-        : new Session({ ...session });
-      console.log(
-        "isActive",
-        sessionInstance,
-        sessionInstance?.isActive(sessionInstance.scope),
-      );
-      return sessionInstance;
-    } catch (error) {}
+
+  private async init() {
+    await connectDb();
+    console.log("MongoDB connected!");
   }
-  /**
-   * Deletes a session from storage.
-   *
-   * @param id Id of the session to delete
-   */
-  async deleteSession(id: string): Promise<boolean> {
-    try {
-      await Sessions.findByIdAndDelete(id);
-      return true;
-    } catch (error) {
-      return false;
-    }
+
+  public async storeSession(session: ExtendedSession): Promise<boolean> {
+    await this.ready;
+    await Sessions.findOneAndUpdate(
+      { _id: session.id },
+      { $set: session.toObject() },
+      { upsert: true, new: true },
+    );
+
+    return true;
   }
-  /**
-   * Deletes an array of sessions from storage.
-   *
-   * @param ids Array of session id's to delete
-   */
-  async deleteSessions(ids: string[]): Promise<boolean> {
-    try {
-      await Sessions.deleteMany({ $in: ids });
-      return true;
-    } catch (error) {
-      return false;
-    }
+
+  public async loadSession(id: string): Promise<ExtendedSession | undefined> {
+    await this.ready;
+
+    const result = await Sessions.findOne({ _id: id }).lean();
+    return result ? new Session(result) : undefined;
   }
-  /**
-   * Return an array of sessions for a given shop (or [] if none found).
-   *
-   * @param shop shop of the session(s) to return
-   */
-  async findSessionsByShop(shop: string): Promise<Session[]> {
-    console.log("LoadSessionsByShop", shop);
-    try {
-      const sessionsByShop = await Sessions.find<Session>({ shop });
-      return sessionsByShop.map((item) => new Session({ ...item }));
-    } catch (error) {
-      return [];
-    }
+
+  public async deleteSession(id: string): Promise<boolean> {
+    await this.ready;
+
+    await Sessions.deleteOne({ _id: id });
+    return true;
+  }
+
+  public async deleteSessions(ids: string[]): Promise<boolean> {
+    await this.ready;
+
+    await Sessions.deleteMany({ _id: { $in: ids } });
+    return true;
+  }
+
+  public async findSessionsByShop(shop: string): Promise<ExtendedSession[]> {
+    await this.ready;
+
+    const results = await Sessions.find({ shop }).lean();
+    return results.map((doc: any) => new Session(doc));
   }
 }

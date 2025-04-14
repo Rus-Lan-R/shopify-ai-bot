@@ -13,20 +13,17 @@ import { authenticate } from "../shopify.server";
 import { useLoaderData } from "@remix-run/react";
 
 import { useMemo } from "react";
-import {
-  IPlatform,
-  PlatformName,
-  Platforms,
-  Sessions,
-} from "@internal/database";
+import { IPlatform, PlatformName, Platforms } from "@internal/database";
 import { formDataToObject } from "../helpers/utils";
 import { TelegramFormIntegrations } from "../components/integrations/TelegramFormIntegration";
 import { WhatsAppFormIntegration } from "../components/integrations/WhatsAppFormIntegration";
+import { ExtendedSession } from "app/modules/sessionStorage";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const authData = await authenticate.admin(request);
+  const session = authData.session as ExtendedSession;
 
-  const platforms = await Platforms.find({ sessionId: session?.id });
+  const platforms = await Platforms.find({ sessionId: session?._id });
 
   return {
     platforms,
@@ -34,7 +31,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const authData = await authenticate.admin(request);
+  const session = authData.session as ExtendedSession;
+
   const formData = await request.formData();
   const {
     action,
@@ -43,30 +42,24 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     status,
   } = formDataToObject(formData);
 
-  const shopSession = await Sessions.findById(session.id);
-
-  if (!shopSession) {
-    throw { message: "Session not found" };
-  }
-
   switch (action) {
     case "init-platform":
       const platformModule = await Platforms.findOne({
-        sessionId: shopSession?.id,
+        sessionId: session?._id,
         name: platformName,
       });
 
       if (!platformModule) {
         await Platforms.create({
           name: platformName,
-          sessionId: shopSession?.id,
+          sessionId: session?._id,
           primaryApiKey: primaryApiKey,
           integrationStatus: status,
         });
       } else {
         await Platforms.updateOne(
           {
-            id: platformModule.id,
+            id: platformModule._id,
           },
           {
             primaryApiKey: primaryApiKey,
@@ -80,7 +73,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       await Platforms.updateOne(
         {
           name: platformName,
-          sessionId: shopSession.id,
+          sessionId: session._id,
         },
         {
           integrationStatus: status,

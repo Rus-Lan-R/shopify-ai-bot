@@ -3,6 +3,7 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { Sessions } from "@internal/database";
 import { AiClient } from "@internal/services";
 import { authenticate } from "../shopify.server";
+import { ExtendedSession } from "app/modules/sessionStorage";
 
 // const deleteShop = async (shop: string) => {
 //   const openAi = new AiClient();
@@ -62,8 +63,9 @@ import { authenticate } from "../shopify.server";
 // "CUSTOMERS_DATA_REQUEST":  "SHOP_REDACT":
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { topic, shop, session, admin, payload } =
+  const { topic, shop, admin, payload, ...rest } =
     await authenticate.webhook(request);
+  const session = rest.session as ExtendedSession;
 
   if (!admin) {
     // The admin context isn't returned if the webhook fired after a shop was uninstalled.
@@ -80,7 +82,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const current = payload.current as string[];
       await Sessions.updateOne(
         {
-          _id: session?.id,
+          _id: session?._id,
         },
         {
           scope: current.toString(),

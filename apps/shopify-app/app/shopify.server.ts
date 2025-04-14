@@ -1,6 +1,5 @@
 import "@shopify/shopify-app-remix/adapters/node";
-
-import { SessionStorage } from "./modules/sessionStorage";
+import { MongoDBSessionStorage } from "./modules/sessionStorage";
 import {
   ApiVersion,
   AppDistribution,
@@ -14,7 +13,7 @@ const shopify = shopifyApp({
   scopes: process.env.SCOPES?.split(","),
   appUrl: process.env.SHOPIFY_APP_URL || "",
   authPathPrefix: "/auth",
-  sessionStorage: new SessionStorage(),
+  sessionStorage: new MongoDBSessionStorage(),
   distribution: AppDistribution.AppStore,
   future: {
     unstable_newEmbeddedAuthStrategy: true,

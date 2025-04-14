@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b78f49118baa15c77d8adf447c933901"
-application_url = "https://retain-grande-limits-pharmacies.trycloudflare.com"
+application_url = "https://represent-lions-pattern-cite.trycloudflare.com"
 embedded = true
 name = "Dev ChatPilot"
 handle = "dev-chatpilot"
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://retain-grande-limits-pharmacies.trycloudflare.com/auth/callback",
-  "https://retain-grande-limits-pharmacies.trycloudflare.com/auth/shopify/callback",
-  "https://retain-grande-limits-pharmacies.trycloudflare.com/api/auth/callback"
+  "https://represent-lions-pattern-cite.trycloudflare.com/auth/callback",
+  "https://represent-lions-pattern-cite.trycloudflare.com/auth/shopify/callback",
+  "https://represent-lions-pattern-cite.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]

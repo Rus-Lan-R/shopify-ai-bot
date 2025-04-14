@@ -17,7 +17,7 @@ import { authenticate } from "../shopify.server";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormInput } from "../components/form/FormInput";
 import { useLoaderData, useSubmit } from "@remix-run/react";
-import { ISession, Sessions } from "@internal/database";
+import { Sessions } from "@internal/database";
 import { createGraphqlRequest } from "../api/graphql";
 import { getMainTheme } from "../modules/themes/getThemes";
 import { FileTypes, VsFile } from "../modules/openAi/openAi.interfaces";
@@ -26,12 +26,15 @@ import { dataSync } from "../modules/vectoreStoreSync";
 import { CREATE_SCRIPT, DELETE_SCRIPT } from "../api/scripts/scripts.gql";
 import { useLoading } from "../helpers/useLoading";
 import { firstLetterUpperCase, formDataToObject } from "../helpers/utils";
+import { ExtendedSession } from "app/modules/sessionStorage";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { session } = await authenticate.admin(request);
+  const authData = await authenticate.admin(request);
+  const session = authData.session as ExtendedSession;
+
   const graphqlRequest = await createGraphqlRequest(request);
 
-  const shopSession = await Sessions.findById(session.id);
+  const shopSession = await Sessions.findById(session._id);
 
   const { mainTheme } = await getMainTheme({ graphqlRequest });
   return {
@@ -47,26 +50,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { admin, session } = await authenticate.admin(request);
+  const authData = await authenticate.admin(request);
+  const session = authData.session as ExtendedSession;
+  const { admin } = authData;
+
   const formData = await request.formData();
   const { action, assistantPrompt, assistantName, welcomeMessage, fileType } =
     formDataToObject(formData);
   const graphqlRequest = await createGraphqlRequest(request);
-  const shopSession = await Sessions.findById<ISession>(session.id);
 
-  if (!shopSession) {
-    return new Response(JSON.stringify({ error: "Session not found" }), {
-      status: 404,
-      headers: {},
-    });
-  }
-  if (admin && session.id && shopSession) {
+  if (admin && session._id) {
     switch (action) {
       case "init":
         try {
           const { assistantId, vectorStoreId, mainChatId } =
             await assistantInit({
-              shopSession,
+              shopSession: session,
               assistantName,
               assistantPrompt,
             });
@@ -80,7 +79,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               const promiseData = dataSync({
                 vsId: vectorStoreId,
                 type: item.type,
-                shopId: session.id,
+                shopId: session._id,
                 vsFiles: initAssistantFiles,
                 graphqlRequest,
               });
@@ -89,7 +88,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           );
 
           await Sessions.updateOne(
-            { _id: session.id },
+            { _id: session._id },
             {
               assistantName: assistantName || "",
               assistantPrompt: assistantPrompt || "",
@@ -111,14 +110,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         break;
       case "update":
         try {
-          if (session.id && !!shopSession?.assistantId) {
+          if (session._id && !!session?.assistantId) {
             await assistantUpdate({
-              assistantId: shopSession.assistantId,
+              assistantId: session.assistantId,
               assistantName,
               assistantPrompt,
             });
             await Sessions.updateOne(
-              { id: shopSession.id },
+              { _id: session._id },
               {
                 assistantName: assistantName || "",
                 assistantPrompt: assistantPrompt || "",
@@ -132,17 +131,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         break;
 
       case "sync": {
-        if (fileType && shopSession?.assistantVectorStoreId) {
+        if (fileType && session?.assistantVectorStoreId) {
           const { updatedVsFiles } = await dataSync({
-            vsId: shopSession?.assistantVectorStoreId,
+            vsId: session?.assistantVectorStoreId,
             type: fileType as FileTypes,
-            shopId: shopSession.id,
-            vsFiles: shopSession.assistantFiles as VsFile[],
+            shopId: session._id,
+            vsFiles: session.assistantFiles as VsFile[],
             graphqlRequest,
           });
           if (!!updatedVsFiles?.length) {
             await Sessions.updateOne(
-              { id: shopSession.id },
+              { _id: session._id },
               {
                 assistantFiles: JSON.parse(JSON.stringify(updatedVsFiles)),
               },
