@@ -5,7 +5,7 @@ import {
   Sessions,
   ISession,
   IntegrationStatus,
-  connectDb,
+  MongoDB,
 } from "@internal/database";
 import { WhatsAppBot } from "@internal/services";
 
@@ -18,7 +18,11 @@ const botsList = async () => {
     const session = await Sessions.findById<ISession>(platformItem?.sessionId);
 
     if (session?._id) {
-      const whatsAppBot = new WhatsAppBot(platformItem, session);
+      const whatsAppBot = new WhatsAppBot(
+        platformItem,
+        session,
+        process.env.OPENAI_API_KEY || ""
+      );
 
       if (platformItem.integrationStatus === IntegrationStatus.NEW) {
         console.log("auth");
@@ -34,7 +38,11 @@ const botsList = async () => {
 };
 
 const run = async () => {
-  await connectDb();
+  if (!process.env.DATABASE_URL) {
+    throw { error: "Mongo DB Url not found" };
+  }
+  const mongoDbInstance = new MongoDB(process.env.DATABASE_URL);
+  await mongoDbInstance.connect();
   const queueEventEmitter = Platforms.watch();
   await botsList();
   queueEventEmitter.on("change", async () => {

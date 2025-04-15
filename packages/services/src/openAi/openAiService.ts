@@ -6,9 +6,9 @@ import { extractTextWithoutAnnotations } from "../helpers";
 export class AiClient {
   public aiClient: OpenAI;
 
-  constructor() {
+  constructor(apiKey: string) {
     this.aiClient = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey,
     });
   }
 

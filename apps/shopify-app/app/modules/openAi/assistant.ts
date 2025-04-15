@@ -4,7 +4,8 @@ import {
   ISession,
   Platforms,
 } from "@internal/database";
-import { AiClient, ChatService } from "@internal/services";
+import { ChatService } from "@internal/services";
+import { openAi } from "app/services/openAi.server";
 
 const devPromopt = `vector storage files contain information about products`;
 export const assistantInit = async ({
@@ -16,7 +17,6 @@ export const assistantInit = async ({
   assistantName: string;
   assistantPrompt: string;
 }) => {
-  const openAi = new AiClient();
   let platform = await Platforms.findOne<IPlatform>({
     name: "Website",
     sessionId: shopSession._id,
@@ -36,7 +36,7 @@ export const assistantInit = async ({
     name: shopSession._id,
   });
 
-  const assistant = await openAi.aiClient.beta.assistants.create({
+  const openAiAssistant = await openAi.aiClient.beta.assistants.create({
     model: "gpt-4o",
     name: assistantName,
     instructions: assistantPrompt + " /n " + devPromopt,
@@ -67,11 +67,10 @@ export const assistantInit = async ({
     ],
   });
 
-  const thread = await openAi.createThread();
-  await chatService.createChat();
+  const { thread } = await chatService.createChat();
 
   return {
-    assistantId: assistant.id,
+    assistantId: openAiAssistant.id,
     vectorStoreId: vs.id,
     mainChatId: thread.id,
   };
@@ -86,7 +85,6 @@ export const assistantUpdate = async ({
   assistantName: string;
   assistantPrompt: string;
 }) => {
-  const openAi = new AiClient();
   await openAi.aiClient.beta.assistants.update(assistantId, {
     name: assistantName,
     instructions: assistantPrompt + " /n " + devPromopt,

@@ -5,7 +5,7 @@ import {
   LoaderFunctionArgs,
 } from "@remix-run/node";
 import { IPlatform, ISession, Platforms, Sessions } from "@internal/database";
-import { ChatService, AiClient } from "@internal/services";
+import { ChatService } from "@internal/services";
 import { formDataToObject } from "../helpers/utils";
 
 export type MainChatLoader = typeof loader;
@@ -125,10 +125,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (action) {
     case "init": {
       if (shopSession?.assistantId) {
-        const aiClient = new AiClient();
-
-        const thread = await aiClient.createThread();
-        await chatService.createChat();
+        const { thread } = await chatService.createChat();
 
         return new Response(JSON.stringify({ chatId: thread.id }), {
           headers: {
@@ -163,25 +160,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
 
       if (shopSession?.assistantId) {
-        // TODO replace on service
-        // await Messages.create({
-        //   chatId: chatId,
-        //   text: message,
-        //   direction: "user",
-        // });
-
-        // const answer = await getOpenAIResponse({
-        //   userText: message,
-        //   threadId: chatId,
-        //   assistantId: shopSession?.assistantId,
-        // });
-        // await Messages.create({
-        //   chatId: chatId,
-        //   text: answer,
-        //   direction: "assistant",
-        // });
-
-        return new Response(JSON.stringify({ answer: "" }), {
+        const answer = await chatService.getAiAnswer(message, chatId);
+        return new Response(JSON.stringify({ answer: answer }), {
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",

@@ -14,5 +14,6 @@
       "@internal/services": ["packages/services/dist"],
       "app/*": ["apps/shopify-app/app/*"]
     }
-  }
+  },
+  "include": ["apps/**/*", "packages/**/*"]
 }

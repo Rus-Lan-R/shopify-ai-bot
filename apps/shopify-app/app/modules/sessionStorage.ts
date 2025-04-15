@@ -1,6 +1,6 @@
-import { SessionStorage } from "@shopify/shopify-app-session-storage";
 import { Session } from "@shopify/shopify-app-remix/server";
-import { connectDb, ISession, Sessions } from "@internal/database";
+import { ISession, MongoDB, Sessions } from "@internal/database";
+import { SessionStorage } from "@shopify/shopify-app-session-storage";
 
 export type ExtendedSession = Session & ISession;
 export interface MongoDBSessionStorageOptions {
@@ -9,14 +9,14 @@ export interface MongoDBSessionStorageOptions {
 
 export class MongoDBSessionStorage implements SessionStorage {
   public ready: Promise<void>;
-
+  private mongoDB: MongoDB;
   constructor() {
+    this.mongoDB = new MongoDB(process.env.DATABASE_URL || "");
     this.ready = this.init();
   }
 
   private async init() {
-    await connectDb();
-    console.log("MongoDB connected!");
+    await this.mongoDB.connect();
   }
 
   public async storeSession(session: ExtendedSession): Promise<boolean> {

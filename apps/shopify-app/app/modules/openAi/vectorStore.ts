@@ -1,7 +1,7 @@
+import { openAi } from "app/services/openAi.server";
 import { createFileFromObject } from "../../helpers/createFileFromObject";
 import { FileTypes, VsFile } from "./openAi.interfaces";
-import { AiClient } from "@internal/services";
-const openAi = new AiClient();
+
 export const populateVectorStoreInfo = async ({
   shopId,
   vsId,

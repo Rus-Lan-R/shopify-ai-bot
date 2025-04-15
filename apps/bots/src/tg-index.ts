@@ -1,20 +1,27 @@
 import {
-  connectDb,
   ISession,
   Sessions,
   IPlatform,
   PlatformName,
   Platforms,
+  MongoDB,
+  IntegrationStatus,
 } from "@internal/database";
 import { TelegramBot } from "@internal/services";
 
 const run = async () => {
-  await connectDb();
+  if (!process.env.DATABASE_URL) {
+    throw { error: "Mongo DB Url not found" };
+  }
+  const mongoDbInstance = new MongoDB(process.env.DATABASE_URL || "");
+  await mongoDbInstance.connect();
   try {
     const telegramPlatforms = await Platforms.find<IPlatform>({
       name: PlatformName.TELEGRAM,
-      isEnabled: true,
+      integrationStatus: IntegrationStatus.ACTIVE,
     });
+
+    console.log("Telegram Platforms -> ", telegramPlatforms.length);
 
     telegramPlatforms
       .filter((item) => !!item.primaryApiKey)
@@ -24,7 +31,11 @@ const run = async () => {
         );
 
         if (session) {
-          const bot = new TelegramBot(platformItem, session);
+          const bot = new TelegramBot(
+            platformItem,
+            session,
+            process.env.OPENAI_API_KEY || ""
+          );
           await bot.init();
           await bot.listenMessages();
         }

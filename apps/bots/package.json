@@ -2,20 +2,23 @@
   "name": "bots",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev:telegram": "nodemon -r tsconfig-paths/register src/tg-index.ts",
-    "dev:wa": "nodemon -r tsconfig-paths/register src/wa-index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "build": "tsup",
+    "start:tg": "node dist/tg-index.js",
+    "start:wa": "node dist/wa-index.js",
+    "dev": "pnpm build && pnpm start:tg & pnpm start:wa",
+    "dev:tg": "tsup src/tg-index.ts --watch --onSuccess \"pkill -f dist/tg-index.js; node dist/tg-index.js\"",
+    "dev:wa": "tsup src/wa-index.ts --watch --onSuccess \"pkill -f dist/wa-index.js; node dist/wa-index.js\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@internal/database": "workspace:*",
-    "@internal/services": "workspace:*"
+    "@internal/services": "workspace:*",
+    "add": "^2.0.6"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

@@ -152,7 +152,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         break;
       }
       case "chat-init": {
-        const response = await graphqlRequest(CREATE_SCRIPT, {
+        await graphqlRequest(CREATE_SCRIPT, {
           input: {
             displayScope: "ALL",
             src: `${process.env.SHOPIFY_APP_URL}/chat.js`,

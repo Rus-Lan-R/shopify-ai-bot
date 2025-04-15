@@ -11,8 +11,8 @@ import whatsapp from "whatsapp-web.js";
 export class WhatsAppBot extends ChatService {
   private bot: whatsapp.Client;
 
-  constructor(platform: IPlatform, session: ISession) {
-    super(platform, session);
+  constructor(platform: IPlatform, session: ISession, openAiApiKey: string) {
+    super(platform, session, openAiApiKey);
     this.bot = new whatsapp.Client({
       authStrategy: new whatsapp.LocalAuth({ clientId: session._id }),
     });
@@ -52,7 +52,7 @@ export class WhatsAppBot extends ChatService {
       logerFunction(async (msg) => {
         if (!msg.fromMe) {
           const chat = await this.findOrCreateChat(msg.from);
-          if (!!chat && !!chat.externalChatId) {
+          if (!!chat) {
             const aiResponse = await this.getAiAnswer(
               msg.body,
               chat.externalChatId

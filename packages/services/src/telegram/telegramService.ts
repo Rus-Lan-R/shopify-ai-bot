@@ -6,8 +6,8 @@ import { logerFunction } from "../helpers";
 export class TelegramBot extends ChatService {
   private bot: TgBot;
 
-  constructor(platform: IPlatform, session: ISession) {
-    super(platform, session);
+  constructor(platform: IPlatform, session: ISession, openAiApiKey: string) {
+    super(platform, session, openAiApiKey);
     this.bot = new TgBot(this.platform.primaryApiKey!, {
       polling: true,
     });
@@ -19,7 +19,7 @@ export class TelegramBot extends ChatService {
       logerFunction<Message>(async (msg) => {
         const chatId = String(msg?.chat?.id);
         const existChat = await this.findExistChat(chatId);
-
+        console.log("init bot");
         if (!existChat) {
           await this.createChat(chatId);
           const welcomeMessage = this.welcomeMessage;

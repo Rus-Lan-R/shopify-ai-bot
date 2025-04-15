@@ -1,15 +1,14 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "moduleResolution": "node",
     "outDir": "dist",
     "rootDir": "src",
-    "declaration": true,
+    "declaration": false,
     "types": ["node"],
-    "noEmit": false,
-    "moduleResolution": "Node",
-    "target": "ES2021",
-    "module": "CommonJS"
+    "esModuleInterop": true,
+    "target": "ESNext"
   },
-  "include": ["./**/*.ts"],
+  "include": ["./src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
