@@ -65,4 +65,4 @@ const SessionSchema = new Schema(
 );
 
 export const Sessions =
-  mongoose.models.Sessions || model("Sessions", SessionSchema);
+  mongoose.models?.Sessions || model("Sessions", SessionSchema);

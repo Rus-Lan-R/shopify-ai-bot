@@ -1,4 +1,10 @@
-import { Chats, IPlatform, ISession, Messages } from "@internal/database";
+import {
+  Chats,
+  IPlatform,
+  ISession,
+  MessageRole,
+  Messages,
+} from "@internal/database";
 import { AiClient } from "../openAi/openAiService";
 import { extractTextWithoutAnnotations } from "../helpers";
 
@@ -50,8 +56,10 @@ export class ChatService extends AiClient {
     if (!!this?.session?.assistantId && !!existChat?._id) {
       await Messages.create({
         chatId: existChat._id,
+        sessionId: existChat.sessionId,
+        platformId: existChat.platformId,
         text: message,
-        direction: "user",
+        direction: MessageRole.USER,
       });
       const responseText = await this.getOpenAIResponse({
         userText: message,
@@ -60,8 +68,10 @@ export class ChatService extends AiClient {
       });
       await Messages.create({
         chatId: existChat._id,
+        sessionId: existChat.sessionId,
+        platformId: existChat.platformId,
         text: responseText,
-        direction: "assistant",
+        direction: MessageRole.ASSISTANT,
       });
       return responseText;
     } else {
@@ -80,7 +90,7 @@ export class ChatService extends AiClient {
     }));
 
     preparedMessages.push({
-      role: "assistant",
+      role: MessageRole.ASSISTANT,
       text: this.session.welcomeMessage || "Hi, how can I help you?",
     });
 

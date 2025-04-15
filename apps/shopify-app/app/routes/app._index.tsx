@@ -13,23 +13,28 @@ import { authenticate } from "../shopify.server";
 import { useLoaderData } from "@remix-run/react";
 import { ChatBot } from "../packages/ChatBot";
 import { ExtendedSession } from "app/modules/sessionStorage";
+import { Chats, Messages } from "@internal/database";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, context }: LoaderFunctionArgs) => {
+  console.log("context", context?.env);
   const authData = await authenticate.admin(request);
   const session = authData.session as ExtendedSession;
 
   try {
-    // const totalChats = await Chats.count({
-    //   where: { _id: session?.id },
-    // });
+    const totalChats = await Chats.countDocuments({
+      sessionId: session?._id,
+    });
 
+    const totalMessages = await Messages.countDocuments({
+      sessionId: session?._id,
+    });
     return {
       assistantId: session?.assistantId,
       chatId: session?.mainChatId,
       shop: session._id,
       data: {
-        totalRequests: 0,
-        totalChats: 0,
+        totalRequests: totalMessages,
+        totalChats: totalChats,
       },
       assistant: {
         assistantName: session?.assistantName,

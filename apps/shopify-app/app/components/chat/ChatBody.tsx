@@ -1,5 +1,6 @@
 import { BlockStack, Box, Card, Scrollable, Text } from "@shopify/polaris";
 import { IMessage } from "../publicChat/PublicChat";
+import { MessageRole } from "@internal/database";
 
 export const ChatBody = (props: {
   messages: IMessage[];
@@ -21,7 +22,7 @@ export const ChatBody = (props: {
         <Scrollable.ScrollTo />
         {messages.length ? (
           messages?.map((item, index) => {
-            const isRight = item.role === "user";
+            const isRight = item.role === MessageRole.USER;
             return (
               <div
                 style={{

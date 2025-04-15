@@ -36,4 +36,4 @@ const PlatformSchema = new Schema<IPlatform>(
 );
 
 export const Platforms =
-  mongoose.models.Platforms || model("Platforms", PlatformSchema);
+  mongoose.models?.Platforms || model("Platforms", PlatformSchema);

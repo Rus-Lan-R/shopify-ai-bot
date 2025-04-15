@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { Run } from "openai/resources/beta/threads/runs/runs";
 import { Message } from "openai/resources/beta/threads/messages";
 import { extractTextWithoutAnnotations } from "../helpers";
+import { MessageRole } from "@internal/database";
 
 export class AiClient {
   public aiClient: OpenAI;
@@ -38,7 +39,7 @@ export class AiClient {
     // });
 
     await this.aiClient.beta.threads.messages.create(threadId, {
-      role: "user",
+      role: MessageRole.USER,
       content: userText,
     });
 

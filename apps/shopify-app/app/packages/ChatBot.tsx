@@ -3,6 +3,7 @@ import { Chat } from "../components/chat/Chat";
 import { useFetcher } from "@remix-run/react";
 import { MainChatLoader } from "app/routes/api.chat";
 import { IMessage } from "app/components/publicChat/PublicChat";
+import { MessageRole } from "@internal/database";
 
 export const ChatBot = (props: { shop: string; chatId: string }) => {
   const { shop, chatId } = props;
@@ -15,7 +16,10 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
     formData.append("action", "message");
     formData.append("message", message);
     try {
-      setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
+      setMessagesList((prev) => [
+        { role: MessageRole.USER, text: message },
+        ...prev,
+      ]);
       setIsLoading(true);
       const response = await fetch(`/api/chat?shop=${shop}&chatId=${chatId}`, {
         method: "POST",
@@ -23,7 +27,7 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
       });
       const data = (await response.json()) as { answer: string };
       setMessagesList((prev) => [
-        { role: "assistant", text: data.answer },
+        { role: MessageRole.ASSISTANT, text: data.answer },
         ...prev,
       ]);
     } catch (error) {
