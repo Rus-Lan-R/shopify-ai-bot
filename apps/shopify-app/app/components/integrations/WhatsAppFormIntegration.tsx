@@ -2,9 +2,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import { BlockStack, Button, ButtonGroup, Form } from "@shopify/polaris";
 import { useSubmit } from "@remix-run/react";
 import { useLoading } from "app/helpers/useLoading";
-import { IntegrationStatus } from "@prisma/client";
 import qrcode from "qrcode";
 import { useEffect, useState } from "react";
+import { IntegrationStatus, PlatformName } from "@internal/database";
 
 export const WhatsAppFormIntegration = (props: {
   primaryApiKey?: string | null;
@@ -22,8 +22,8 @@ export const WhatsAppFormIntegration = (props: {
     setLoadingSlug("whatsapp");
     const fomrData = new FormData();
     fomrData.append("action", "init-platform");
-    fomrData.append("platform", "WhatsApp");
-    fomrData.append("status", "NEW");
+    fomrData.append("platform", PlatformName.WHATSAPP);
+    fomrData.append("status", IntegrationStatus.NEW);
     submit(fomrData, { method: "POST" });
   });
 
@@ -31,8 +31,13 @@ export const WhatsAppFormIntegration = (props: {
     setLoadingSlug("whatsapp-connection");
     const fomrData = new FormData();
     fomrData.append("action", "toggle-connect");
-    fomrData.append("platform", "WhatsApp");
-    fomrData.append("status", status === "ACTIVE" ? "DISCONNECTED" : "ACTIVE");
+    fomrData.append("platform", PlatformName.WHATSAPP);
+    fomrData.append(
+      "status",
+      status === IntegrationStatus.ACTIVE
+        ? IntegrationStatus.DISCONNECTED
+        : IntegrationStatus.ACTIVE,
+    );
     submit(fomrData, { method: "POST" });
   };
 
@@ -60,7 +65,10 @@ export const WhatsAppFormIntegration = (props: {
             <img src={qrCode} width={200} height={200} alt={"qr code"} />
           )}
           <ButtonGroup>
-            {status && ["ACTIVE", "DISCONNECTED"].includes(status) ? (
+            {status &&
+            [IntegrationStatus.ACTIVE, IntegrationStatus.DISCONNECTED].includes(
+              status,
+            ) ? (
               <Button
                 disabled={isLoading}
                 loading={checkIsLoading("whatsapp-connection")}
@@ -68,23 +76,20 @@ export const WhatsAppFormIntegration = (props: {
                 variant={"secondary"}
                 onClick={handleDisconnect}
               >
-                {status === "ACTIVE" ? "Disconnect" : "Connect"}
+                {status === IntegrationStatus.ACTIVE ? "Disable" : "Enable"}
               </Button>
             ) : (
-              <></>
-            )}
-            {status === "NEW" ? (
               <Button
                 submit={true}
-                disabled={isLoading}
+                disabled={isLoading || status === IntegrationStatus.CONNECTING}
                 loading={checkIsLoading("whatsapp")}
                 fullWidth={false}
                 variant={"primary"}
               >
-                Connect
+                {status === IntegrationStatus.CONNECTING
+                  ? "Connecting"
+                  : "Connect"}
               </Button>
-            ) : (
-              <></>
             )}
           </ButtonGroup>
         </BlockStack>

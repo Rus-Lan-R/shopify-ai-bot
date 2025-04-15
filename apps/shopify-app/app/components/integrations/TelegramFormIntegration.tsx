@@ -3,7 +3,7 @@ import { FormInput } from "../form/FormInput";
 import { BlockStack, Button, ButtonGroup, Form } from "@shopify/polaris";
 import { useSubmit } from "@remix-run/react";
 import { useLoading } from "app/helpers/useLoading";
-import { IntegrationStatus } from "@prisma/client";
+import { IntegrationStatus, PlatformName } from "@internal/database";
 
 export const TelegramFormIntegrations = (props: {
   primaryApiKey?: string | null;
@@ -25,8 +25,8 @@ export const TelegramFormIntegrations = (props: {
     setLoadingSlug("telegram");
     const fomrData = new FormData();
     fomrData.append("action", "init-platform");
-    fomrData.append("platform", "Telegram");
-    fomrData.append("status", "ACTIVE");
+    fomrData.append("platform", PlatformName.TELEGRAM);
+    fomrData.append("status", IntegrationStatus.ACTIVE);
     Object.entries(data).forEach(([key, value]) => {
       fomrData.append(key, String(value));
     });
@@ -37,8 +37,13 @@ export const TelegramFormIntegrations = (props: {
     setLoadingSlug("telegram-connection");
     const fomrData = new FormData();
     fomrData.append("action", "toggle-connect");
-    fomrData.append("platform", "Telegram");
-    fomrData.append("status", status === "ACTIVE" ? "DISCONNECTED" : "ACTIVE");
+    fomrData.append("platform", PlatformName.TELEGRAM);
+    fomrData.append(
+      "status",
+      status === IntegrationStatus.ACTIVE
+        ? IntegrationStatus.DISCONNECTED
+        : IntegrationStatus.ACTIVE,
+    );
     submit(fomrData, { method: "POST" });
   };
   return (
@@ -59,7 +64,7 @@ export const TelegramFormIntegrations = (props: {
                 variant={"secondary"}
                 onClick={handleDisconnect}
               >
-                {status === "ACTIVE" ? "Disconnect" : "Connect"}
+                {status === IntegrationStatus.ACTIVE ? "Disable" : "Enable"}
               </Button>
             ) : (
               <></>

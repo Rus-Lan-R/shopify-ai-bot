@@ -4,9 +4,16 @@ import {
   json,
   LoaderFunctionArgs,
 } from "@remix-run/node";
-import { IPlatform, ISession, Platforms, Sessions } from "@internal/database";
+import {
+  IPlatform,
+  ISession,
+  PlatformName,
+  Platforms,
+  Sessions,
+} from "@internal/database";
 import { ChatService } from "@internal/services";
 import { formDataToObject } from "../helpers/utils";
+import { openAiKey } from "app/services/openAi.server";
 
 export type MainChatLoader = typeof loader;
 
@@ -41,10 +48,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
   }
   const platform = await Platforms.findOne<IPlatform>({
-    name: "Website",
+    name: PlatformName.WEBSITE,
     sessionId: shopSession._id,
   });
-  const chatService = new ChatService(platform!, shopSession);
+  const chatService = new ChatService(platform!, shopSession, openAiKey);
 
   let preparedMessages;
   if (chatId) {
@@ -116,11 +123,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const platform = await Platforms.findOne<IPlatform>({
-    name: "Website",
+    name: PlatformName.WEBSITE,
     sessionId: shopSession._id,
   });
 
-  const chatService = new ChatService(platform!, shopSession);
+  const chatService = new ChatService(platform!, shopSession, openAiKey);
 
   switch (action) {
     case "init": {
