@@ -10,5 +10,10 @@ export const GET_SHOP = `#graphql
         }
         ianaTimezone
         shipsToCountries
+        plan {
+          displayName
+          partnerDevelopment
+          shopifyPlus
+        }
     }
   }`;

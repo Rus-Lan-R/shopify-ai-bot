@@ -13,13 +13,19 @@ import { authenticate } from "../shopify.server";
 import { useLoaderData } from "@remix-run/react";
 import { ChatBot } from "../packages/ChatBot";
 import { ExtendedSession } from "app/modules/sessionStorage";
-import { Chats, Messages } from "@internal/database";
+import { Chats, Messages, Sessions } from "@internal/database";
+import { getShopInfo } from "app/modules/shop/getShopInfo";
+import { createGraphqlRequest } from "app/api/graphql";
 
 export const loader = async ({ request, context }: LoaderFunctionArgs) => {
-  console.log("context", context?.env);
   const authData = await authenticate.admin(request);
   const session = authData.session as ExtendedSession;
+  const graphqlRequest = await createGraphqlRequest(request);
 
+  if (typeof session?.isDevStore === "boolean") {
+    const shop = await getShopInfo({ graphqlRequest });
+    // await Sessions.updateOne({ _id: session._id }, { isDevStore: shop.shopInfo.shop. });
+  }
   try {
     const totalChats = await Chats.countDocuments({
       sessionId: session?._id,

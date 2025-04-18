@@ -27,6 +27,7 @@ import { CREATE_SCRIPT, DELETE_SCRIPT } from "../api/scripts/scripts.gql";
 import { useLoading } from "../helpers/useLoading";
 import { firstLetterUpperCase, formDataToObject } from "../helpers/utils";
 import { ExtendedSession } from "app/modules/sessionStorage";
+import { getShopInfo } from "app/modules/shop/getShopInfo";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const authData = await authenticate.admin(request);
@@ -87,6 +88,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             }),
           );
 
+          const shopData = await getShopInfo({ graphqlRequest });
+
           await Sessions.updateOne(
             { _id: session._id },
             {
@@ -96,6 +99,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               welcomeMessage: welcomeMessage || "",
               assistantId,
               mainChatId,
+              isDevStore: !!shopData.shopInfo.shop.plan.partnerDevelopment,
               assistantFiles: initAssistantFiles.map((item) => {
                 const uploadedFileId = files.find(
                   (fileItem) => fileItem.newFile?.type === item.type,
@@ -111,14 +115,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       case "update":
         try {
           if (session._id && !!session?.assistantId) {
+            const shopData = await getShopInfo({ graphqlRequest });
+
             await assistantUpdate({
               assistantId: session.assistantId,
               assistantName,
               assistantPrompt,
             });
+
             await Sessions.updateOne(
               { _id: session._id },
               {
+                isDevStore: !!shopData.shopInfo.shop.plan.partnerDevelopment,
                 assistantName: assistantName || "",
                 assistantPrompt: assistantPrompt || "",
                 welcomeMessage: welcomeMessage || "",
@@ -179,6 +187,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function Index() {
   const { assistant, files, mainTheme } = useLoaderData<typeof loader>();
+  console.log(mainTheme);
   const { isLoading, checkIsLoading, setLoadingSlug } = useLoading<
     FileTypes | "widget" | "main"
   >();

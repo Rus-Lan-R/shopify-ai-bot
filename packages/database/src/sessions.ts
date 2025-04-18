@@ -15,6 +15,8 @@ export interface ISession extends Document {
   locale: string;
   collaborator: boolean;
   emailVerified: boolean;
+  isDevStore: boolean;
+  openaiApiKey?: string;
 
   // ---------------------
   assistantId?: string;
@@ -33,6 +35,7 @@ const SessionSchema = new Schema(
     shop: { type: String, required: true },
     state: { type: String, required: true, default: "active" },
     isOnline: { type: Boolean, default: false },
+    isDevStore: { type: Boolean },
     scope: { type: String },
     accessToken: { type: String, required: true },
     expires: { type: Date, default: null },
@@ -48,7 +51,6 @@ const SessionSchema = new Schema(
     emailVerified: { type: Boolean },
 
     isDeleted: { type: Boolean, default: false },
-
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 
