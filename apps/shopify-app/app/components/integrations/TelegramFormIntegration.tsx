@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { FormInput } from "../form/FormInput";
-import { BlockStack, Button, ButtonGroup, Form } from "@shopify/polaris";
+import { BlockStack, Button, Form, InlineStack } from "@shopify/polaris";
 import { useSubmit } from "@remix-run/react";
 import { useLoading } from "app/helpers/useLoading";
 import { IntegrationStatus, PlatformName } from "@internal/database";
@@ -8,12 +8,13 @@ import { IntegrationStatus, PlatformName } from "@internal/database";
 export const TelegramFormIntegrations = (props: {
   primaryApiKey?: string | null;
   status?: IntegrationStatus;
+  isDisabled: boolean;
 }) => {
   const { isLoading, checkIsLoading, setLoadingSlug } = useLoading<
     "telegram" | "telegram-connection"
   >();
   const submit = useSubmit();
-  const { primaryApiKey, status } = props;
+  const { primaryApiKey, status, isDisabled } = props;
 
   const form = useForm({
     defaultValues: {
@@ -55,30 +56,40 @@ export const TelegramFormIntegrations = (props: {
             label="Telegram bot api key"
             autoComplete="off"
           />
-          <ButtonGroup>
+          <InlineStack gap={"300"}>
             {primaryApiKey ? (
-              <Button
-                disabled={isLoading}
-                loading={checkIsLoading("telegram-connection")}
-                fullWidth={false}
-                variant={"secondary"}
-                onClick={handleDisconnect}
-              >
-                {status === IntegrationStatus.ACTIVE ? "Disable" : "Enable"}
-              </Button>
+              <>
+                <Button
+                  disabled={isLoading}
+                  loading={checkIsLoading("telegram-connection")}
+                  fullWidth={false}
+                  variant={"secondary"}
+                  onClick={handleDisconnect}
+                >
+                  {status === IntegrationStatus.ACTIVE ? "Disable" : "Enable"}
+                </Button>
+                <Button
+                  submit={true}
+                  disabled={isLoading}
+                  loading={checkIsLoading("telegram")}
+                  fullWidth={false}
+                  variant={"primary"}
+                >
+                  {"Update"}
+                </Button>
+              </>
             ) : (
-              <></>
+              <Button
+                submit={true}
+                disabled={isLoading || isDisabled}
+                loading={checkIsLoading("telegram")}
+                fullWidth={false}
+                variant={"primary"}
+              >
+                {"Connect"}
+              </Button>
             )}
-            <Button
-              submit={true}
-              disabled={isLoading}
-              loading={checkIsLoading("telegram")}
-              fullWidth={false}
-              variant={"primary"}
-            >
-              {primaryApiKey ? "Update" : "Connect"}
-            </Button>
-          </ButtonGroup>
+          </InlineStack>
         </BlockStack>
       </FormProvider>
     </Form>

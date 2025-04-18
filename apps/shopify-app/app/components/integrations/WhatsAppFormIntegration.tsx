@@ -9,12 +9,13 @@ import { IntegrationStatus, PlatformName } from "@internal/database";
 export const WhatsAppFormIntegration = (props: {
   primaryApiKey?: string | null;
   status: IntegrationStatus;
+  isDisabled: boolean;
 }) => {
   const { isLoading, checkIsLoading, setLoadingSlug } = useLoading<
     "whatsapp" | "whatsapp-connection"
   >();
   const submit = useSubmit();
-  const { primaryApiKey, status } = props;
+  const { isDisabled, primaryApiKey, status } = props;
   const [qrCode, setQrCode] = useState<string>();
   const form = useForm({});
 
@@ -81,7 +82,11 @@ export const WhatsAppFormIntegration = (props: {
             ) : (
               <Button
                 submit={true}
-                disabled={isLoading || status === IntegrationStatus.CONNECTING}
+                disabled={
+                  isDisabled ||
+                  isLoading ||
+                  status === IntegrationStatus.CONNECTING
+                }
                 loading={checkIsLoading("whatsapp")}
                 fullWidth={false}
                 variant={"primary"}

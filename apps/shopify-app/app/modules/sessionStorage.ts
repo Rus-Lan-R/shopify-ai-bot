@@ -16,13 +16,14 @@ export class MongoDBSessionStorage implements SessionStorage {
       { $set: session.toObject() },
       { upsert: true, new: true },
     );
-
     return true;
   }
 
   public async loadSession(id: string): Promise<ExtendedSession | undefined> {
-    const result = await Sessions.findOne({ _id: id }).lean();
-    return result ? new Session(result) : undefined;
+    const result = await Sessions.findOne({ _id: id })
+      .populate("limitationId")
+      .lean();
+    return result ? new Session({ ...result, id: result._id }) : undefined;
   }
 
   public async deleteSession(id: string): Promise<boolean> {
@@ -37,6 +38,6 @@ export class MongoDBSessionStorage implements SessionStorage {
 
   public async findSessionsByShop(shop: string): Promise<ExtendedSession[]> {
     const results = await Sessions.find({ shop }).lean();
-    return results.map((doc: any) => new Session(doc));
+    return results.map((doc: any) => new Session({ ...doc, id: doc._id }));
   }
 }

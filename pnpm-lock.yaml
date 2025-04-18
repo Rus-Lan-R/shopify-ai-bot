@@ -82,6 +82,9 @@ importers:
       '@shopify/shopify-app-session-storage':
         specifier: ^3.0.17
         version: 3.0.17(@shopify/shopify-api@11.12.0)
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       esbuild:
         specifier: ^0.25.1
         version: 0.25.2
@@ -2510,6 +2513,9 @@ packages:
   date-format@4.0.14:
     resolution: {integrity: sha512-39BOQLs9ZjKh0/patS9nrT8wc3ioX3/eA/zgbKNopnF2wCqJEoxywwwElATYvRsXdnOxA/OQeQoFZ3rFjVajhg==}
     engines: {node: '>=4.0'}
+
+  dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
 
   debounce@1.2.1:
     resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
@@ -8817,6 +8823,8 @@ snapshots:
       '@babel/runtime': 7.27.0
 
   date-format@4.0.14: {}
+
+  dayjs@1.11.13: {}
 
   debounce@1.2.1: {}
 

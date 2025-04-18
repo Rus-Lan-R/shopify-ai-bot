@@ -5,53 +5,74 @@ import {
   Button,
   Card,
   EmptyState,
+  InlineGrid,
   InlineStack,
   Page,
   Text,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
-import { useLoaderData } from "@remix-run/react";
+import { Await, defer, useLoaderData } from "@remix-run/react";
 import { ChatBot } from "../packages/ChatBot";
 import { ExtendedSession } from "app/modules/sessionStorage";
-import { Chats, Messages, Sessions } from "@internal/database";
-import { getShopInfo } from "app/modules/shop/getShopInfo";
-import { createGraphqlRequest } from "app/api/graphql";
+import { Chats, Messages, Platforms } from "@internal/database";
+import { StatisticsCard } from "app/components/StatisticsCard/Stats";
+import { Suspense } from "react";
 
-export const loader = async ({ request, context }: LoaderFunctionArgs) => {
+const getDeferedData = ({ sessionId }: { sessionId: string }) => {
+  const chatsPromise = new Promise<number>(async (res) => {
+    res(
+      Chats.countDocuments({
+        sessionId: sessionId,
+      }).lean(),
+    );
+  });
+
+  const messagesPromise = new Promise<number>(async (res) => {
+    const messagesCount = await Messages.countDocuments({
+      sessionId: sessionId,
+    }).lean();
+    res(messagesCount);
+  });
+
+  const platformsPromise = new Promise<number>(async (res) => {
+    const platformsCount = await Platforms.countDocuments({
+      sessionId: sessionId,
+    }).lean();
+    res(platformsCount);
+  });
+
+  return { platformsPromise, messagesPromise, chatsPromise };
+};
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const authData = await authenticate.admin(request);
   const session = authData.session as ExtendedSession;
-  const graphqlRequest = await createGraphqlRequest(request);
 
-  if (typeof session?.isDevStore === "boolean") {
-    const shop = await getShopInfo({ graphqlRequest });
-    // await Sessions.updateOne({ _id: session._id }, { isDevStore: shop.shopInfo.shop. });
-  }
   try {
-    const totalChats = await Chats.countDocuments({
-      sessionId: session?._id,
+    const promiseStats = getDeferedData({
+      sessionId: session._id,
     });
 
-    const totalMessages = await Messages.countDocuments({
-      sessionId: session?._id,
-    });
-    return {
+    return defer({
+      ...promiseStats,
       assistantId: session?.assistantId,
       chatId: session?.mainChatId,
       shop: session._id,
-      data: {
-        totalRequests: totalMessages,
-        totalChats: totalChats,
-      },
+      limitations: { ...session.limitationId },
       assistant: {
         assistantName: session?.assistantName,
         assistantPrompt: session?.assistantPrompt,
       },
-    };
+    });
   } catch (error) {
+    console.log("error", error);
     return {
-      data: {},
+      platformsPromise: null,
+      chatsPromise: null,
+      messagesPromise: null,
+      limitations: { platforms: 0, chats: 0, requests: 0 },
       shop: session._id,
-      chatId: "",
+      chatId: null,
       assistantId: null,
       assistant: {},
     };
@@ -59,8 +80,16 @@ export const loader = async ({ request, context }: LoaderFunctionArgs) => {
 };
 
 export default function Index() {
-  const { data, assistantId, assistant, shop, chatId } =
-    useLoaderData<typeof loader>();
+  const {
+    assistantId,
+    assistant,
+    shop,
+    chatId,
+    limitations,
+    messagesPromise,
+    chatsPromise,
+    platformsPromise,
+  } = useLoaderData<typeof loader>() ?? {};
 
   return (
     <Page>
@@ -92,25 +121,50 @@ export default function Index() {
                         <Text
                           as="p"
                           fontWeight={"bold"}
-                        >{`Instruction: `}</Text>
+                        >{`Instructions: `}</Text>
                         <Text as="p">{assistant.assistantPrompt}</Text>
-                      </InlineStack>
-                      <InlineStack gap={"100"}>
-                        <Text as="p" fontWeight={"bold"}>{`Chats: `}</Text>
-                        <Text as="p">{data?.totalChats || 0}</Text>
-                      </InlineStack>
-                      <InlineStack gap={"100"}>
-                        <Text
-                          as="p"
-                          fontWeight={"bold"}
-                        >{`Total requests: `}</Text>
-                        <Text as="p">{data?.totalRequests || 0}</Text>
                       </InlineStack>
                     </BlockStack>
                   )}
                 </BlockStack>
               </Card>
-
+              <InlineGrid gap={"300"} columns={3}>
+                <Suspense fallback={<p>Loading stats...</p>}>
+                  <Await resolve={messagesPromise}>
+                    {(data) => {
+                      return (
+                        <StatisticsCard
+                          name={"Total requests"}
+                          used={data || 0}
+                          total={limitations.requests || 0}
+                        />
+                      );
+                    }}
+                  </Await>
+                </Suspense>
+                <Suspense fallback={<p>Loading stats...</p>}>
+                  <Await resolve={chatsPromise}>
+                    {(data) => (
+                      <StatisticsCard
+                        name={"Active chats"}
+                        used={data}
+                        total={limitations?.chats || 0}
+                      />
+                    )}
+                  </Await>
+                </Suspense>
+                <Suspense fallback={<p>Loading stats...</p>}>
+                  <Await resolve={platformsPromise}>
+                    {(data) => (
+                      <StatisticsCard
+                        name={"Platforms"}
+                        used={data}
+                        total={limitations?.platforms || 0}
+                      />
+                    )}
+                  </Await>
+                </Suspense>
+              </InlineGrid>
               {chatId && shop ? <ChatBot shop={shop} chatId={chatId} /> : <></>}
             </>
           ) : (

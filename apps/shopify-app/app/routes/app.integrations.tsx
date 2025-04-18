@@ -13,7 +13,12 @@ import { authenticate } from "../shopify.server";
 import { useLoaderData } from "@remix-run/react";
 
 import { useMemo } from "react";
-import { IPlatform, PlatformName, Platforms } from "@internal/database";
+import {
+  IPlatform,
+  Limitations,
+  PlatformName,
+  Platforms,
+} from "@internal/database";
 import { formDataToObject } from "../helpers/utils";
 import { TelegramFormIntegrations } from "../components/integrations/TelegramFormIntegration";
 import { WhatsAppFormIntegration } from "../components/integrations/WhatsAppFormIntegration";
@@ -23,9 +28,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const authData = await authenticate.admin(request);
   const session = authData.session as ExtendedSession;
 
-  const platforms = await Platforms.find({ sessionId: session?._id });
+  const platforms = await Platforms.find<IPlatform>({
+    sessionId: session?._id,
+  });
+
+  const isNewDisabled =
+    session.limitationId && platforms.length >= session.limitationId?.platforms;
 
   return {
+    isNewDisabled,
     platforms,
   };
 };
@@ -44,10 +55,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   switch (action) {
     case "init-platform":
-      const platformModule = await Platforms.findOne({
+      const platformModule = await Platforms.findOne<IPlatform>({
         sessionId: session?._id,
         name: platformName,
-      });
+      }).lean();
 
       if (!platformModule) {
         await Platforms.create({
@@ -89,13 +100,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return {};
 };
 
-// const availablePlatforms: PlatformName[] = [
-//   PlatformName.Telegram,
-//   PlatformName.WhatsApp,
-// ];
-
 export default function Index() {
-  const { platforms } = useLoaderData<typeof loader>();
+  const { platforms, isNewDisabled } = useLoaderData<typeof loader>();
 
   const platformsBySlug = useMemo(() => {
     return platforms.reduce<Partial<{ [key in PlatformName]: IPlatform }>>(
@@ -132,6 +138,7 @@ export default function Index() {
             </Box>
             <Card roundedAbove="sm">
               <TelegramFormIntegrations
+                isDisabled={!!isNewDisabled}
                 primaryApiKey={platformsBySlug?.Telegram?.primaryApiKey}
                 status={platformsBySlug?.Telegram?.integrationStatus!}
               />
@@ -155,6 +162,7 @@ export default function Index() {
             </Box>
             <Card roundedAbove="sm">
               <WhatsAppFormIntegration
+                isDisabled={!!isNewDisabled}
                 status={platformsBySlug?.WhatsApp?.integrationStatus!}
                 primaryApiKey={platformsBySlug.WhatsApp?.primaryApiKey}
               />

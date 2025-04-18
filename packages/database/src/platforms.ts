@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 export enum IntegrationStatus {
   NEW = "NEW",
@@ -14,10 +14,11 @@ export enum PlatformName {
   WEBSITE = "Website",
 }
 
-export interface IPlatform extends Document {
+export interface IPlatform {
+  _id: string;
   primaryApiKey: string;
   sessionId: string;
-  name: string;
+  name: PlatformName;
   integrationStatus: IntegrationStatus;
 }
 

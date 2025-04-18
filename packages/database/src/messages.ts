@@ -1,4 +1,4 @@
-import mongoose, { model, Schema, Types } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 export enum MessageRole {
   ASSISTANT = "assistant",
@@ -8,10 +8,10 @@ export enum MessageRole {
 // 🗨️ Messages
 const MessageSchema = new Schema(
   {
-    chatId: { type: String, required: true, ref: "Chats" },
+    chatId: { type: Schema.Types.ObjectId, required: true, ref: "Chats" },
     sessionId: { type: String, required: true, ref: "Sessions" },
     platformId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: false,
       ref: "Platforms",
     },

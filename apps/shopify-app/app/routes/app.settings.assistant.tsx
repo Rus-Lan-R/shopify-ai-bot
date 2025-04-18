@@ -17,7 +17,7 @@ import { authenticate } from "../shopify.server";
 import { FormProvider, useForm } from "react-hook-form";
 import { FormInput } from "../components/form/FormInput";
 import { useLoaderData, useSubmit } from "@remix-run/react";
-import { Sessions } from "@internal/database";
+import { ILimitation, Limitations, Sessions } from "@internal/database";
 import { createGraphqlRequest } from "../api/graphql";
 import { getMainTheme } from "../modules/themes/getThemes";
 import { FileTypes, VsFile } from "../modules/openAi/openAi.interfaces";
@@ -89,6 +89,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           );
 
           const shopData = await getShopInfo({ graphqlRequest });
+          const isDevStore = !!shopData.shopInfo.shop.plan.partnerDevelopment;
+          const limitation = await Limitations.findOne<ILimitation>(
+            isDevStore ? { slug: "dev" } : { slug: "base" },
+          );
+          console.log(limitation?._id);
 
           await Sessions.updateOne(
             { _id: session._id },
@@ -99,13 +104,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
               welcomeMessage: welcomeMessage || "",
               assistantId,
               mainChatId,
-              isDevStore: !!shopData.shopInfo.shop.plan.partnerDevelopment,
+              isDevStore: isDevStore,
               assistantFiles: initAssistantFiles.map((item) => {
                 const uploadedFileId = files.find(
                   (fileItem) => fileItem.newFile?.type === item.type,
                 );
                 return { ...item, fileId: uploadedFileId?.newFile?.fileId };
               }),
+              limitationId: limitation?._id,
             },
           );
         } catch (error) {
@@ -117,6 +123,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           if (session._id && !!session?.assistantId) {
             const shopData = await getShopInfo({ graphqlRequest });
 
+            const isDevStore = !!shopData.shopInfo.shop.plan.partnerDevelopment;
+            const limitation = await Limitations.findOne<ILimitation>(
+              isDevStore ? { slug: "dev" } : { slug: "base" },
+            ).lean();
+            console.log(limitation?._id);
             await assistantUpdate({
               assistantId: session.assistantId,
               assistantName,
@@ -130,6 +141,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                 assistantName: assistantName || "",
                 assistantPrompt: assistantPrompt || "",
                 welcomeMessage: welcomeMessage || "",
+                limitationId: limitation?._id,
               },
             );
           }
@@ -187,7 +199,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function Index() {
   const { assistant, files, mainTheme } = useLoaderData<typeof loader>();
-  console.log(mainTheme);
+
   const { isLoading, checkIsLoading, setLoadingSlug } = useLoading<
     FileTypes | "widget" | "main"
   >();
@@ -216,7 +228,6 @@ export default function Index() {
     submit(formData, { method: "POST" });
   };
 
-  // console.log(mainTheme);
   return (
     <Page
       title="Settings"

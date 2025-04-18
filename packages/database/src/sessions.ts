@@ -1,6 +1,7 @@
-import mongoose, { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
+import { ILimitation } from "./limitations";
 
-export interface ISession extends Document {
+export interface ISession {
   _id: string;
   shop: string;
   accessToken: string;
@@ -27,6 +28,7 @@ export interface ISession extends Document {
   mainChatId?: string;
   assistantFiles: {};
   isDeleted: boolean;
+  limitationId?: ILimitation;
 }
 // 🧠 Sessions
 const SessionSchema = new Schema(
@@ -54,7 +56,7 @@ const SessionSchema = new Schema(
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 
-    // Assistant-related (опционально)
+    // Assistant-related
     assistantId: { type: String },
     assistantName: { type: String },
     welcomeMessage: { type: String },
@@ -62,6 +64,11 @@ const SessionSchema = new Schema(
     assistantVectorStoreId: { type: String },
     mainChatId: { type: String },
     assistantFiles: { type: mongoose.Schema.Types.Mixed },
+    limitationId: {
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: "Limitations",
+    },
   },
   { timestamps: true, collection: "Sessions" }
 );
