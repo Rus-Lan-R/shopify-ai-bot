@@ -32,6 +32,6 @@ jobs:
 
       - name: Release the app on Heroku
         run: |
-          heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
+          heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }} -f Dockerfile.app .
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
