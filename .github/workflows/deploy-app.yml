@@ -19,6 +19,10 @@ jobs:
         run: |
           echo "BUILD_ARGS=$(echo "--build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}")" >> $GITHUB_ENV
 
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+          
       - name: Login to Heroku
         run: |
           echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username=_ --password-stdin registry.heroku.com
