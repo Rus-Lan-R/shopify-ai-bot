@@ -16,7 +16,9 @@ export class WhatsAppBot extends ChatService {
     super(platform, session, openAiApiKey);
     this.bot = new whatsapp.Client({
       puppeteer: {
-        executablePath: executablePath(),
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+        headless: true,
+        args: ['--no-sandbox', " '--disable-setuid-sandbox'"]
       },
       authStrategy: new whatsapp.LocalAuth({ clientId: platform._id }),
     });

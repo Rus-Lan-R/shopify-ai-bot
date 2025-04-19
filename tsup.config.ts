@@ -9,6 +9,7 @@ export default defineConfig([
     sourcemap: true,
     clean: true,
     dts: false,
+    minify: true,
   },
   {
     entry: ["packages/services/src/index.ts"],
@@ -18,6 +19,7 @@ export default defineConfig([
     sourcemap: true,
     clean: true,
     dts: true,
+    minify: true,
   },
   {
     entry: ["packages/database/src/index.ts"],
@@ -27,5 +29,6 @@ export default defineConfig([
     sourcemap: true,
     clean: true,
     dts: true,
+    minify: true,
   },
 ]);

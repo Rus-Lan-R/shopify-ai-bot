@@ -1,0 +1,31 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+COPY pnpm-lock.yaml ./
+COPY package.json ./
+COPY pnpm-workspace.yaml ./
+
+COPY apps/bots/package.json apps/bots/
+COPY packages/database/package.json packages/database/
+COPY packages/services/package.json packages/services/
+
+RUN corepack enable && pnpm install --frozen-lockfile
+
+COPY apps/bots apps/bots
+COPY packages/database packages/database
+COPY packages/services packages/services
+
+RUN pnpm --filter bots build
+
+CMD ["pnpm", "--filter", "bots", "start"]

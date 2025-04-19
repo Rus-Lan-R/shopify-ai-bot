@@ -6,10 +6,12 @@ const env = {
   "process.env.DATABASE_URL": JSON.stringify(process.env.DATABASE_URL),
   "process.env.OPENAI_API_KEY": JSON.stringify(process.env.OPENAI_API_KEY),
 };
+
 export default defineConfig([
   {
     entry: ["src/tg-index.ts"],
     format: ["esm"],
+    minify: true,
     outDir: "dist",
     define: env,
     splitting: false,
@@ -23,6 +25,7 @@ export default defineConfig([
   {
     entry: ["src/wa-index.ts"],
     format: ["esm"],
+    minify: true,
     outDir: "dist",
     define: env,
     splitting: false,

@@ -8,6 +8,7 @@
     "build": "tsup",
     "start:tg": "node dist/tg-index.js",
     "start:wa": "node dist/wa-index.js",
+    "start": "pnpm start:tg & pnpm start:wa",
     "dev": "pnpm build && pnpm start:tg & pnpm start:wa",
     "dev:tg": "tsup src/tg-index.ts --watch --onSuccess \"pkill -f dist/tg-index.js; node dist/tg-index.js\"",
     "dev:wa": "tsup src/wa-index.ts --watch --onSuccess \"pkill -f dist/wa-index.js; node dist/wa-index.js\""
