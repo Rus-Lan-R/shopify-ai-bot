@@ -1,4 +1,4 @@
-name: Deploy Shopify app to Heroku
+name: Deploy Bots to Heroku
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  deploy-bots:
+  deploy-assistant-bots:
     runs-on: ubuntu-latest
 
     env:
@@ -30,11 +30,13 @@ jobs:
 
       - name: Build and push to Heroku
         run: |
-          docker build $BUILD_ARGS \
-            -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web \
+          docker build \
+            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+            -t registry.heroku.com/chat-assistant-bots/web \
             -f Dockerfile.app .
-          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+          docker push registry.heroku.com/chat-assistant-bots/web
 
       - name: Release on Heroku
         run: |
-          heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
+          heroku container:release web -a chat-assistant-bots
