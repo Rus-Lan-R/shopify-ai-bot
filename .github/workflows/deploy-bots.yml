@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  deploy-app:
+  deploy-bots:
     runs-on: ubuntu-latest
 
     env:
@@ -15,6 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Generate Docker build args
+        run: |
+          echo "BUILD_ARGS=$(echo "--build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}")" >> $GITHUB_ENV
 
       - name: Print secrets
         run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
@@ -26,7 +30,9 @@ jobs:
 
       - name: Build and push to Heroku
         run: |
-          docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web -f Dockerfile.app .
+          docker build $BUILD_ARGS \
+            -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web \
+            -f Dockerfile.app .
           docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
 
       - name: Release on Heroku
