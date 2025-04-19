@@ -1,0 +1,37 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
+application_url = "https://chat-assistant-app-b47c5af582bc.herokuapp.com"
+embedded = true
+name = "ChatPilot AI"
+handle = "support-ai-assistant"
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = false
+dev_store_url = "nikasoul-store.myshopify.com"
+
+[webhooks]
+api_version = "2025-01"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled", "app/scopes_update" ]
+  uri = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/webhooks"
+
+  [[webhooks.subscriptions]]
+  compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
+  uri = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/webhooks"
+
+[auth]
+redirect_urls = [
+  "https://chat-assistant-app-b47c5af582bc.herokuapp.com/auth/callback",
+  "https://chat-assistant-app-b47c5af582bc.herokuapp.com/auth/shopify/callback",
+  "https://chat-assistant-app-b47c5af582bc.herokuapp.com/api/auth/callback"
+]
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_orders,read_products,read_locations,read_themes"
+
+[pos]
+embedded = false

@@ -1,0 +1,200 @@
+/* ../../../../../../../../../private/var/folders/d8/kn6sfphj67n572x21m44vz4r0000gn/T/tmp-26182-RZbCp52B2YXx/Users/ruslan/my/shopify/apps/ai-assistant/shopify-ai-bot/apps/shopify-app/app/components/publicChat/styles.css */
+*,
+::after,
+::before {
+  box-sizing: border-box;
+  font-family:
+    "Inter",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-seri;
+}
+.h0fc93b4ee9264f1642003e7c44a51b91 {
+  width: 100%;
+  min-width: 25rem;
+  height: 40rem;
+  border-radius: 1rem;
+  position: relative;
+  box-shadow: rgba(22, 22, 22, 0.1) 0px 0px 16px 0px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: rgb(235, 235, 235);
+}
+.h9b46deb2b8bf38be0cbcaf76ee696ddc {
+  width: 100%;
+  padding: 0 0.75rem;
+  display: flex;
+  flex: 1 1 0%;
+  overflow: scroll;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  background-color: #fff;
+  scrollbar-width: none;
+}
+.h9b46deb2b8bf38be0cbcaf76ee696ddc::-webkit-scrollbar {
+  display: none;
+}
+.h00a3fc58acf17b2976aa046afe78debf {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  flex-grow: 1;
+  gap: 0.5rem;
+  background-color: #fff;
+  width: 100%;
+}
+.h5b6f597c9d90f588ad9b567baf64a6b7 {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+.hf080b3d143755990f027758abe9a4266 {
+  background-color: rgb(235, 235, 235);
+  padding: 0.75rem;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+.h4ceabac5bceea131688dab1117fb5019 {
+  background-color: #fff;
+  padding: 0.75rem;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+.hef75644761b5430b68cc29865c530529 {
+  flex-grow: 1;
+  min-height: 2rem;
+  max-height: 12rem;
+  font-size: 12px;
+  overflow-y: auto;
+  width: 100%;
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  padding: 8px 12px;
+  outline: none;
+  resize: none;
+  color: #161616;
+  background-color: #eeeeee;
+  border: none;
+}
+.hef75644761b5430b68cc29865c530529:active,
+.hef75644761b5430b68cc29865c530529:focus {
+  box-shadow: none;
+  border: none;
+}
+.hcb50499c85a4442cb7b27fa1684527e3 {
+  margin-top: auto;
+}
+.h70c62086bbc437fdda3fcae7681c6891 {
+  cursor: pointer;
+  padding: 0.5rem;
+  background-color: none;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: fit-content;
+}
+.h41662b2cded8da2e914640335b7fdd75 {
+  width: fit-content;
+  border-radius: 14px;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  max-width: 90%;
+  white-space: pre-wrap;
+}
+.he55f5fed8e058b681c2a94462a021008 {
+  align-self: flex-end;
+  background-color: rgb(235, 235, 235);
+}
+.h6e606d6d3926a2f4c5b511529d997359 {
+  background-color: rgb(244, 245, 247);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
+}
+.h0875056dfa38f290f224740fe3fc6021 {
+  margin: 0;
+  font-size: 11px;
+  line-height: 120%;
+}
+.h0ee59a59e8f24b86ea01df4f6cd92c4a {
+  margin-left: auto;
+}
+.hb50ce5c4efffb5b6cda5bf1c8d7b59d5 {
+  width: fit-content;
+  height: fit-content;
+  padding: 0.5rem;
+  border-radius: 50%;
+  background-color: rgb(235, 235, 235);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.hbe2b0cbe00f79547016c8887e39944ac {
+  max-width: 30rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.hfa82c56bf6a5162d3eba8c1c19d46adb {
+  animation: rotate 1s infinite linear;
+  transform-origin: center;
+}
+.h452cf0a5f76c208553a277ee49b22956 {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  height: 1rem;
+  padding: 0 0.5rem;
+}
+.ha5c0c3aaaf86f96a4f77d179ef8390f2 {
+  display: block !important;
+  min-width: 0.5rem;
+  min-height: 0.5rem;
+  background-color: #767575;
+  border-radius: 50%;
+  animation: typingAnimation 1.5s infinite ease-in-out;
+}
+.ha5c0c3aaaf86f96a4f77d179ef8390f2:nth-child(1) {
+  animation-delay: 0s;
+}
+.ha5c0c3aaaf86f96a4f77d179ef8390f2:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.ha5c0c3aaaf86f96a4f77d179ef8390f2:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes typingAnimation {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
