@@ -31,8 +31,13 @@ COPY packages/services/package.json packages/services/
 RUN corepack enable && pnpm install --frozen-lockfile
 
 COPY apps/bots apps/bots
+
 COPY packages/database packages/database
+RUN pnpm --filter @internal/database build
+
 COPY packages/services packages/services
+RUN pnpm --filter @internal/services build
+
 
 RUN pnpm --filter bots build
 
