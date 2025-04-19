@@ -5,14 +5,14 @@ on:
     branches:
       - master
 
-env: &default-env
+env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
 jobs:
   deploy-bots:
     runs-on: ubuntu-latest
-    env: *default-env
 
     steps:
       - uses: actions/checkout@v3
@@ -32,7 +32,6 @@ jobs:
 
   deploy-app:
     runs-on: ubuntu-latest
-    env: *default-env
 
     steps:
       - uses: actions/checkout@v3
