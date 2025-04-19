@@ -10,6 +10,11 @@ RUN apk add --no-cache \
     ca-certificates \
     ttf-freefont
 
+ARG DATABASE_URL
+ARG OPENAI_API_KEY
+
+ENV DATABASE_URL=$DATABASE_URL
+ENV OPENAI_API_KEY=$OPENAI_API_KEY
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 COPY pnpm-lock.yaml ./

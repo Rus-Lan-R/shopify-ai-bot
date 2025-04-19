@@ -2,6 +2,12 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+ARG DATABASE_URL
+ARG OPENAI_API_KEY
+
+ENV DATABASE_URL=$DATABASE_URL
+ENV OPENAI_API_KEY=$OPENAI_API_KEY
+
 COPY pnpm-lock.yaml ./
 COPY package.json ./
 COPY pnpm-workspace.yaml ./
