@@ -5,12 +5,14 @@ on:
     branches:
       - master
 
+env: &default-env
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
 jobs:
-  deploy:
+  deploy-bots:
     runs-on: ubuntu-latest
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      SHOPIFY_API_KEY: ${{ secrets.SHOPIFY_API_KEY }}
+    env: *default-env
 
     steps:
       - uses: actions/checkout@v3
@@ -27,3 +29,23 @@ jobs:
       - name: Release on Heroku
         run: |
           heroku container:release web -a chat-assistant-bots
+
+  deploy-app:
+    runs-on: ubuntu-latest
+    env: *default-env
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to Heroku
+        run: |
+          echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username=_ --password-stdin registry.heroku.com
+
+      - name: Build and push to Heroku
+        run: |
+          docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web -f Dockerfile.app .
+          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+
+      - name: Release on Heroku
+        run: |
+          heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
