@@ -1,64 +1,75 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-
-import { Sessions } from "@internal/database";
-import { AiClient } from "@internal/services";
+import {
+  Chats,
+  IChat,
+  Messages,
+  Platforms,
+  Sessions,
+} from "@internal/database";
 import { authenticate } from "../shopify.server";
 import { ExtendedSession } from "app/modules/sessionStorage";
+import { FileTypes } from "app/modules/openAi/openAi.interfaces";
+import { openAi } from "app/services/openAi.server";
 
-// const deleteShop = async (shop: string) => {
-//   const openAi = new AiClient();
-//   const shopSession = await Sessions.findById(shop);
-//   if (shopSession?.assistantId) {
-//     await Promise.all(
-//       (
-//         JSON.parse(String(shopSession.assistantFiles) || "") as {
-//           type: FileTypes;
-//           fileId: string;
-//         }[]
-//       ).map(async (item) => {
-//         try {
-//           await openAi.aiClient.vectorStores.del(item.fileId);
-//         } catch (error) {}
-//         try {
-//           await openAi.aiClient.files.del(item.fileId);
-//         } catch (error) {}
-//       }),
-//     );
-//     console.log("Vector store files deleted");
+const deleteShop = async (shop: string) => {
+  const shopSession = await Sessions.findById(shop);
+  if (shopSession?.assistantId) {
+    await Promise.all(
+      (
+        JSON.parse(String(shopSession.assistantFiles) || "") as {
+          type: FileTypes;
+          fileId: string;
+        }[]
+      ).map(async (item) => {
+        try {
+          await openAi.aiClient.vectorStores.del(item.fileId);
+        } catch (error) {}
+        try {
+          await openAi.aiClient.files.del(item.fileId);
+        } catch (error) {}
+      }),
+    );
+    console.log("Vector store files deleted");
 
-//     const allShopChats = await db.chat.findMany({
-//       where: { sessionId: shopSession.id },
-//     });
+    const allShopChats = await Chats.find<IChat>({
+      sessionId: shopSession._id,
+    }).lean();
 
-//     await db.platform.deleteMany({
-//       where: { sessionId: shopSession.id },
-//     });
+    console.log("Shop deleted");
+    try {
+      await Promise.all(
+        allShopChats.map(
+          (item) =>
+            item?._id &&
+            typeof item?._id === "string" &&
+            openAi?.aiClient.beta.threads.del(item._id),
+        ),
+      );
+      console.log("Threads deleted");
+    } catch (error) {
+      console.error(`Threads delete error: ${error}`);
+    }
+    try {
+      await openAi?.aiClient.beta.assistants.del(shopSession?.assistantId);
+    } catch (error) {
+      console.error(`Assistant delete error: ${error}`);
+    }
 
-//     console.log("Shop deleted");
-//     try {
-//       await Promise.all(
-//         allShopChats.map(
-//           (item) => item.id && aiClient.beta.threads.del(item.id),
-//         ),
-//       );
-//       console.log("Threads deleted");
-//     } catch (error) {
-//       console.error(`Threads delete error: ${error}`);
-//     }
-//     try {
-//       await aiClient.beta.assistants.del(shopSession?.assistantId);
-//     } catch (error) {
-//       console.error(`Assistant delete error: ${error}`);
-//     }
-//     await db.chat.deleteMany({
-//       where: { sessionId: shopSession.id },
-//     });
+    await Promise.all([
+      Platforms.deleteMany({ sessionId: shopSession._id }),
+      Chats.deleteMany({
+        sessionId: shopSession._id,
+      }),
+      Messages.deleteMany({
+        sessionId: shopSession._id,
+      }),
+    ]);
 
-//     await db.session.delete({ where: { id: shopSession.id } });
-//   }
+    await Sessions.deleteOne({ _id: shopSession._id });
+  }
 
-//   console.log("SHOP FULLY DELETED");
-// };
+  console.log("SHOP FULLY DELETED");
+};
 
 // "CUSTOMERS_DATA_REQUEST":  "SHOP_REDACT":
 
@@ -76,7 +87,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (topic) {
     case "APP_UNINSTALLED":
     case "SHOP_REDACT":
-      // await deleteShop(shop);
+      await deleteShop(shop);
       break;
     case "SCOPES_UPDATE":
       const current = payload.current as string[];

@@ -7,6 +7,7 @@ import {
 import { ChatService } from "../chat/chatService";
 import { logerFunction } from "../helpers";
 import whatsapp from "whatsapp-web.js";
+import { executablePath } from "puppeteer";
 
 export class WhatsAppBot extends ChatService {
   private bot: whatsapp.Client;
@@ -14,7 +15,10 @@ export class WhatsAppBot extends ChatService {
   constructor(platform: IPlatform, session: ISession, openAiApiKey: string) {
     super(platform, session, openAiApiKey);
     this.bot = new whatsapp.Client({
-      authStrategy: new whatsapp.LocalAuth({ clientId: session._id }),
+      puppeteer: {
+        executablePath: executablePath(),
+      },
+      authStrategy: new whatsapp.LocalAuth({ clientId: platform._id }),
     });
   }
 
@@ -44,6 +48,7 @@ export class WhatsAppBot extends ChatService {
         }
       );
     });
+    this.bot.initialize();
   }
 
   async listenMessages() {
@@ -62,5 +67,9 @@ export class WhatsAppBot extends ChatService {
         }
       })
     );
+  }
+
+  public async stop() {
+    await this.bot.destroy();
   }
 }

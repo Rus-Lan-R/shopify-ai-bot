@@ -8,7 +8,7 @@ export enum MessageRole {
 // 🗨️ Messages
 const MessageSchema = new Schema(
   {
-    chatId: { type: Schema.Types.ObjectId, required: true, ref: "Chats" },
+    chatId: { type: String, required: true, ref: "Chats" },
     sessionId: { type: String, required: true, ref: "Sessions" },
     platformId: {
       type: Schema.Types.ObjectId,

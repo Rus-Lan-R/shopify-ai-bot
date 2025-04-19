@@ -51,9 +51,10 @@ export class ChatService extends AiClient {
   }
 
   async getAiAnswer(message: string, externalChatId: string) {
-    const existChat = await this.findExistChat(externalChatId);
+    const existChat = await this.findOrCreateChat(externalChatId);
 
     if (!!this?.session?.assistantId && !!existChat?._id) {
+      console.log(message);
       await Messages.create({
         chatId: existChat._id,
         sessionId: existChat.sessionId,
@@ -66,6 +67,7 @@ export class ChatService extends AiClient {
         assistantId: this.session.assistantId,
         threadId: existChat?._id,
       });
+      console.log(responseText);
       await Messages.create({
         chatId: existChat._id,
         sessionId: existChat.sessionId,
@@ -75,6 +77,7 @@ export class ChatService extends AiClient {
       });
       return responseText;
     } else {
+      console.log(this.session.assistantId, existChat?._id);
       return "Setup required";
     }
   }

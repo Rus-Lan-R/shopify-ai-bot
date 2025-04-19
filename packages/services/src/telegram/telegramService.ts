@@ -19,7 +19,6 @@ export class TelegramBot extends ChatService {
       logerFunction<Message>(async (msg) => {
         const chatId = String(msg?.chat?.id);
         const existChat = await this.findExistChat(chatId);
-        console.log("init bot");
         if (!existChat) {
           await this.createChat(chatId);
           const welcomeMessage = this.welcomeMessage;
@@ -43,5 +42,16 @@ export class TelegramBot extends ChatService {
         }
       })
     );
+  }
+
+  public async stop() {
+    console.log("Bot stoped ", this.platform.sessionId);
+    try {
+      this.bot.removeAllListeners();
+      await this.bot.deleteWebHook();
+      await this.bot.stopPolling();
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

@@ -9,6 +9,7 @@
     "@internal/database": "workspace:*",
     "node-telegram-bot-api": "^0.66.0",
     "openai": "^4.93.0",
+    "puppeteer": "^24.6.1",
     "whatsapp-web.js": "^1.27.0"
   },
   "devDependencies": {
