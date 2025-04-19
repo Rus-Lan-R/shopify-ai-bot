@@ -20,10 +20,6 @@ jobs:
         run: |
           echo "BUILD_ARGS=$(echo "--build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}")" >> $GITHUB_ENV
 
-      - name: Print secrets
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}"
-        run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}"
-
       - name: Login to Heroku
         run: |
           echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username=_ --password-stdin registry.heroku.com
@@ -34,7 +30,7 @@ jobs:
             --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
             --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
             -t registry.heroku.com/chat-assistant-bots/web \
-            -f Dockerfile.app .
+            -f Dockerfile.bots .
           docker push registry.heroku.com/chat-assistant-bots/web
 
       - name: Release on Heroku
