@@ -7,7 +7,6 @@ import {
 import { ChatService } from "../chat/chatService";
 import { logerFunction } from "../helpers";
 import whatsapp from "whatsapp-web.js";
-import { executablePath } from "puppeteer";
 
 export class WhatsAppBot extends ChatService {
   private bot: whatsapp.Client;
@@ -16,9 +15,9 @@ export class WhatsAppBot extends ChatService {
     super(platform, session, openAiApiKey);
     this.bot = new whatsapp.Client({
       puppeteer: {
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+        // executablePath: executablePath(),
         headless: true,
-        args: ['--no-sandbox', " '--disable-setuid-sandbox'"]
+        args: ['--no-sandbox'],
       },
       authStrategy: new whatsapp.LocalAuth({ clientId: platform._id }),
     });

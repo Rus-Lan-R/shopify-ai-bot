@@ -7,6 +7,8 @@ node_modules
 dist
 build
 
+**/dist
+**/build
 
 .wwebjs_auth
 sessions
@@ -25,4 +27,3 @@ Thumbs.db
 .gitignore
 
 .dockerignore
-.env

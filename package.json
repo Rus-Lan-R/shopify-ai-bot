@@ -12,7 +12,8 @@
     "dev:wa": "pnpm --filter bots dev:wa",
     "build": "pnpm --filter @internal/database build && pnpm --filter @internal/services build",
     "lint": "pnpm -r lint",
-    "build:chat": "pnpm --filter shopify-app build:chat"
+    "build:chat": "pnpm --filter shopify-app build:chat",
+    "docker:build": "docker build -t bots --file Dockerfile.bots ."
   },
   "dependencies": {
     "dotenv": "^16.4.5",

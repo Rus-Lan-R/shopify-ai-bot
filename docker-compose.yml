@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  bots:
+    build:
+      context: .
+      dockerfile: Dockerfile.bots
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+        OPENAI_API_KEY: ${OPENAI_API_KEY}
+    env_file:
+      - .env
+    image: registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+
+  shopify-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+      args:
+        API_URL: ${API_URL}
+    env_file:
+      - .env
+    image: registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/web

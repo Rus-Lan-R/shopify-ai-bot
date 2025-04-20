@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const env = {
-  "process.env.DATABASE_URL": JSON.stringify(process.env.DATABASE_URL),
-  "process.env.OPENAI_API_KEY": JSON.stringify(process.env.OPENAI_API_KEY),
+  DATABASE_URL: JSON.stringify(process.env.DATABASE_URL),
+  OPENAI_API_KEY: JSON.stringify(process.env.OPENAI_API_KEY),
 };
 
 export default defineConfig([
