@@ -20,8 +20,8 @@
     "types": ["node"],
     "paths": {
       "app/*": ["app/*"],
-      "@internal/database": ["packages/database/src"],
-      "@internal/services": ["packages/services/src"]
+      "@internal/database": ["packages/database/dist"],
+      "@internal/services": ["packages/services/dist"]
     }
   }
 }

@@ -5,7 +5,7 @@ import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { NavMenu } from "@shopify/app-bridge-react";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 
-import { authenticate } from "../shopify.server";
+import { authenticate } from "../../shopify.server";
 import { boundary } from "@shopify/shopify-app-remix/server";
 
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
@@ -27,7 +27,7 @@ export default function App() {
         </Link>
         <Link to="/app/chats">Chats</Link>
         <Link to="/app/integrations">Integrations</Link>
-        <Link to="/app/settings/assistant">Settings</Link>
+        <Link to="/app/settings">Settings</Link>
       </NavMenu>
       <Outlet />
     </AppProvider>

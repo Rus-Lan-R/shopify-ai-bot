@@ -7,10 +7,9 @@ import {
   Text,
   useIndexResourceState,
 } from "@shopify/polaris";
-import { authenticate } from "../shopify.server";
+
 import { useLoaderData } from "@remix-run/react";
-import { Chats, IChat, IPlatform, PlatformName } from "@internal/database";
-import { ExtendedSession } from "app/modules/sessionStorage";
+import { PlatformName } from "@internal/database";
 import { useMemo } from "react";
 import { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import {
@@ -20,19 +19,8 @@ import {
   MobileIcon,
 } from "@shopify/polaris-icons";
 import { localeTimeFormated } from "app/helpers/storeTime";
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const authData = await authenticate.admin(request);
-  const session = authData.session as ExtendedSession;
-
-  const chats = await Chats.find<IChat>({
-    sessionId: session?._id,
-  }).populate<{ platformId: IPlatform }>("platformId");
-
-  return {
-    chats,
-  };
-};
+import type { loader } from "./server";
+export { loader } from "./server";
 
 const resourceName = {
   singular: "Chats",
