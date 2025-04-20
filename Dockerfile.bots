@@ -12,7 +12,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 ENV PUPPETEER_EXECUTABLE_PATH='/usr/bin/chromium'
 
-# COPY pnpm-lock.yaml ./
+COPY pnpm-lock.yaml ./
 COPY package.json ./
 COPY pnpm-workspace.yaml ./
 COPY tsconfig.base.json ./
@@ -24,7 +24,7 @@ COPY packages/types/package.json packages/types/
 COPY packages/database/package.json packages/database/
 COPY packages/services/package.json packages/services/
 
-RUN corepack enable && pnpm install
+RUN corepack enable && pnpm install --frozen-lockfile
 
 COPY apps/bots apps/bots
 

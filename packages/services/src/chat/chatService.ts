@@ -1,7 +1,8 @@
-import { Chats, Messages } from "@internal/database";
+import { Chats ,Messages} from "@internal/database";
 import { IPlatform, ISession, MessageRole } from "@internal/types";
 import { AiClient } from "../openAi/openAiService";
 import { extractTextWithoutAnnotations } from "../helpers";
+import { MessagesPage } from "openai/resources/beta/threads/messages";
 
 export class ChatService extends AiClient {
   public platform: IPlatform;
@@ -78,7 +79,7 @@ export class ChatService extends AiClient {
   }
 
   async getAllMessages(chatId: string) {
-    const messages = await this.aiClient.beta.threads.messages.list(chatId, {
+    const messages: MessagesPage = await this.aiClient.beta.threads.messages.list(chatId, {
       limit: 100,
     });
 

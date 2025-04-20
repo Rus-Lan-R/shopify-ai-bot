@@ -1,5 +1,5 @@
 import { FormProvider, useForm } from "react-hook-form";
-import { FormInput } from "../form/FormInput";
+import { FormInput } from "app/components/form/FormInput";
 import { BlockStack, Button, Form, InlineStack } from "@shopify/polaris";
 import { useSubmit } from "@remix-run/react";
 import { useLoading } from "app/helpers/useLoading";

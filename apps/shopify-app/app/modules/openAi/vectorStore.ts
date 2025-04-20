@@ -1,5 +1,5 @@
 import { openAi } from "app/services/openAi.server";
-import { createFileFromObject } from "../../helpers/createFileFromObject";
+import { createFileFromObject } from "app/helpers/createFileFromObject";
 import { FileTypes, VsFile } from "./openAi.interfaces";
 
 export const populateVectorStoreInfo = async ({
