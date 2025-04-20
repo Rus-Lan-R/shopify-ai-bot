@@ -6,7 +6,9 @@
   "type": "module",
   "private": true,
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+     "typescript": "^5.0.0"
+  },
   "scripts": {
     "build": "tsup"
   }

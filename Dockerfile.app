@@ -16,6 +16,7 @@ COPY tsconfig.json ./
 COPY tsup.config.ts ./
 
 COPY apps/shopify-app/package.json apps/shopify-app/
+COPY packages/types/package.json packages/types/
 COPY packages/database/package.json packages/database/
 COPY packages/services/package.json packages/services/
 

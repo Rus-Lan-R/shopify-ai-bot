@@ -19,8 +19,7 @@
   "dependencies": {
     "@internal/database": "workspace:*",
     "@internal/services": "workspace:*",
-    "@internal/types": "workspace:*",
-    "add": "^2.0.6"
+    "@internal/types": "workspace:*"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
