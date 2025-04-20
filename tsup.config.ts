@@ -31,4 +31,14 @@ export default defineConfig([
     dts: true,
     minify: true,
   },
+  {
+    entry: ["packages/types/src/index.ts"],
+    outDir: "packages/types/dist",
+    format: ["esm"],
+    splitting: false,
+    sourcemap: true,
+    clean: true,
+    dts: true,
+    minify: true,
+  },
 ]);

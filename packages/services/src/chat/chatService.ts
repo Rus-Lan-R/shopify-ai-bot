@@ -1,10 +1,5 @@
-import {
-  Chats,
-  IPlatform,
-  ISession,
-  MessageRole,
-  Messages,
-} from "@internal/database";
+import { Chats, Messages } from "@internal/database";
+import { IPlatform, ISession, MessageRole } from "@internal/types";
 import { AiClient } from "../openAi/openAiService";
 import { extractTextWithoutAnnotations } from "../helpers";
 

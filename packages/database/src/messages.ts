@@ -1,10 +1,6 @@
+import { MessageRole } from "@internal/types";
 import mongoose, { model, Schema } from "mongoose";
 
-export enum MessageRole {
-  ASSISTANT = "assistant",
-  USER = "user",
-  MANAGER = "manager",
-}
 // 🗨️ Messages
 const MessageSchema = new Schema(
   {

@@ -1,26 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
-
-export enum IntegrationStatus {
-  NEW = "NEW",
-  ACTIVE = "ACTIVE",
-  CONNECTING = "CONNECTING",
-  DISCONNECTED = "DISCONNECTED",
-}
-
-export enum PlatformName {
-  TELEGRAM = "Telegram",
-  INSTAGRAM = "Instagram",
-  WHATSAPP = "WhatsApp",
-  WEBSITE = "Website",
-}
-
-export interface IPlatform {
-  _id: string;
-  primaryApiKey: string;
-  sessionId: string;
-  name: PlatformName;
-  integrationStatus: IntegrationStatus;
-}
+import { IPlatform, PlatformName, IntegrationStatus } from "@internal/types";
 
 // 🔌 Platforms
 const PlatformSchema = new Schema<IPlatform>(

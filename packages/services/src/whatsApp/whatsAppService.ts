@@ -1,9 +1,5 @@
-import {
-  type IPlatform,
-  type ISession,
-  IntegrationStatus,
-  Platforms,
-} from "@internal/database";
+import { Platforms } from "@internal/database";
+import { IPlatform, IntegrationStatus, ISession } from "@internal/types";
 import { ChatService } from "../chat/chatService";
 import { logerFunction } from "../helpers";
 import whatsapp from "whatsapp-web.js";
@@ -17,7 +13,7 @@ export class WhatsAppBot extends ChatService {
       puppeteer: {
         // executablePath: executablePath(),
         headless: true,
-        args: ['--no-sandbox'],
+        args: ["--no-sandbox"],
       },
       authStrategy: new whatsapp.LocalAuth({ clientId: platform._id }),
     });

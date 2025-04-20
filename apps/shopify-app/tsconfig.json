@@ -21,7 +21,8 @@
     "paths": {
       "app/*": ["app/*"],
       "@internal/database": ["packages/database/dist"],
-      "@internal/services": ["packages/services/dist"]
+      "@internal/services": ["packages/services/dist"],
+      "@internal/types": ["packages/services/dist"]
     }
   }
 }

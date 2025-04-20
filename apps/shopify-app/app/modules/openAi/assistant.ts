@@ -1,10 +1,10 @@
+import { Platforms } from "@internal/database";
 import {
   IntegrationStatus,
   IPlatform,
   ISession,
   PlatformName,
-  Platforms,
-} from "@internal/database";
+} from "@internal/types";
 import { ChatService } from "@internal/services";
 import { openAi, openAiKey } from "app/services/openAi.server";
 

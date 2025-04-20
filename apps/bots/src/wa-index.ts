@@ -1,14 +1,12 @@
-import {
-  Platforms,
-  PlatformName,
-  IPlatform,
-  Sessions,
-  ISession,
-  IntegrationStatus,
-  MongoDB,
-} from "@internal/database";
+import { Platforms, Sessions, MongoDB } from "@internal/database";
 import { WhatsAppBot } from "@internal/services";
 import { debounce } from "./helpers/debaunce";
+import {
+  IntegrationStatus,
+  IPlatform,
+  ISession,
+  PlatformName,
+} from "@internal/types";
 
 const listenBots = async () => {
   const whatsAppPlatforms = await Platforms.find<IPlatform>({

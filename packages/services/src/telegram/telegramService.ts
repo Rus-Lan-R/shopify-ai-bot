@@ -1,5 +1,5 @@
 import TgBot, { Message } from "node-telegram-bot-api";
-import { IPlatform, ISession } from "@internal/database";
+import { IPlatform, ISession } from "@internal/types";
 import { ChatService } from "../chat/chatService";
 import { logerFunction } from "../helpers";
 

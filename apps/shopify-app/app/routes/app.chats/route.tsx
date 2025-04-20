@@ -7,9 +7,8 @@ import {
   Text,
   useIndexResourceState,
 } from "@shopify/polaris";
-
 import { useLoaderData } from "@remix-run/react";
-import { PlatformName } from "@internal/database";
+import { PlatformName } from "@internal/types";
 import { useMemo } from "react";
 import { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import {

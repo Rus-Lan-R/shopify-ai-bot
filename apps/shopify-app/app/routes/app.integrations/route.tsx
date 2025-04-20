@@ -9,10 +9,10 @@ import {
 } from "@shopify/polaris";
 import { useLoaderData } from "@remix-run/react";
 import { useMemo } from "react";
-import { IPlatform, PlatformName } from "@internal/database";
-import type { loader } from "./server";
+import { IPlatform, PlatformName } from "@internal/types";
 import { TelegramFormIntegrations } from "app/components/integrations/TelegramFormIntegration";
 import { WhatsAppFormIntegration } from "app/components/integrations/WhatsAppFormIntegration";
+import type { loader } from "./server";
 export { loader, action } from "./server";
 
 export default function Index() {

@@ -4,16 +4,11 @@ import {
   json,
   LoaderFunctionArgs,
 } from "@remix-run/node";
-import {
-  IPlatform,
-  ISession,
-  PlatformName,
-  Platforms,
-  Sessions,
-} from "@internal/database";
+import { Platforms, Sessions } from "@internal/database";
+import { IPlatform, ISession, PlatformName } from "@internal/types";
 import { ChatService } from "@internal/services";
-import { formDataToObject } from "../helpers/utils";
 import { openAiKey } from "app/services/openAi.server";
+import { formDataToObject } from "app/helpers/utils";
 
 export type MainChatLoader = typeof loader;
 

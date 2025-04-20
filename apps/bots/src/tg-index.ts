@@ -1,14 +1,12 @@
-import {
-  ISession,
-  Sessions,
-  IPlatform,
-  PlatformName,
-  Platforms,
-  MongoDB,
-  IntegrationStatus,
-} from "@internal/database";
+import { Sessions, Platforms, MongoDB } from "@internal/database";
 import { TelegramBot } from "@internal/services";
 import { debounce } from "./helpers/debaunce";
+import {
+  IPlatform,
+  PlatformName,
+  IntegrationStatus,
+  ISession,
+} from "@internal/types";
 
 const listenBots = async () => {
   let createdBots: TelegramBot[] = [];

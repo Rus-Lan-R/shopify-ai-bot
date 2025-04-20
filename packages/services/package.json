@@ -7,6 +7,7 @@
   "private": true,
   "dependencies": {
     "@internal/database": "workspace:*",
+    "@internal/types": "workspace:*",
     "node-telegram-bot-api": "^0.66.0",
     "openai": "^4.93.0",
     "whatsapp-web.js": "^1.27.0"
@@ -18,6 +19,7 @@
     "build": "tsup"
   },
   "_moduleAliases": {
-    "@internal/database": "packages/database/dist"
+    "@internal/database": "packages/database/dist",
+    "@internal/types": "packages/types/dist"
   }
 }

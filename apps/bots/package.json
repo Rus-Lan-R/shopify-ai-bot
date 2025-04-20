@@ -19,6 +19,7 @@
   "dependencies": {
     "@internal/database": "workspace:*",
     "@internal/services": "workspace:*",
+    "@internal/types": "workspace:*",
     "add": "^2.0.6"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
   },
   "_moduleAliases": {
     "@internal/services": "packages/services/dist",
-    "@internal/database": "packages/database/dist"
+    "@internal/database": "packages/database/dist",
+    "@internal/types": "packages/types/dist"
   }
 }

@@ -29,6 +29,7 @@
   "dependencies": {
     "@internal/database": "workspace:*",
     "@internal/services": "workspace:*",
+    "@internal/types": "workspace:*",
     "@remix-run/dev": "^2.15.0",
     "@remix-run/fs-routes": "^2.15.0",
     "@remix-run/node": "^2.15.0",
@@ -78,6 +79,7 @@
   "author": "ruslan",
   "_moduleAliases": {
     "@internal/services": "packages/services/dist",
-    "@internal/database": "packages/database/dist"
+    "@internal/database": "packages/database/dist",
+    "@internal/types": "packages/types/dist"
   }
 }

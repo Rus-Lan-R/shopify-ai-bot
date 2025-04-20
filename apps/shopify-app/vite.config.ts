@@ -49,6 +49,7 @@ export default defineConfig({
         __dirname,
         "../../packages/services/dist",
       ),
+      "@internal/types": path.resolve(__dirname, "../../packages/types/dist"),
     },
   },
   server: {
@@ -79,7 +80,9 @@ export default defineConfig({
   ],
   build: {
     assetsInlineLimit: 0,
-    rollupOptions: { external: ["@internal/database", "@internal/services"] },
+    rollupOptions: {
+      external: ["@internal/database", "@internal/services", "@internal/types"],
+    },
   },
   // optimizeDeps: {
   //   include: ["@shopify/app-bridge-react", "@shopify/polaris"],

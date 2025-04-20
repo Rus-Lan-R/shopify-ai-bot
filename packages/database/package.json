@@ -9,6 +9,10 @@
     "build": "tsup"
   },
   "dependencies": {
+    "@internal/types": "workspace:*",
     "mongoose": "^8.13.2"
+  },
+  "_moduleAliases": {
+    "@internal/types": "packages/types/dist"
   }
 }

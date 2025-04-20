@@ -23,6 +23,9 @@ RUN corepack enable && pnpm install --frozen-lockfile
 
 COPY apps/shopify-app apps/shopify-app
 
+COPY packages/types packages/types
+RUN pnpm --filter @internal/types build
+
 COPY packages/database packages/database
 RUN pnpm --filter @internal/database build
 
