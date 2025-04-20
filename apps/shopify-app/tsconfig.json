@@ -16,8 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "app/*": ["app/*"],
-      "@internal/database": ["packages/database/dist"],
-      "@internal/services": ["packages/services/dist"]
+      "@internal/database": ["packages/database/src"],
+      "@internal/services": ["packages/services/src"]
     }
   },
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
