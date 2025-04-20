@@ -21,7 +21,7 @@ jobs:
           echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username=_ --password-stdin registry.heroku.com
 
       - name: Build images with Docker Compose
-        run: docker-compose build
+        run: docker compose build
 
       - name: Tag and Push shopify-app as web
         run: |
