@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  bots:
+  chat-assistant-bots:
     build:
       context: .
       dockerfile: Dockerfile.bots
@@ -12,7 +12,7 @@ services:
       - .env
     image: registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
 
-  shopify-app:
+  chat-assistant-app:
     build:
       context: .
       dockerfile: Dockerfile.app
