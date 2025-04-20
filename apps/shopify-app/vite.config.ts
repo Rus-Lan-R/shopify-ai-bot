@@ -17,7 +17,7 @@ if (
   process.env.SHOPIFY_APP_URL = process.env.HOST;
   delete process.env.HOST;
 }
-
+console.log(process.env.HOST, process.env.SHOPIFY_APP_URL);
 const host = new URL(process.env.SHOPIFY_APP_URL || "http://localhost")
   .hostname;
 

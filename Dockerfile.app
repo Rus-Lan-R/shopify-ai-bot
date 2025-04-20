@@ -2,6 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+COPY .env .env
 COPY pnpm-lock.yaml ./
 COPY package.json ./
 COPY pnpm-workspace.yaml ./
