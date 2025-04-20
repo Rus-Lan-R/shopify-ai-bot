@@ -6,6 +6,8 @@ import {
   shopifyApp,
 } from "@shopify/shopify-app-remix/server";
 import { MongoDB } from "@internal/database";
+import dotenv from "dotenv";
+dotenv.config();
 
 const mongoDB = new MongoDB(process.env.DATABASE_URL || "");
 mongoDB.connect();

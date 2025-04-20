@@ -39,9 +39,6 @@ if (host === "localhost") {
 }
 
 export default defineConfig({
-  // define: {
-  //   "import.meta.env.SSR": "false",
-  // },
   resolve: {
     alias: {
       "@internal/database": path.resolve(
@@ -84,7 +81,7 @@ export default defineConfig({
     assetsInlineLimit: 0,
     rollupOptions: { external: ["@internal/database", "@internal/services"] },
   },
-  optimizeDeps: {
-    include: ["@shopify/app-bridge-react", "@shopify/polaris"],
-  },
+  // optimizeDeps: {
+  //   include: ["@shopify/app-bridge-react", "@shopify/polaris"],
+  // },
 }) satisfies UserConfig;
