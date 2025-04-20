@@ -5,20 +5,22 @@ import { Form, useLoaderData } from "@remix-run/react";
 import { login } from "../../shopify.server";
 
 import styles from "./styles.module.css";
+import { Platforms } from "@internal/database";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
+  const platforms = await Platforms.find().lean();
 
   if (url.searchParams.get("shop")) {
     throw redirect(`/app?${url.searchParams.toString()}`);
   }
 
-  return { showForm: Boolean(login) };
+  return { platforms, showForm: Boolean(login) };
 };
 
 export default function App() {
-  const { showForm } = useLoaderData<typeof loader>();
-
+  const { platforms, showForm } = useLoaderData<typeof loader>();
+  console.log(platforms);
   return (
     <div className={styles.index}>
       <div className={styles.content}>
