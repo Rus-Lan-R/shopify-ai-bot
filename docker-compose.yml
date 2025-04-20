@@ -10,7 +10,7 @@ services:
         OPENAI_API_KEY: ${OPENAI_API_KEY}
     env_file:
       - .env
-    image: registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+    image: chat-assistant-bots
 
   chat-assistant-app:
     build:
@@ -20,4 +20,4 @@ services:
         API_URL: ${API_URL}
     env_file:
       - .env
-    image: registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/web
+    image: chat-assistant-app
