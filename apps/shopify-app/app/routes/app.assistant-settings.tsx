@@ -18,8 +18,8 @@ import { useLoading } from "app/helpers/useLoading";
 import { FileTypes } from "app/modules/openAi/openAi.interfaces";
 import { FormInput } from "app/components/form/FormInput";
 import { firstLetterUpperCase } from "app/helpers/utils";
-import type { loader } from "./server";
-export { loader, action } from "./server";
+import type { loader } from "app/routes/app.assistant-settings.server";
+export { loader, action } from "app/routes/app.assistant-settings.server";
 
 export default function Index() {
   const { assistant, files, mainTheme } = useLoaderData<typeof loader>();

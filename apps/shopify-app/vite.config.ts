@@ -80,9 +80,9 @@ export default defineConfig({
   ],
   build: {
     assetsInlineLimit: 0,
-    rollupOptions: {
-      external: ["@internal/database", "@internal/services", "@internal/types"],
-    },
+    // rollupOptions: {
+    //   external: ["@internal/database", "@internal/services", "@internal/types"],
+    // },
   },
   // optimizeDeps: {
   //   include: ["@shopify/app-bridge-react", "@shopify/polaris"],

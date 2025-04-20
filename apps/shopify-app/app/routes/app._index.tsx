@@ -13,8 +13,8 @@ import { Await, useLoaderData } from "@remix-run/react";
 import { StatisticsCard } from "app/components/StatisticsCard/Stats";
 import { Suspense } from "react";
 import { ChatBot } from "app/packages/ChatBot";
-import type { loader } from "./server.js";
-export { loader } from "./server.js";
+import type { loader } from "app/routes/app.index.server.js";
+export { loader } from "app/routes/app.index.server.js";
 
 export default function Index() {
   const {
@@ -44,7 +44,7 @@ export default function Index() {
                     <Text as={"h2"} variant={"headingSm"}>
                       Ai Assistant Info
                     </Text>
-                    <Button fullWidth={false} url={"/app/settings"}>
+                    <Button fullWidth={false} url={"/app/assistant-settings"}>
                       Edit
                     </Button>
                   </InlineStack>
@@ -109,7 +109,7 @@ export default function Index() {
               heading="Start working with AI Assistant"
               action={{
                 content: "Setup Assistant",
-                url: "/app/settings",
+                url: "/app/assistant-settings",
               }}
               image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
             >

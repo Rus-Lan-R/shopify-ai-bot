@@ -18,8 +18,8 @@ import {
   MobileIcon,
 } from "@shopify/polaris-icons";
 import { localeTimeFormated } from "app/helpers/storeTime";
-import type { loader } from "./server";
-export { loader } from "./server";
+import type { loader } from "app/routes/app.chats.server";
+export { loader } from "app/routes/app.chats.server";
 
 const resourceName = {
   singular: "Chats",
