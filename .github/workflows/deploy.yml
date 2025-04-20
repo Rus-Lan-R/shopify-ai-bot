@@ -15,6 +15,7 @@ jobs:
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
+        shell: bash
 
       - name: Login to Heroku
         run: |
@@ -39,6 +40,8 @@ jobs:
           docker push registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/web
 
       - name: Release nodes
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
-          heroku container:release web -a ${{ secrets.HEROKU_BOTS_APP_NAME }}
+          /usr/local/bin/heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
+          /usr/local/bin/heroku container:release web -a ${{ secrets.HEROKU_BOTS_APP_NAME }}
