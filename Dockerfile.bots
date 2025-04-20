@@ -1,16 +1,17 @@
 FROM node:18-bullseye
 
-
 RUN apt-get update && \
     apt-get install -y chromium
 
 WORKDIR /app
 
+ARG DATABASE_URL
+ARG OPENAI_API_KEY
 
-
+ENV DATABASE_URL=${DATABASE_URL}
+ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 ENV PUPPETEER_EXECUTABLE_PATH='/usr/bin/chromium'
 
-COPY .env .env
 # COPY pnpm-lock.yaml ./
 COPY package.json ./
 COPY pnpm-workspace.yaml ./
