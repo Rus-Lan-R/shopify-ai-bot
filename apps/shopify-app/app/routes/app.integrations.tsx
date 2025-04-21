@@ -12,8 +12,8 @@ import { useMemo } from "react";
 import { IPlatform, PlatformName } from "@internal/types";
 import { TelegramFormIntegrations } from "app/components/integrations/TelegramFormIntegration";
 import { WhatsAppFormIntegration } from "app/components/integrations/WhatsAppFormIntegration";
-import type { loader } from "app/routes/app.integrations.server";
-export { loader, action } from "app/routes/app.integrations.server";
+import type { loader } from "app/server/app.integrations.server";
+export { loader, action } from "app/server/app.integrations.server";
 
 export default function Index() {
   const { platforms, isNewDisabled } = useLoaderData<typeof loader>();

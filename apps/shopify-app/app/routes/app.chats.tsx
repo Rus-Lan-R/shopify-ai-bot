@@ -1,4 +1,3 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
 import {
   Badge,
   Box,
@@ -18,8 +17,8 @@ import {
   MobileIcon,
 } from "@shopify/polaris-icons";
 import { localeTimeFormated } from "app/helpers/storeTime";
-import type { loader } from "app/routes/app.chats.server";
-export { loader } from "app/routes/app.chats.server";
+import type { loader } from "app/server/app.chats.server";
+export { loader } from "app/server/app.chats.server";
 
 const resourceName = {
   singular: "Chats",

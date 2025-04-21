@@ -13,8 +13,8 @@ import { Await, useLoaderData } from "@remix-run/react";
 import { StatisticsCard } from "app/components/StatisticsCard/Stats";
 import { Suspense } from "react";
 import { ChatBot } from "app/packages/ChatBot";
-import type { loader } from "app/routes/app.index.server.js";
-export { loader } from "app/routes/app.index.server.js";
+import type { loader } from "app/server/app._index.server.js";
+export { loader } from "app/server/app._index.server.js";
 
 export default function Index() {
   const {

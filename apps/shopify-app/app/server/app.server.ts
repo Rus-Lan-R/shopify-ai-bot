@@ -1,6 +1,3 @@
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
-import { AppProvider } from "@shopify/shopify-app-remix/react";
-import { NavMenu } from "@shopify/app-bridge-react";
 import type { HeadersFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { useRouteError } from "@remix-run/react";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
@@ -14,24 +11,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return { apiKey: process.env.SHOPIFY_API_KEY || "" };
 };
-
-export default function App() {
-  const { apiKey } = useLoaderData<typeof loader>();
-
-  return (
-    <AppProvider isEmbeddedApp apiKey={apiKey}>
-      <NavMenu>
-        <Link to="/app" rel="home">
-          Home
-        </Link>
-        <Link to="/app/chats">Chats</Link>
-        <Link to="/app/integrations">Integrations</Link>
-        <Link to="/app/assistant-settings">Settings</Link>
-      </NavMenu>
-      <Outlet />
-    </AppProvider>
-  );
-}
 
 // Shopify needs Remix to catch some thrown responses, so that their headers are included in the response.
 export function ErrorBoundary() {

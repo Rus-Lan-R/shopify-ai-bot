@@ -17,7 +17,7 @@
     "moduleResolution": "Bundler",
     "target": "ES2022",
     "baseUrl": ".",
-    "types": ["node"],
+    "types": ["@remix-run/node", "vite/client"],
     "paths": {
       "app/*": ["app/*"],
       "@internal/database": ["packages/database/dist"],
