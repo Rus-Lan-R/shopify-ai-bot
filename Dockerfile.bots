@@ -23,6 +23,7 @@ COPY apps/bots/package.json apps/bots/
 COPY packages/types/package.json packages/types/
 COPY packages/database/package.json packages/database/
 COPY packages/services/package.json packages/services/
+COPY packages/messengers/package.json packages/messengers/
 
 RUN corepack enable && pnpm install --frozen-lockfile
 
@@ -36,6 +37,9 @@ RUN pnpm --filter @internal/database build
 
 COPY packages/services packages/services
 RUN pnpm --filter @internal/services build
+
+COPY packages/messengers packages/messengers
+RUN pnpm --filter @internal/messengers build
 
 
 RUN pnpm --filter bots build
