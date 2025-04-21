@@ -73,11 +73,6 @@
     "@shopify/plugin-cloudflare"
   ],
   "author": "ruslan",
-  "_moduleAliases": {
-    "@internal/services": "packages/services/dist",
-    "@internal/database": "packages/database/dist",
-    "@internal/types": "packages/types/dist"
-  },
   "overrides": {
     "@graphql-tools/url-loader": "8.0.16"
   },

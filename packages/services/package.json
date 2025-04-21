@@ -5,6 +5,12 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "private": true,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "dependencies": {
     "@internal/database": "workspace:*",
     "@internal/types": "workspace:*",
