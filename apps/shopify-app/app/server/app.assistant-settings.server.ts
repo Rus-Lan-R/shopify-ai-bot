@@ -82,10 +82,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           await Sessions.updateOne(
             { _id: session._id },
             {
-              assistantName: assistantName || "",
-              assistantPrompt: assistantPrompt || "",
+              assistantName: assistantName ?? "",
+              assistantPrompt: assistantPrompt ?? "",
               assistantVectorStoreId: vectorStoreId,
-              welcomeMessage: welcomeMessage || "",
+              welcomeMessage: welcomeMessage ?? "",
               assistantId,
               mainChatId,
               isDevStore: isDevStore,
