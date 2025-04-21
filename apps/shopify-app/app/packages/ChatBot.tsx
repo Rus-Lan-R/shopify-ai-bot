@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Chat } from "../components/chat/Chat";
+import { Chat } from "app/components/chat/Chat";
 import { useFetcher } from "@remix-run/react";
 import { MainChatLoader } from "app/routes/api.chat";
 import { IMessage } from "app/components/publicChat/PublicChat";
-import { MessageRole } from "../../../../packages/types/src";
+import { MessageRole } from "@internal/types";
 
 export const ChatBot = (props: { shop: string; chatId: string }) => {
   const { shop, chatId } = props;

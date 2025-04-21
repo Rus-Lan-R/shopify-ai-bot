@@ -1,16 +1,16 @@
 import { Limitations, Sessions } from "@internal/database";
-import { ILimitation } from "../../../../packages/types/src";
+import { ILimitation } from "@internal/types";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { createGraphqlRequest } from "../api/graphql";
-import { CREATE_SCRIPT, DELETE_SCRIPT } from "../api/scripts/scripts.gql";
-import { formDataToObject } from "../helpers/utils";
-import { assistantInit, assistantUpdate } from "../modules/openAi/assistant";
-import { FileTypes, VsFile } from "../modules/openAi/openAi.interfaces";
-import { ExtendedSession } from "../modules/sessionStorage";
-import { getShopInfo } from "../modules/shop/getShopInfo";
-import { getMainTheme } from "../modules/themes/getThemes";
-import { dataSync } from "../modules/vectoreStoreSync";
-import { authenticate } from "../shopify.server";
+import { createGraphqlRequest } from "app/api/graphql";
+import { CREATE_SCRIPT, DELETE_SCRIPT } from "app/api/scripts/scripts.gql";
+import { formDataToObject } from "app/helpers/utils";
+import { assistantInit, assistantUpdate } from "app/modules/openAi/assistant";
+import { FileTypes, VsFile } from "app/modules/openAi/openAi.interfaces";
+import { ExtendedSession } from "app/modules/sessionStorage";
+import { getShopInfo } from "app/modules/shop/getShopInfo";
+import { getMainTheme } from "app/modules/themes/getThemes";
+import { dataSync } from "app/modules/vectoreStoreSync";
+import { authenticate } from "app/shopify.server";
 
 export type SettingsLoaderType = typeof loader;
 export const loader = async ({ request }: LoaderFunctionArgs) => {

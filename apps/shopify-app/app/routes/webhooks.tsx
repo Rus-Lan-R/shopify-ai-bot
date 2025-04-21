@@ -1,7 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { Chats, Messages, Platforms, Sessions } from "@internal/database";
-import { IChat } from "../../../../packages/types/src";
-
+import { IChat } from "@internal/types";
 import { ExtendedSession } from "app/modules/sessionStorage";
 import { FileTypes } from "app/modules/openAi/openAi.interfaces";
 import { openAi } from "app/services/openAi.server";

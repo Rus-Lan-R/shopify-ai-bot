@@ -36,12 +36,12 @@ jobs:
 
       - name: Tag and Push nodes
         run: |
-          docker tag chat-assistant-bots registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/web
-          docker push registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/web
+          docker tag chat-assistant-bots registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/worker
+          docker push registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/worker
 
       - name: Release nodes
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           /usr/local/bin/heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
-          /usr/local/bin/heroku container:release web -a ${{ secrets.HEROKU_BOTS_APP_NAME }}
+          /usr/local/bin/heroku container:release worker -a ${{ secrets.HEROKU_BOTS_APP_NAME }}

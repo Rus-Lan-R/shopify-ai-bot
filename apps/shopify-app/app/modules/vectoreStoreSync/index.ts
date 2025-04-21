@@ -1,9 +1,9 @@
 import { getAllProducts } from "../products/getAllProducts";
-import { GraphqlRequest } from "../../api/graphql";
+import { GraphqlRequest } from "app/api/graphql";
 import { getShopInfo } from "../shop/getShopInfo";
-import { FileTypes, VsFile } from "../openAi/openAi.interfaces";
-import { populateVectorStoreInfo } from "../openAi/vectorStore";
 import { getAllLocations } from "../locations/getLocations";
+import { populateVectorStoreInfo } from "../openAi/vectorStore";
+import { FileTypes, VsFile } from "../openAi/openAi.interfaces";
 
 const dataFunctionsMap = (
   type: FileTypes,

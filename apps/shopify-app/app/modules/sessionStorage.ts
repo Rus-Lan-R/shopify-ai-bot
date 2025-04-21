@@ -1,7 +1,7 @@
 import { Session } from "@shopify/shopify-app-remix/server";
 import { SessionStorage } from "@shopify/shopify-app-session-storage";
 import { Sessions } from "@internal/database";
-import { ISession } from "../../../../packages/types/src";
+import { ISession } from "@internal/types";
 
 export type ExtendedSession = Session & ISession;
 export interface MongoDBSessionStorageOptions {

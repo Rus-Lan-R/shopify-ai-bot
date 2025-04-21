@@ -25,7 +25,7 @@ import { CREATE_SCRIPT, DELETE_SCRIPT } from "app/api/scripts/scripts.gql";
 import { dataSync } from "app/modules/vectoreStoreSync";
 import { getShopInfo } from "app/modules/shop/getShopInfo";
 import { assistantInit, assistantUpdate } from "app/modules/openAi/assistant";
-import { ILimitation } from "../../../../packages/types/src";
+import { ILimitation } from "@internal/types";
 import { firstLetterUpperCase, formDataToObject } from "app/helpers/utils";
 import { useLoaderData, useSubmit } from "@remix-run/react";
 import { useLoading } from "app/helpers/useLoading";
