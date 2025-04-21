@@ -43,11 +43,11 @@ export default defineConfig({
     alias: {
       "@internal/database": path.resolve(
         __dirname,
-        "../../packages/database/dist",
+        "../../packages/database/src",
       ),
       "@internal/services": path.resolve(
         __dirname,
-        "../../packages/services/dist",
+        "../../packages/services/src",
       ),
       "@internal/types": path.resolve(__dirname, "../../packages/types/dist"),
     },
@@ -81,7 +81,12 @@ export default defineConfig({
   build: {
     assetsInlineLimit: 0,
     rollupOptions: {
-      external: ["@internal/database", "@internal/services", "@internal/types"],
+      external: [
+        "@internal/database",
+        "@internal/services",
+        "@internal/types",
+        "fluent-ffmpeg",
+      ],
     },
   },
   // optimizeDeps: {

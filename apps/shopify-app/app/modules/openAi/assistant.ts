@@ -1,11 +1,11 @@
-import { Platforms } from "@internal/database";
+import { Platforms } from "../../../../../packages/database/src";
 import {
   IntegrationStatus,
   IPlatform,
   ISession,
   PlatformName,
-} from "@internal/types";
-import { ChatService } from "@internal/services";
+} from "../../../../../packages/types/src";
+import { ChatService } from "../../../../../packages/services/src";
 import { openAi, openAiKey } from "app/services/openAi.server";
 
 const devPromopt = `vector storage files contain information about products`;

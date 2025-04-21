@@ -1,6 +1,6 @@
 import { BlockStack, Box, Card, Scrollable, Text } from "@shopify/polaris";
 import { IMessage } from "../publicChat/PublicChat";
-import { MessageRole } from "@internal/types";
+import { MessageRole } from "../../../../../packages/types/src";
 
 export const ChatBody = (props: {
   messages: IMessage[];

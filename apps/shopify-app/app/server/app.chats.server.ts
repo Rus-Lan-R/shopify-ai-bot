@@ -1,5 +1,5 @@
-import { Chats } from "@internal/database";
-import { IChat, IPlatform } from "@internal/types";
+import { Chats } from "../../../../packages/database/src";
+import { IChat, IPlatform } from "../../../../packages/types/src";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { ExtendedSession } from "app/modules/sessionStorage";
 import { authenticate } from "app/shopify.server";

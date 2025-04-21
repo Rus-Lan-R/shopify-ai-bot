@@ -10,10 +10,10 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@internal/database": ["packages/database/dist"],
-      "@internal/services": ["packages/services/dist"],
-      "@internal/types": ["packages/types/dist"],
-      "app/*": ["apps/shopify-app/app/*"]
+      "@internal/database": ["./packages/database/dist"],
+      "@internal/services": ["./packages/services/dist"],
+      "@internal/messengers": ["./packages/messengers/dist"],
+      "@internal/types": ["./packages/types/dist"]
     }
   },
   "include": ["apps/**/*", "packages/**/*"]

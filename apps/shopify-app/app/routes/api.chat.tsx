@@ -4,9 +4,13 @@ import {
   json,
   LoaderFunctionArgs,
 } from "@remix-run/node";
-import { Platforms, Sessions } from "@internal/database";
-import { IPlatform, ISession, PlatformName } from "@internal/types";
-import { ChatService } from "@internal/services";
+import { Platforms, Sessions } from "../../../../packages/database/src";
+import {
+  IPlatform,
+  ISession,
+  PlatformName,
+} from "../../../../packages/types/src";
+import { ChatService } from "../../../../packages/services/src";
 import { openAiKey } from "app/services/openAi.server";
 import { formDataToObject } from "app/helpers/utils";
 

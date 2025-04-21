@@ -6,6 +6,9 @@
     "packages/*"
   ],
   "scripts": {
+    "prebuild": "pnpm --filter @internal/types build && pnpm --filter @internal/database run build && pnpm --filter @internal/services run build && pnpm --filter @internal/messengers run build",
+    "build:shopify": "pnpm run prebuild && pnpm run --filter shopify-app build",
+    "start:shopify": "pnpm run --filter shopify-app start",
     "dev:shopify": "shopify app dev --path=apps/shopify-app",
     "dev": "concurrently \"pnpm --filter bots dev:tg\"  \"pnpm --filter bots dev:wa\"",
     "dev:tg": "pnpm --filter bots dev:tg",
@@ -16,8 +19,7 @@
     "docker:build": "docker build -t bots --file Dockerfile.bots ."
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "module-alias": "^2.2.3"
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@types/node": "^22.2.0",

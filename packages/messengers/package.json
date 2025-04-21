@@ -1,5 +1,5 @@
 {
-  "name": "@internal/services",
+  "name": "@internal/messengers",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,9 @@
   "dependencies": {
     "@internal/database": "workspace:*",
     "@internal/types": "workspace:*",
-    "openai": "^4.93.0"
+    "@internal/services": "workspace:*",
+    "node-telegram-bot-api": "^0.66.0",
+    "whatsapp-web.js": "^1.27.0"
   },
   "devDependencies": {
     "@types/node-telegram-bot-api": "^0.64.8"
@@ -24,6 +26,7 @@
   },
   "_moduleAliases": {
     "@internal/database": "packages/database/dist",
-    "@internal/types": "packages/types/dist"
+    "@internal/types": "packages/types/dist",
+    "@internal/services": "packages/types/dist"
   }
 }

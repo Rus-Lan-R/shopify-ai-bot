@@ -9,7 +9,7 @@ import {
 } from "@shopify/polaris";
 import { useLoaderData } from "@remix-run/react";
 import { useMemo } from "react";
-import { IPlatform, PlatformName } from "@internal/types";
+import { IPlatform, PlatformName } from "../../../../packages/types/src";
 import { TelegramFormIntegrations } from "app/components/integrations/TelegramFormIntegration";
 import { WhatsAppFormIntegration } from "app/components/integrations/WhatsAppFormIntegration";
 import type { loader } from "app/server/app.integrations.server";

@@ -1,5 +1,5 @@
 import { Sessions, Platforms, MongoDB } from "@internal/database";
-import { TelegramBot } from "@internal/services";
+import { TelegramBot } from "@internal/messengers";
 import {
   IPlatform,
   PlatformName,
