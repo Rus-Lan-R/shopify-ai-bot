@@ -1,6 +1,6 @@
 import TgBot, { Message } from "node-telegram-bot-api";
 import { IPlatform, ISession } from "@internal/types";
-import { ChatService } from "../chat/chatService";
+import { ChatService } from "@internal/services";
 import { logerFunction } from "../helpers";
 
 export class TelegramBot extends ChatService {
