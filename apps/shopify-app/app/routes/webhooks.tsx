@@ -1,5 +1,10 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Chats, Messages, Platforms, Sessions } from "@internal/database";
+import {
+  Chats,
+  Messages,
+  Platforms,
+  Sessions,
+} from "../../../../packages/database/src";
 import { IChat } from "../../../../packages/types/src";
 
 import { ExtendedSession } from "app/modules/sessionStorage";

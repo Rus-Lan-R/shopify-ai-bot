@@ -21,10 +21,15 @@ export class MongoDBSessionStorage implements SessionStorage {
   }
 
   public async loadSession(id: string): Promise<ExtendedSession | undefined> {
-    const result = await Sessions.findOne({ _id: id })
-      .populate("limitationId")
-      .lean();
-    return result ? new Session({ ...result, id: result._id }) : undefined;
+    console.log("id", id);
+    try {
+      const result = await Sessions.findOne({ _id: id })
+        .populate("limitationId")
+        .lean();
+      return result ? new Session({ ...result, id: result._id }) : undefined;
+    } catch (error) {
+      console.log("error", error);
+    }
   }
 
   public async deleteSession(id: string): Promise<boolean> {

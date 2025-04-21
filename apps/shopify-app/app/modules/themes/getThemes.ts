@@ -18,5 +18,5 @@ export const getMainTheme = async ({
     roles: ["MAIN"],
   });
 
-  return { mainTheme: allThemes.data.themes?.nodes?.[0] };
+  return { mainTheme: allThemes?.data?.themes?.nodes?.[0] };
 };

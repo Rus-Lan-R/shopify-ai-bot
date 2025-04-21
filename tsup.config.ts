@@ -9,7 +9,7 @@ export default defineConfig([
     sourcemap: false,
     clean: true,
     dts: false,
-    minify: true,
+    minify: false,
   },
   {
     entry: ["packages/services/src/index.ts"],
@@ -19,7 +19,7 @@ export default defineConfig([
     sourcemap: false,
     clean: true,
     dts: true,
-    minify: true,
+    minify: false,
   },
   {
     entry: ["packages/messengers/src/index.ts"],
@@ -29,7 +29,7 @@ export default defineConfig([
     sourcemap: false,
     clean: true,
     dts: true,
-    minify: true,
+    minify: false,
   },
   {
     entry: ["packages/database/src/index.ts"],
@@ -39,7 +39,7 @@ export default defineConfig([
     sourcemap: false,
     clean: true,
     dts: true,
-    minify: true,
+    minify: false,
   },
   {
     entry: ["packages/types/src/index.ts"],
@@ -49,6 +49,6 @@ export default defineConfig([
     sourcemap: false,
     clean: true,
     dts: true,
-    minify: true,
+    minify: false,
   },
 ]);

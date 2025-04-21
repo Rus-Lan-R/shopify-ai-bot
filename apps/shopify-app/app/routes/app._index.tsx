@@ -16,7 +16,7 @@ import { ChatBot } from "app/packages/ChatBot";
 import type { loader } from "app/server/app._index.server.js";
 export { loader } from "app/server/app._index.server.js";
 
-export default function Index() {
+export default function IndexPage() {
   const {
     assistantId,
     assistant,

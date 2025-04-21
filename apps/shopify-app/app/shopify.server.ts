@@ -1,16 +1,12 @@
 import "@shopify/shopify-app-remix/adapters/node";
-import { MongoDBSessionStorage } from "./modules/sessionStorage";
+import { MongoDBSessionStorage } from "app/modules/sessionStorage";
 import {
   ApiVersion,
   AppDistribution,
   shopifyApp,
 } from "@shopify/shopify-app-remix/server";
-import { MongoDB } from "@internal/database";
 import dotenv from "dotenv";
 dotenv.config();
-
-const mongoDB = new MongoDB(process.env.DATABASE_URL || "");
-mongoDB.connect();
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,

@@ -1,5 +1,5 @@
 import { getAllProducts } from "../products/getAllProducts";
-import { GraphqlRequest } from "app/api/graphql";
+import { GraphqlRequest } from "../../api/graphql";
 import { getShopInfo } from "../shop/getShopInfo";
 import { FileTypes, VsFile } from "../openAi/openAi.interfaces";
 import { populateVectorStoreInfo } from "../openAi/vectorStore";

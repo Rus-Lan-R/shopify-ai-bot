@@ -9,5 +9,5 @@ export default defineConfig({
   clean: true,
   dts: true,
   target: "esnext",
-  minify: true,
+  minify: false,
 });

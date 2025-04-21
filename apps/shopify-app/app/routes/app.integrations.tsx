@@ -15,7 +15,7 @@ import { WhatsAppFormIntegration } from "app/components/integrations/WhatsAppFor
 import type { loader } from "app/server/app.integrations.server";
 export { loader, action } from "app/server/app.integrations.server";
 
-export default function Index() {
+export default function IntegrationsPage() {
   const { platforms, isNewDisabled } = useLoaderData<typeof loader>();
 
   const platformsBySlug = useMemo(() => {

@@ -11,7 +11,7 @@ export default defineConfig([
   {
     entry: ["src/tg-index.ts"],
     format: ["esm"],
-    minify: true,
+    minify: false,
     outDir: "dist",
     define: env,
     splitting: false,
@@ -20,12 +20,17 @@ export default defineConfig([
     dts: false,
     target: "esnext",
     noExternal: ["fs"],
-    external: ["@internal/database", "@internal/services"],
+    external: [
+      "@internal/database",
+      "@internal/services",
+      "@internal/messengers",
+      "@internal/types",
+    ],
   },
   {
     entry: ["src/wa-index.ts"],
     format: ["esm"],
-    minify: true,
+    minify: false,
     outDir: "dist",
     define: env,
     splitting: false,
@@ -34,6 +39,11 @@ export default defineConfig([
     dts: false,
     target: "esnext",
     noExternal: ["fs"],
-    external: ["@internal/database", "@internal/services"],
+    external: [
+      "@internal/database",
+      "@internal/services",
+      "@internal/messengers",
+      "@internal/types",
+    ],
   },
 ]);

@@ -9,7 +9,10 @@ function getConfig() {
       default: shopifyApiProject({
         apiType: ApiType.Admin,
         apiVersion: LATEST_API_VERSION,
-        documents: ["./app/**/*.{js,ts,jsx,tsx}", "./app/.server/**/*.{js,ts,jsx,tsx}"],
+        documents: [
+          "./app/**/*.{js,ts,jsx,tsx}",
+          "./app/.server/**/*.{js,ts,jsx,tsx}",
+        ],
         outputDir: "./app/types",
       }),
     },
@@ -37,6 +40,4 @@ function getConfig() {
   return config;
 }
 
-const config = getConfig();
-
-export default config;
+module.exports = getConfig();

@@ -8,7 +8,7 @@ export class MongoDB {
 
   async connect() {
     try {
-      console.log("MongoDB connecting...");
+      console.log("MongoDB connecting...", this.dbHost);
       await mongoose.connect(this.dbHost);
       console.log("MongoDB connected!");
     } catch (error) {
