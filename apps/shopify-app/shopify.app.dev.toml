@@ -1,14 +1,14 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b78f49118baa15c77d8adf447c933901"
-application_url = "https://butler-tool-licensed-frontpage.trycloudflare.com"
+application_url = "https://6da2-2402-d000-8128-e1a-810d-9d76-2c5c-5c4d.ngrok-free.app"
 embedded = true
 name = "Dev ChatPilot"
 handle = "dev-chatpilot"
 
 [build]
 include_config_on_deploy = true
-automatically_update_urls_on_dev = true
+automatically_update_urls_on_dev = false
 dev_store_url = "nikasoul-store.myshopify.com"
 
 [webhooks]
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://butler-tool-licensed-frontpage.trycloudflare.com/auth/callback",
-  "https://butler-tool-licensed-frontpage.trycloudflare.com/auth/shopify/callback",
-  "https://butler-tool-licensed-frontpage.trycloudflare.com/api/auth/callback"
+  "https://polyphonic-sensitivity-toxic-hc.trycloudflare.com/auth/callback",
+  "https://polyphonic-sensitivity-toxic-hc.trycloudflare.com/auth/shopify/callback",
+  "https://polyphonic-sensitivity-toxic-hc.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]

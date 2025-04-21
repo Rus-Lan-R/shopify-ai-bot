@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "fluent-ffmpeg": "^2.1.3",
     "module-alias": "^2.2.3"
   },
   "devDependencies": {
@@ -31,8 +30,5 @@
     "@internal/services": "packages/services/dist",
     "@internal/database": "packages/database/dist",
     "@internal/types": "packages/database/types"
-  },
-  "resolutions": {
-    "@graphql-tools/url-loader": "8.0.16"
   }
 }

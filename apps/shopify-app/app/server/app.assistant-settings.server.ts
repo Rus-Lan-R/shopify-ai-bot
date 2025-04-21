@@ -12,6 +12,7 @@ import { getMainTheme } from "app/modules/themes/getThemes";
 import { dataSync } from "app/modules/vectoreStoreSync";
 import { authenticate } from "app/shopify.server";
 
+export type SettingsLoaderType = typeof loader;
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const authData = await authenticate.admin(request);
   const session = authData.session as ExtendedSession;

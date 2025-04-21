@@ -1,7 +1,10 @@
 {
   "name": "shopify-app",
   "private": true,
-  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": "^18.20 || ^20.10 || >=21.0.0"
+  },
   "scripts": {
     "build": "npm run build:chat && remix vite:build",
     "dev": "shopify app dev",
@@ -21,10 +24,6 @@
     "sprite": "ts-node --require tsconfig-paths/register ./scripts/sprite.ts",
     "build:chat": "node esbuild.config.js",
     "heroku": "heroku container:login && heroku container:push web --app chat-assistant-app && heroku container:release web --app chat-assistant-app"
-  },
-  "type": "module",
-  "engines": {
-    "node": "^18.20 || ^20.10 || >=21.0.0"
   },
   "dependencies": {
     "@internal/database": "workspace:*",
@@ -73,13 +72,16 @@
   "trustedDependencies": [
     "@shopify/plugin-cloudflare"
   ],
-  "overrides": {
-    "@graphql-tools/url-loader": "8.0.16"
-  },
   "author": "ruslan",
   "_moduleAliases": {
     "@internal/services": "packages/services/dist",
     "@internal/database": "packages/database/dist",
     "@internal/types": "packages/types/dist"
+  },
+  "overrides": {
+    "@graphql-tools/url-loader": "8.0.16"
+  },
+  "resolutions": {
+    "@graphql-tools/url-loader": "8.0.16"
   }
 }
