@@ -7,7 +7,7 @@ import {
 } from "@remix-run/node";
 import { isbot } from "isbot";
 import { addDocumentResponseHeaders } from "app/shopify.server";
-import { MongoDB } from "../../../packages/database/src";
+import { MongoDB } from "@internal/database";
 import dotenv from "dotenv";
 dotenv.config();
 

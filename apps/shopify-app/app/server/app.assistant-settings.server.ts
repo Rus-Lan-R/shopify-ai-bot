@@ -1,4 +1,4 @@
-import { Limitations, Sessions } from "../../../../packages/database/src";
+import { Limitations, Sessions } from "@internal/database";
 import { ILimitation } from "../../../../packages/types/src";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { createGraphqlRequest } from "../api/graphql";

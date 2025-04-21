@@ -1,4 +1,4 @@
-import { Platforms } from "../../../../../packages/database/src";
+import { Platforms } from "@internal/database";
 import {
   IntegrationStatus,
   IPlatform,

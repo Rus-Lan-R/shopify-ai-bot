@@ -12,7 +12,7 @@ import {
   Page,
   Text,
 } from "@shopify/polaris";
-import { Limitations, Sessions } from "../../../../packages/database/src";
+import { Limitations, Sessions } from "@internal/database";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { createGraphqlRequest } from "app/api/graphql";
 import { FileTypes, VsFile } from "app/modules/openAi/openAi.interfaces";

@@ -4,7 +4,7 @@ import {
   json,
   LoaderFunctionArgs,
 } from "@remix-run/node";
-import { Platforms, Sessions } from "../../../../packages/database/src";
+import { Platforms, Sessions } from "@internal/database";
 import {
   IPlatform,
   ISession,

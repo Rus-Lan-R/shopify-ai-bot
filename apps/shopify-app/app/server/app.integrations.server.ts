@@ -1,4 +1,4 @@
-import { Platforms } from "../../../../packages/database/src";
+import { Platforms } from "@internal/database";
 import { IPlatform } from "../../../../packages/types/src";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { formDataToObject } from "app/helpers/utils";

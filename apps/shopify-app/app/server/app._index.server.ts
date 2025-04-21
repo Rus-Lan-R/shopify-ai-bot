@@ -1,4 +1,4 @@
-import { Chats, Messages, Platforms } from "../../../../packages/database/src";
+import { Chats, Messages, Platforms } from "@internal/database";
 import { defer, LoaderFunctionArgs } from "@remix-run/node";
 import { ExtendedSession } from "app/modules/sessionStorage";
 import { authenticate } from "app/shopify.server";

@@ -1,6 +1,6 @@
 import { Session } from "@shopify/shopify-app-remix/server";
 import { SessionStorage } from "@shopify/shopify-app-session-storage";
-import { Sessions } from "../../../../packages/database/src";
+import { Sessions } from "@internal/database";
 import { ISession } from "../../../../packages/types/src";
 
 export type ExtendedSession = Session & ISession;
