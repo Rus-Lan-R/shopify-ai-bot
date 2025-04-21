@@ -29,6 +29,6 @@
   "_moduleAliases": {
     "@internal/services": "packages/services/dist",
     "@internal/database": "packages/database/dist",
-    "@internal/types": "packages/database/types"
+    "@internal/types": "packages/types/dist"
   }
 }

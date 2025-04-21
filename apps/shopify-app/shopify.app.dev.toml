@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b78f49118baa15c77d8adf447c933901"
-application_url = "https://grown-nam-scientific-hc.trycloudflare.com"
+application_url = "https://directive-euros-trinidad-lang.trycloudflare.com"
 embedded = true
 name = "Dev ChatPilot"
 handle = "dev-chatpilot"
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://grown-nam-scientific-hc.trycloudflare.com/auth/callback",
-  "https://grown-nam-scientific-hc.trycloudflare.com/auth/shopify/callback",
-  "https://grown-nam-scientific-hc.trycloudflare.com/api/auth/callback"
+  "https://directive-euros-trinidad-lang.trycloudflare.com/auth/callback",
+  "https://directive-euros-trinidad-lang.trycloudflare.com/auth/shopify/callback",
+  "https://directive-euros-trinidad-lang.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]

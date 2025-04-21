@@ -3,6 +3,6 @@ import { authenticate } from "app/shopify.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticate.admin(request);
-
+  console.log("AUTH");
   return null;
 };
