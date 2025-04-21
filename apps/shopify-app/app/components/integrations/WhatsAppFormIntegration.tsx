@@ -4,7 +4,10 @@ import { useSubmit } from "@remix-run/react";
 import { useLoading } from "app/helpers/useLoading";
 import qrcode from "qrcode";
 import { useEffect, useState } from "react";
-import { IntegrationStatus, PlatformName } from "@internal/types";
+import {
+  IntegrationStatus,
+  PlatformName,
+} from "../../../../../packages/types/src";
 
 export const WhatsAppFormIntegration = (props: {
   primaryApiKey?: string | null;

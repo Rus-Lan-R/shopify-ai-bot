@@ -49,7 +49,7 @@ export default defineConfig({
         __dirname,
         "../../packages/services/src",
       ),
-      "@internal/types": path.resolve(__dirname, "../../packages/types/dist"),
+      "@internal/types": path.resolve(__dirname, "../../packages/types/src"),
     },
   },
   server: {

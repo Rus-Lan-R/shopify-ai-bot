@@ -4,7 +4,7 @@ import {
   IPlatform,
   ISession,
   PlatformName,
-} from "@internal/types";
+} from "../../../../../packages/types/src";
 import { ChatService } from "@internal/services";
 import { openAi, openAiKey } from "app/services/openAi.server";
 

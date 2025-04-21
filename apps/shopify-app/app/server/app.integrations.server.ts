@@ -1,5 +1,5 @@
 import { Platforms } from "@internal/database";
-import { IPlatform } from "@internal/types";
+import { IPlatform } from "../../../../packages/types/src";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { formDataToObject } from "app/helpers/utils";
 import { ExtendedSession } from "app/modules/sessionStorage";

@@ -20,9 +20,9 @@
     "types": ["@remix-run/node", "vite/client"],
     "paths": {
       "app/*": ["app/*"],
-      "@internal/database": ["../../packages/database/dist"],
-      "@internal/services": ["../../packages/services/dist"],
-      "@internal/types": ["../../packages/types/dist"]
+      "@internal/database": ["../../packages/database/src"],
+      "@internal/services": ["../../packages/services/src"],
+      "@internal/types": ["../../packages/types/src"]
     }
   }
 }
