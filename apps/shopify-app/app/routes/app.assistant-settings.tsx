@@ -96,7 +96,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           const limitation = await Limitations.findOne<ILimitation>(
             isDevStore ? { slug: "dev" } : { slug: "base" },
           );
-          console.log(limitation?._id);
 
           await Sessions.updateOne(
             { _id: session._id },

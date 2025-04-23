@@ -7,7 +7,7 @@ const renderComponent = () => {
   if (container) {
     const shopName = container?.getAttribute("data-shopName");
     const localChatId = localStorage.getItem("supportAiChatId");
-
+    console.log("localChatId", localChatId);
     ReactDOM.render(
       <>
         <div

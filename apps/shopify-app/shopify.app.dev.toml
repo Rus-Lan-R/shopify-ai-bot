@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b78f49118baa15c77d8adf447c933901"
-application_url = "https://3d6d-2402-d000-8128-e1a-810d-9d76-2c5c-5c4d.ngrok-free.app"
+application_url = "https://app-test.ngrok.dev"
 embedded = true
 name = "Dev ChatPilot"
 handle = "dev-chatpilot"
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://3d6d-2402-d000-8128-e1a-810d-9d76-2c5c-5c4d.ngrok-free.app/auth/callback",
-  "https://3d6d-2402-d000-8128-e1a-810d-9d76-2c5c-5c4d.ngrok-free.app/auth/shopify/callback",
-  "https://3d6d-2402-d000-8128-e1a-810d-9d76-2c5c-5c4d.ngrok-free.app/api/auth/callback"
+  "https://app-test.ngrok.dev/auth/callback",
+  "https://app-test.ngrok.dev/auth/shopify/callback",
+  "https://app-test.ngrok.dev/api/auth/callback"
 ]
 
 [access_scopes]

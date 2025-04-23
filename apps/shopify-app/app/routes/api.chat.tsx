@@ -54,7 +54,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   let preparedMessages;
   if (chatId) {
-    preparedMessages = await chatService.getAllMessages(chatId);
+    try {
+      preparedMessages = await chatService.getAllMessages(chatId);
+    } catch (error) {
+      throw new Response("Chat not found", {
+        status: 424,
+      });
+    }
   }
 
   return json(

@@ -21,7 +21,6 @@ export class MongoDBSessionStorage implements SessionStorage {
   }
 
   public async loadSession(id: string): Promise<ExtendedSession | undefined> {
-    console.log("id", id);
     try {
       const result = await Sessions.findOne({ _id: id })
         .populate("limitationId")

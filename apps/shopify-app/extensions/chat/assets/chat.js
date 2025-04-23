@@ -24556,23 +24556,29 @@ var RemixEmbed = (() => {
       }
     };
     (0, import_react.useEffect)(() => {
-      if (loaderData.chatId) {
-        (async () => {
-          const response = await fetch(
-            `${CHAT_API}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
-            {
-              method: "GET"
-            }
-          );
-          const data = await response.json();
-          setMessagesList(data.messages.length ? data.messages : []);
-          setLoaderData((prev) => ({
-            ...prev,
-            chatId: data.chatId,
-            assistantName: data.assistantName
-          }));
-        })();
-      }
+      (async () => {
+        if (loaderData.chatId) {
+          try {
+            const response = await fetch(
+              `${CHAT_API}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+              {
+                method: "GET"
+              }
+            );
+            const data = await response.json();
+            setMessagesList(data.messages.length ? data.messages : []);
+            setLoaderData((prev) => ({
+              ...prev,
+              chatId: data.chatId,
+              assistantName: data.assistantName
+            }));
+          } catch (error) {
+            await handleInit();
+          }
+        } else {
+          await handleInit();
+        }
+      })();
     }, [loaderData.chatId]);
     (0, import_react.useEffect)(() => {
       if (conversationRef.current) {
@@ -24586,28 +24592,31 @@ var RemixEmbed = (() => {
         textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
       }
     };
+    const handleInit = async () => {
+      const formData = new FormData();
+      formData.append("action", "init");
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          `${CHAT_API}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
+          {
+            method: "POST",
+            body: formData
+          }
+        );
+        const data = await response.json();
+        localStorage.setItem("supportAiChatId", data.chatId);
+        setLoaderData((prev) => ({ ...prev, chatId: data.chatId }));
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
+    };
     const handleOpen = async () => {
       setIsOpen((prev) => !prev);
       const localChatId = localStorage.getItem("supportAiChatId");
       if (!localChatId) {
-        const formData = new FormData();
-        formData.append("action", "init");
-        try {
-          setIsLoading(true);
-          const response = await fetch(
-            `${CHAT_API}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
-            {
-              method: "POST",
-              body: formData
-            }
-          );
-          const data = await response.json();
-          localStorage.setItem("supportAiChatId", data.chatId);
-          setLoaderData((prev) => ({ ...prev, chatId: data.chatId }));
-        } catch (error) {
-        } finally {
-          setIsLoading(false);
-        }
+        await handleInit();
       }
     };
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.widget, children: [
@@ -24705,6 +24714,7 @@ var RemixEmbed = (() => {
     if (container) {
       const shopName = container?.getAttribute("data-shopName");
       const localChatId = localStorage.getItem("supportAiChatId");
+      console.log("localChatId", localChatId);
       import_react_dom.default.render(
         /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(

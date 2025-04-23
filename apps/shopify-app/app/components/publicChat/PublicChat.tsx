@@ -65,28 +65,34 @@ const PublicChat = (props: {
   };
 
   useEffect(() => {
-    if (loaderData.chatId) {
-      (async () => {
-        const response = await fetch(
-          `${CHAT_API}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
-          {
-            method: "GET",
-          },
-        );
-        const data = (await response.json()) as {
-          assistantName: string;
-          messages: IMessage[];
-          chatId: string;
-        };
+    (async () => {
+      if (loaderData.chatId) {
+        try {
+          const response = await fetch(
+            `${CHAT_API}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+            {
+              method: "GET",
+            },
+          );
+          const data = (await response.json()) as {
+            assistantName: string;
+            messages: IMessage[];
+            chatId: string;
+          };
 
-        setMessagesList(data.messages.length ? data.messages : []);
-        setLoaderData((prev) => ({
-          ...prev,
-          chatId: data.chatId,
-          assistantName: data.assistantName,
-        }));
-      })();
-    }
+          setMessagesList(data.messages.length ? data.messages : []);
+          setLoaderData((prev) => ({
+            ...prev,
+            chatId: data.chatId,
+            assistantName: data.assistantName,
+          }));
+        } catch (error) {
+          await handleInit();
+        }
+      } else {
+        await handleInit();
+      }
+    })();
   }, [loaderData.chatId]);
 
   useEffect(() => {
@@ -103,29 +109,33 @@ const PublicChat = (props: {
     }
   };
 
+  const handleInit = async () => {
+    const formData = new FormData();
+    formData.append("action", "init");
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        `${CHAT_API}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+      const data = (await response.json()) as { chatId: string };
+      localStorage.setItem("supportAiChatId", data.chatId);
+      setLoaderData((prev) => ({ ...prev, chatId: data.chatId }));
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleOpen = async () => {
     setIsOpen((prev) => !prev);
     const localChatId = localStorage.getItem("supportAiChatId");
     if (!localChatId) {
-      const formData = new FormData();
-      formData.append("action", "init");
-
-      try {
-        setIsLoading(true);
-        const response = await fetch(
-          `${CHAT_API}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
-          {
-            method: "POST",
-            body: formData,
-          },
-        );
-        const data = (await response.json()) as { chatId: string };
-        localStorage.setItem("supportAiChatId", data.chatId);
-        setLoaderData((prev) => ({ ...prev, chatId: data.chatId }));
-      } catch (error) {
-      } finally {
-        setIsLoading(false);
-      }
+      await handleInit();
     }
   };
 
