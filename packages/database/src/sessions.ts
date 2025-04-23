@@ -1,3 +1,4 @@
+import { ISession } from "@internal/types";
 import mongoose, { Schema, model } from "mongoose";
 
 // 🧠 Sessions

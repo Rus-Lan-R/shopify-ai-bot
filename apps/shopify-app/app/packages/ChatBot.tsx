@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { Chat } from "app/components/chat/Chat";
 import { useFetcher } from "@remix-run/react";
 import { MainChatLoader } from "app/routes/api.chat";
-import { IMessage } from "app/components/publicChat/PublicChat";
+import { IChatMessage } from "app/components/publicChat/PublicChat";
 import { MessageRole } from "../../../../packages/types/src";
 
 export const ChatBot = (props: { shop: string; chatId: string }) => {
   const { shop, chatId } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [messagesList, setMessagesList] = useState<IMessage[]>([]);
+  const [messagesList, setMessagesList] = useState<IChatMessage[]>([]);
   const fetcher = useFetcher<MainChatLoader>();
 
   const handleSubmit = async (message: string) => {
@@ -49,6 +49,7 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
       messagesList={messagesList}
       isLoading={isLoading}
       onSend={handleSubmit}
+      watcherRole={MessageRole.USER}
     ></Chat>
   );
 };

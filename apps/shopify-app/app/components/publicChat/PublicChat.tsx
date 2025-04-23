@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import SpriteIcon from "app/components/SpriteIcon";
 import { mergeClassNames } from "app/helpers/utils";
 
-export interface IMessage {
+export interface IChatMessage {
   role: "assistant" | "user";
   text: string;
 }
@@ -35,7 +35,7 @@ const PublicChat = (props: {
     shopName,
   });
 
-  const [messagesList, setMessagesList] = useState<IMessage[]>([]);
+  const [messagesList, setMessagesList] = useState<IChatMessage[]>([]);
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (message: string) => {
@@ -76,7 +76,7 @@ const PublicChat = (props: {
           );
           const data = (await response.json()) as {
             assistantName: string;
-            messages: IMessage[];
+            messages: IChatMessage[];
             chatId: string;
           };
 

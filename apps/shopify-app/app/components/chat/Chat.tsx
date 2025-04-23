@@ -1,11 +1,13 @@
 import { Box, Button, Card, InlineStack, TextField } from "@shopify/polaris";
 import { ChatBody } from "./ChatBody";
 import { useState } from "react";
-import { IMessage } from "../publicChat/PublicChat";
+import { IChatMessage } from "../publicChat/PublicChat";
+import { IMessage, MessageRole } from "@internal/types";
 
 export const Chat = (props: {
   isLoading: boolean;
-  messagesList: IMessage[];
+  messagesList: (IMessage | IChatMessage)[];
+  watcherRole: MessageRole;
   onSend: (message: string) => void;
 }) => {
   const { messagesList, isLoading, onSend } = props;
@@ -20,7 +22,7 @@ export const Chat = (props: {
 
   return (
     <Card>
-      <ChatBody messages={messagesList}>
+      <ChatBody messages={messagesList} watcherRole={props.watcherRole}>
         <InlineStack
           gap={"300"}
           blockAlign={"stretch"}

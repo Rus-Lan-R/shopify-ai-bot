@@ -1,4 +1,4 @@
-import { MessageRole } from "@internal/types";
+import { IMessage, MessageRole } from "@internal/types";
 import mongoose, { model, Schema } from "mongoose";
 
 // 🗨️ Messages
@@ -11,11 +11,11 @@ const MessageSchema = new Schema(
       required: false,
       ref: "Platforms",
     },
-    direction: { type: String, enum: MessageRole, required: true },
+    role: { type: String, enum: MessageRole, required: true },
     text: { type: String, required: true },
   },
   { timestamps: true, collection: "Messages" }
 );
 
 export const Messages =
-  mongoose.models?.Messages || model("Messages", MessageSchema);
+  mongoose.models?.Messages || model<IMessage>("Messages", MessageSchema);

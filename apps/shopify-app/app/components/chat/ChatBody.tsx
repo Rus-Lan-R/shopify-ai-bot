@@ -1,12 +1,50 @@
 import { BlockStack, Box, Card, Scrollable, Text } from "@shopify/polaris";
-import { IMessage } from "../publicChat/PublicChat";
-import { MessageRole } from "../../../../../packages/types/src";
+import { IChatMessage } from "../publicChat/PublicChat";
+import { IMessage, MessageRole } from "../../../../../packages/types/src";
+
+const watcherToRoleStyle: {
+  [key in MessageRole]: {
+    [key in MessageRole]: { position: string; style: string };
+  };
+} = {
+  [MessageRole.USER]: {
+    [MessageRole.USER]: {
+      position: "flex-end",
+      style: "bg-fill-info",
+    },
+    [MessageRole.ASSISTANT]: {
+      position: "flex-start",
+      style: "bg-fill-transparent",
+    },
+    [MessageRole.MANAGER]: {
+      position: "flex-start",
+      style: "bg-fill-transparent",
+    },
+  },
+  [MessageRole.ASSISTANT]: {
+    [MessageRole.USER]: {
+      position: "flex-start",
+      style: "bg-fill-transparent",
+    },
+    [MessageRole.ASSISTANT]: { position: "flex-end", style: "bg-fill-info" },
+    [MessageRole.MANAGER]: { position: "flex-end", style: "bg-fill-info" },
+  },
+  [MessageRole.MANAGER]: {
+    [MessageRole.USER]: {
+      position: "flex-start",
+      style: "bg-fill-transparent",
+    },
+    [MessageRole.ASSISTANT]: { position: "flex-end", style: "bg-fill-info" },
+    [MessageRole.MANAGER]: { position: "flex-end", style: "bg-fill-info" },
+  },
+};
 
 export const ChatBody = (props: {
-  messages: IMessage[];
+  messages: (IChatMessage | IMessage)[];
   children: JSX.Element;
+  watcherRole: MessageRole;
 }) => {
-  const { messages, children } = props;
+  const { messages, children, watcherRole } = props;
 
   return (
     <Box position={"relative"} minHeight={"300px"}>
@@ -22,23 +60,24 @@ export const ChatBody = (props: {
         <Scrollable.ScrollTo />
         {messages.length ? (
           messages?.map((item, index) => {
-            const isRight = item.role === MessageRole.USER;
             return (
               <div
                 style={{
-                  alignSelf: isRight ? "flex-end" : "flex-start",
+                  alignSelf:
+                    watcherToRoleStyle[watcherRole][item.role].position,
                   maxWidth: "66%",
                 }}
                 key={index}
               >
                 <Card
                   padding={"200"}
-                  background={isRight ? "bg-fill-info" : "bg-fill-transparent"}
+                  // @ts-ignore
+                  background={
+                    watcherToRoleStyle[watcherRole]?.[item.role]?.style
+                  }
                 >
                   <div style={{ whiteSpace: "pre-wrap" }}>
-                    <Text alignment={isRight ? "end" : "start"} as={"p"}>
-                      {item.text}
-                    </Text>
+                    <Text as={"p"}>{item.text}</Text>
                   </div>
                 </Card>
               </div>

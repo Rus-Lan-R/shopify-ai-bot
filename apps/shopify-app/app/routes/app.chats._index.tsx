@@ -6,7 +6,7 @@ import {
   Text,
   useIndexResourceState,
 } from "@shopify/polaris";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { PlatformName } from "../../../../packages/types/src";
 import { useMemo } from "react";
 import { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
@@ -53,6 +53,7 @@ export default function ChatsPage() {
   const { chats } = useLoaderData<typeof loader>();
   const { selectedResources, allResourcesSelected, handleSelectionChange } =
     useIndexResourceState(chats);
+  const navigate = useNavigate();
 
   const rowMarkup = useMemo(
     () =>
@@ -63,6 +64,9 @@ export default function ChatsPage() {
             key={chatItem._id}
             selected={selectedResources.includes(chatItem._id)}
             position={index}
+            onClick={() => {
+              navigate(`/app/chats/${chatItem._id}`);
+            }}
           >
             <IndexTable.Cell>
               <Text variant="bodyMd" fontWeight="bold" as="span">
@@ -95,7 +99,7 @@ export default function ChatsPage() {
 
   return (
     <Page
-      title="Chats"
+      title="Chat"
       backAction={{
         url: "/app",
       }}

@@ -56,7 +56,7 @@ export class ChatService extends AiClient {
         sessionId: existChat.sessionId,
         platformId: existChat.platformId,
         text: message,
-        direction: MessageRole.USER,
+        role: MessageRole.USER,
       });
       const responseText = await this.getOpenAIResponse({
         userText: message,
@@ -69,7 +69,7 @@ export class ChatService extends AiClient {
         sessionId: existChat.sessionId,
         platformId: existChat.platformId,
         text: responseText,
-        direction: MessageRole.ASSISTANT,
+        role: MessageRole.ASSISTANT,
       });
       return responseText;
     } else {
