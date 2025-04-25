@@ -19,7 +19,8 @@ interface ILodaerData {
   shopName?: string | null;
 }
 
-const CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
+const CHAT_API = "https://app-test.ngrok.dev";
+//  "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
 
 const PublicChat = (props: {
   chatId?: string | null;

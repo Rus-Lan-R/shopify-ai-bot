@@ -1,5 +1,6 @@
 export interface IChat {
   _id: string;
+  threadId: string;
   sessionId: string;
   platformId: string;
   customerId: string;

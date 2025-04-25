@@ -6,6 +6,7 @@ import {
 } from "@remix-run/node";
 import { Platforms, Sessions } from "@internal/database";
 import {
+  IMessage,
   IPlatform,
   ISession,
   PlatformName,
@@ -52,7 +53,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
   const chatService = new ChatService(platform!, shopSession, openAiKey);
 
-  let preparedMessages;
+  let preparedMessages: IMessage[] = [];
   if (chatId) {
     try {
       preparedMessages = await chatService.getAllMessages(chatId);
@@ -137,9 +138,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (action) {
     case "init": {
       if (shopSession?.assistantId) {
-        const { thread } = await chatService.createChat();
+        const { chat } = await chatService.createChat();
 
-        return new Response(JSON.stringify({ chatId: thread.id }), {
+        return new Response(JSON.stringify({ chatId: chat._id }), {
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
@@ -172,7 +173,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
 
       if (shopSession?.assistantId) {
-        const answer = await chatService.getAiAnswer(message, chatId);
+        const answer = await chatService.getAiAnswer(message, chatId, true);
         return new Response(JSON.stringify({ answer: answer }), {
           headers: {
             "Content-Type": "application/json",

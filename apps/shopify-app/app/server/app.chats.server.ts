@@ -8,9 +8,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const authData = await authenticate.admin(request);
   const session = authData.session as ExtendedSession;
 
-  const chats = await Chats.find<IChat>({
-    sessionId: session?._id,
-  }).populate<{ platformId: IPlatform }>("platformId");
+  const chats = await Chats.find<IChat>(
+    {
+      sessionId: session?._id,
+    },
+    {},
+    { sort: { createdAt: -1 } },
+  ).populate<{ platformId: IPlatform }>("platformId");
 
   return {
     chats,

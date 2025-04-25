@@ -24517,7 +24517,7 @@ var RemixEmbed = (() => {
     assistant: styles_default.chatMessage_assistant,
     user: styles_default.chatMessage_user
   };
-  var CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
+  var CHAT_API = "https://app-test.ngrok.dev";
   var PublicChat = (props) => {
     const { shopName, chatId } = props;
     const textareaRef = (0, import_react.useRef)(null);
@@ -24714,7 +24714,6 @@ var RemixEmbed = (() => {
     if (container) {
       const shopName = container?.getAttribute("data-shopName");
       const localChatId = localStorage.getItem("supportAiChatId");
-      console.log("localChatId", localChatId);
       import_react_dom.default.render(
         /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
