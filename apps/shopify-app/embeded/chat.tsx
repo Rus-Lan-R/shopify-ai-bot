@@ -8,6 +8,12 @@ const renderComponent = () => {
     const shopName = container?.getAttribute("data-shopName");
     const localChatId = localStorage.getItem("supportAiChatId");
 
+    let userId = localStorage.getItem("chat-user-id");
+    if (!userId) {
+      userId = Date.now().toString();
+      localStorage.setItem("chat-user-id", userId);
+    }
+
     ReactDOM.render(
       <>
         <div
@@ -22,6 +28,7 @@ const renderComponent = () => {
         </div>
         <PublicChat
           shopName={shopName}
+          userId={userId}
           chatId={
             localChatId && localChatId !== "undefined" ? localChatId : null
           }

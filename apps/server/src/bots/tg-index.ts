@@ -6,7 +6,7 @@ import {
   IntegrationStatus,
   ISession,
 } from "@internal/types";
-import { debounce } from "./helpers/debaunce";
+import { debounce } from "../helpers/debaunce";
 
 const listenBots = async () => {
   let createdBots: TelegramBot[] = [];

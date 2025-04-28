@@ -1093,11 +1093,11 @@ var RemixEmbed = (() => {
             var dispatcher = resolveDispatcher();
             return dispatcher.useReducer(reducer, initialArg, init);
           }
-          function useRef2(initialValue) {
+          function useRef3(initialValue) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect2(create, deps) {
+          function useEffect3(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1880,14 +1880,14 @@ var RemixEmbed = (() => {
           exports.useContext = useContext;
           exports.useDebugValue = useDebugValue;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect2;
+          exports.useEffect = useEffect3;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect;
           exports.useMemo = useMemo;
           exports.useReducer = useReducer;
-          exports.useRef = useRef2;
+          exports.useRef = useRef3;
           exports.useState = useState2;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
@@ -24497,7 +24497,7 @@ var RemixEmbed = (() => {
   var styles_default = result;
 
   // app/components/publicChat/PublicChat.tsx
-  var import_react = __toESM(require_react(), 1);
+  var import_react2 = __toESM(require_react(), 1);
 
   // app/components/SpriteIcon/index.tsx
   var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
@@ -24511,31 +24511,91 @@ var RemixEmbed = (() => {
   // app/helpers/utils.ts
   var mergeClassNames = (classes) => classes.filter((item) => !!item).join(" ");
 
+  // app/websocket/useWebsocket.ts
+  var import_react = __toESM(require_react(), 1);
+  var useWebsocket = (props) => {
+    const ws = (0, import_react.useRef)(null);
+    const { path, onError, onMessage, onOpen, onClose, onReconnect } = props;
+    const reconnectTimeout = (0, import_react.useRef)(null);
+    const wsConnect = () => {
+      ws.current = new WebSocket(`ws://localhost:8080/api/ws/${path}`);
+      ws.current.onopen = () => {
+        if (ws.current) {
+          onOpen(ws.current);
+        }
+      };
+      ws.current.onmessage = onMessage;
+      if (onError) {
+        ws.current.onerror = onError;
+      }
+      if (onClose) {
+        ws.current.onclose = onClose;
+        ws.current.addEventListener("close", () => {
+          onReconnect?.();
+          scheduleReconnect();
+        });
+      }
+    };
+    const scheduleReconnect = () => {
+      if (reconnectTimeout.current) return;
+      reconnectTimeout.current = setTimeout(() => {
+        reconnectTimeout.current = null;
+        ws.current?.close();
+        wsConnect();
+      }, 5e3);
+    };
+    (0, import_react.useEffect)(() => {
+      wsConnect();
+      return () => {
+        if (ws?.current && ws?.current?.readyState) {
+          ws?.current?.close();
+        }
+        if (reconnectTimeout.current) {
+          clearTimeout(reconnectTimeout.current);
+        }
+      };
+    }, []);
+    return { socket: ws.current };
+  };
+
   // app/components/publicChat/PublicChat.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var roleToStyleMap = {
     assistant: styles_default.chatMessage_assistant,
     user: styles_default.chatMessage_user
   };
-  var CHAT_API = "https://app-test.ngrok.dev";
+  var CHAT_API = "https://novels-charity-athletics-amend.trycloudflare.com";
   var PublicChat = (props) => {
-    const { shopName, chatId } = props;
-    const textareaRef = (0, import_react.useRef)(null);
-    const conversationRef = (0, import_react.useRef)(null);
-    const [isLoading, setIsLoading] = (0, import_react.useState)(false);
-    const [isOpen, setIsOpen] = (0, import_react.useState)(false);
-    const [loaderData, setLoaderData] = (0, import_react.useState)({
+    const { shopName, chatId, userId } = props;
+    const textareaRef = (0, import_react2.useRef)(null);
+    const conversationRef = (0, import_react2.useRef)(null);
+    const [isLoading, setIsLoading] = (0, import_react2.useState)(false);
+    const [isOpen, setIsOpen] = (0, import_react2.useState)(false);
+    const [loaderData, setLoaderData] = (0, import_react2.useState)({
       chatId,
       shopName
     });
-    const [messagesList, setMessagesList] = (0, import_react.useState)([]);
-    const [message, setMessage] = (0, import_react.useState)("");
+    const [messagesList, setMessagesList] = (0, import_react2.useState)([]);
+    const [message, setMessage] = (0, import_react2.useState)("");
+    const { socket } = useWebsocket({
+      path: `chats/${chatId}?userId=${userId}`,
+      onMessage: (e) => {
+        console.log(e);
+      },
+      onOpen: () => {
+        console.log("socket connect");
+      },
+      onClose: () => {
+        console.log("chat close");
+      }
+    });
     const handleSubmit = async (message2) => {
       const formData = new FormData();
       formData.append("action", "message");
       formData.append("message", message2);
       setMessage("");
       try {
+        socket?.send("CLIENT CHAT NEW MESSAGE");
         setMessagesList((prev) => [{ role: "user", text: message2 }, ...prev]);
         setIsLoading(true);
         const response = await fetch(
@@ -24546,16 +24606,23 @@ var RemixEmbed = (() => {
           }
         );
         const data = await response.json();
-        setMessagesList((prev) => [
-          { role: "assistant", text: data.answer },
-          ...prev
-        ]);
+        if (!!data?.answer) {
+          setMessagesList((prev) => [
+            { role: "assistant", text: data.answer },
+            ...prev
+          ]);
+        }
       } catch (error) {
       } finally {
         setIsLoading(false);
       }
     };
-    (0, import_react.useEffect)(() => {
+    (0, import_react2.useEffect)(() => {
+      if (socket) {
+        socket.send(JSON.stringify({ type: "CHECK_ONLINE" }));
+      }
+    }, [socket]);
+    (0, import_react2.useEffect)(() => {
       (async () => {
         if (loaderData.chatId) {
           try {
@@ -24580,7 +24647,7 @@ var RemixEmbed = (() => {
         }
       })();
     }, [loaderData.chatId]);
-    (0, import_react.useEffect)(() => {
+    (0, import_react2.useEffect)(() => {
       if (conversationRef.current) {
         conversationRef.current.scrollIntoView();
       }
@@ -24658,7 +24725,7 @@ var RemixEmbed = (() => {
             {
               ref: textareaRef,
               className: styles_default.chatInput,
-              placeholder: "Type a message...",
+              placeholder: "Type a message....",
               name: "chat-input",
               value: message,
               rows: 1,
@@ -24714,6 +24781,11 @@ var RemixEmbed = (() => {
     if (container) {
       const shopName = container?.getAttribute("data-shopName");
       const localChatId = localStorage.getItem("supportAiChatId");
+      let userId = localStorage.getItem("chat-user-id");
+      if (!userId) {
+        userId = Date.now().toString();
+        localStorage.setItem("chat-user-id", userId);
+      }
       import_react_dom.default.render(
         /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
@@ -24732,6 +24804,7 @@ var RemixEmbed = (() => {
             PublicChat_default,
             {
               shopName,
+              userId,
               chatId: localChatId && localChatId !== "undefined" ? localChatId : null
             }
           )

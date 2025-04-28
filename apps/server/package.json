@@ -1,29 +1,40 @@
 {
-  "name": "bots",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsup",
+    "build": "tsc",
     "start:tg": "node dist/tg-index.js",
     "start:wa": "node dist/wa-index.js",
     "start": "pnpm start:tg & pnpm start:wa",
     "dev": "pnpm build && pnpm start:tg & pnpm start:wa",
-    "dev:tg": "tsup src/tg-index.ts --watch --onSuccess \"pkill -f dist/tg-index.js; node dist/tg-index.js\"",
-    "dev:wa": "tsup src/wa-index.ts --watch --onSuccess \"pkill -f dist/wa-index.js; node dist/wa-index.js\""
+    "dev:server": "tsx src/index.ts",
+    "dev:tg": "tsup src/bots/tg-index.ts --watch --onSuccess \"pkill -f dist/tg-index.js; node dist/tg-index.js\"",
+    "dev:wa": "tsup src/bots/wa-index.ts --watch --onSuccess \"pkill -f dist/wa-index.js; node dist/wa-index.js\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@internal/database": "workspace:*",
-    "@internal/services": "workspace:*",
     "@internal/messengers": "workspace:*",
-    "@internal/types": "workspace:*"
+    "@internal/services": "workspace:*",
+    "@internal/types": "workspace:*",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "express-ws": "^5.0.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/express-ws": "^3.0.5",
+    "@types/ws": "^8.18.1",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
   },
   "_moduleAliases": {
     "@internal/services": "packages/services/dist",

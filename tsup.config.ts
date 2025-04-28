@@ -2,16 +2,6 @@ import { defineConfig } from "tsup";
 
 export default defineConfig([
   {
-    entry: ["apps/bots/src/tg-index.ts", "apps/bots/src/wa-index.ts"],
-    outDir: "apps/bots/dist",
-    format: ["esm"],
-    splitting: false,
-    sourcemap: false,
-    clean: true,
-    dts: false,
-    minify: false,
-  },
-  {
     entry: ["packages/services/src/index.ts"],
     outDir: "packages/services/dist",
     format: ["esm"],

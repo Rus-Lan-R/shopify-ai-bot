@@ -38,7 +38,9 @@ export class TelegramBot extends ChatService {
         const chatId = String(msg.chat.id);
         if (msg.text) {
           const chatAnswer = await this.getAiAnswer(msg.text, chatId);
-          await this.bot.sendMessage(chatId, chatAnswer);
+          if (chatAnswer) {
+            await this.bot.sendMessage(chatId, chatAnswer);
+          }
         }
       })
     );

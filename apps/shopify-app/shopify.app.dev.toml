@@ -1,14 +1,14 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b78f49118baa15c77d8adf447c933901"
-application_url = "https://app-test.ngrok.dev"
+application_url = "https://novels-charity-athletics-amend.trycloudflare.com"
 embedded = true
 name = "Dev ChatPilot"
 handle = "dev-chatpilot"
 
 [build]
 include_config_on_deploy = true
-automatically_update_urls_on_dev = false
+automatically_update_urls_on_dev = true
 dev_store_url = "nikasoul-store.myshopify.com"
 
 [webhooks]
@@ -24,9 +24,9 @@ api_version = "2025-01"
 
 [auth]
 redirect_urls = [
-  "https://app-test.ngrok.dev/auth/callback",
-  "https://app-test.ngrok.dev/auth/shopify/callback",
-  "https://app-test.ngrok.dev/api/auth/callback"
+  "https://novels-charity-athletics-amend.trycloudflare.com/auth/callback",
+  "https://novels-charity-athletics-amend.trycloudflare.com/auth/shopify/callback",
+  "https://novels-charity-athletics-amend.trycloudflare.com/api/auth/callback"
 ]
 
 [access_scopes]

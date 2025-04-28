@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "npm run build:chat && remix vite:build",
-    "dev": "shopify app dev --tunnel-url https://app-test.ngrok.dev:3000",
+    "dev": "shopify app dev",
     "config:link": "shopify app config link",
     "generate": "shopify app generate",
     "deploy": "shopify app deploy",

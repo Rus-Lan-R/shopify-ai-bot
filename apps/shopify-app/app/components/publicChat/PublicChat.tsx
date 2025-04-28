@@ -2,6 +2,7 @@ import styles from "./styles.module.css";
 import { useEffect, useRef, useState } from "react";
 import SpriteIcon from "app/components/SpriteIcon";
 import { mergeClassNames } from "app/helpers/utils";
+import { useWebsocket } from "app/websocket/useWebsocket";
 
 export interface IChatMessage {
   role: "assistant" | "user";
@@ -19,14 +20,15 @@ interface ILodaerData {
   shopName?: string | null;
 }
 
-const CHAT_API = "https://app-test.ngrok.dev";
+const CHAT_API = "https://novels-charity-athletics-amend.trycloudflare.com";
 //  "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
 
 const PublicChat = (props: {
+  userId: string;
   chatId?: string | null;
   shopName?: string | null;
 }) => {
-  const { shopName, chatId } = props;
+  const { shopName, chatId, userId } = props;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,12 +41,26 @@ const PublicChat = (props: {
   const [messagesList, setMessagesList] = useState<IChatMessage[]>([]);
   const [message, setMessage] = useState("");
 
+  const { socket } = useWebsocket({
+    path: `chats/${chatId}?userId=${userId}`,
+    onMessage: (e) => {
+      console.log(e);
+    },
+    onOpen: () => {
+      console.log("socket connect");
+    },
+    onClose: () => {
+      console.log("chat close");
+    },
+  });
+
   const handleSubmit = async (message: string) => {
     const formData = new FormData();
     formData.append("action", "message");
     formData.append("message", message);
     setMessage("");
     try {
+      socket?.send("CLIENT CHAT NEW MESSAGE");
       setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
       setIsLoading(true);
       const response = await fetch(
@@ -55,15 +71,23 @@ const PublicChat = (props: {
         },
       );
       const data = (await response.json()) as { answer: string };
-      setMessagesList((prev) => [
-        { role: "assistant", text: data.answer },
-        ...prev,
-      ]);
+      if (!!data?.answer) {
+        setMessagesList((prev) => [
+          { role: "assistant", text: data.answer },
+          ...prev,
+        ]);
+      }
     } catch (error) {
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (socket) {
+      socket.send(JSON.stringify({ type: "CHECK_ONLINE" }));
+    }
+  }, [socket]);
 
   useEffect(() => {
     (async () => {
@@ -188,7 +212,7 @@ const PublicChat = (props: {
             <textarea
               ref={textareaRef}
               className={styles.chatInput}
-              placeholder={"Type a message..."}
+              placeholder={"Type a message...."}
               name={"chat-input"}
               value={message}
               rows={1}

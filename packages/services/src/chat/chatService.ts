@@ -1,5 +1,11 @@
 import { Chats, Messages } from "@internal/database";
-import { IMessage, IPlatform, ISession, MessageRole } from "@internal/types";
+import {
+  IChat,
+  IMessage,
+  IPlatform,
+  ISession,
+  MessageRole,
+} from "@internal/types";
 import { AiClient } from "../openAi/openAiService";
 
 export class ChatService extends AiClient {
@@ -15,14 +21,14 @@ export class ChatService extends AiClient {
   async findOrCreateChat(externalChatId: string, externalIsMain?: boolean) {
     let chat = await this.findExistChat(externalChatId, externalIsMain);
     if (!chat) {
-      chat = await this.createChat(externalChatId);
+      chat = (await this.createChat(externalChatId)).chat;
     }
     return chat;
   }
 
   async createChat(externalChatId?: string) {
     const thread = await this.createThread();
-    const chat = await Chats.create({
+    const chat = await Chats.create<IChat>({
       threadId: thread.id,
       sessionId: this.platform.sessionId,
       platformId: this.platform._id,
@@ -50,7 +56,7 @@ export class ChatService extends AiClient {
             externalChatId: externalChatId,
             sessionId: this.platform.sessionId,
           }
-    );
+    ).lean<IChat>();
     return existChat;
   }
 
@@ -77,19 +83,21 @@ export class ChatService extends AiClient {
         text: message,
         role: MessageRole.USER,
       });
-      const responseText = await this.getOpenAIResponse({
-        userText: message,
-        assistantId: this.session.assistantId,
-        threadId: existChat?.threadId,
-      });
-      await Messages.create({
-        chatId: existChat._id,
-        sessionId: existChat.sessionId,
-        platformId: existChat.platformId,
-        text: responseText,
-        role: MessageRole.ASSISTANT,
-      });
-      return responseText;
+      if (existChat.assistantRole === MessageRole.ASSISTANT) {
+        const responseText = await this.getOpenAIResponse({
+          userText: message,
+          assistantId: this.session.assistantId,
+          threadId: existChat?.threadId,
+        });
+        await Messages.create({
+          chatId: existChat._id,
+          sessionId: existChat.sessionId,
+          platformId: existChat.platformId,
+          text: responseText,
+          role: MessageRole.ASSISTANT,
+        });
+        return responseText;
+      }
     } else {
       console.log(this.session.assistantId, existChat?._id);
       return "Setup required";

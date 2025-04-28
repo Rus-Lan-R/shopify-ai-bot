@@ -1,3 +1,5 @@
+import { MessageRole } from "./messages";
+
 export interface IChat {
   _id: string;
   threadId: string;
@@ -9,4 +11,5 @@ export interface IChat {
   externalChatId: string;
   createdAt: Date;
   updatedAt: Date;
+  assistantRole: MessageRole;
 }
