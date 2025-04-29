@@ -8,7 +8,7 @@ import { formDataToObject } from "app/helpers/utils";
 export interface IChatDetailsResponse {
   messages: IMessage[];
   chatId: string;
-  chat: { assistantRole: MessageRole };
+  chat: { assistantRole: MessageRole; platformId: string };
 }
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const authData = await authenticate.admin(request);
@@ -29,6 +29,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
     return {
       chat: {
+        platformId: chat?.platformId,
         assistantRole:
           chat && "assistantRole" in chat
             ? chat?.assistantRole
@@ -46,7 +47,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const authData = await authenticate.admin(request);
   const session = authData.session as ExtendedSession;
   const formData = await request.formData();
-  const { action, chatId, newAssistant } = formDataToObject(formData);
+  const { action, chatId, platformId, text, newAssistant } =
+    formDataToObject(formData);
 
   switch (action) {
     case "toggleAssistant": {
@@ -58,6 +60,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             assistantRole: newAssistant,
           },
         );
+      }
+      break;
+    }
+
+    case "sendMessage": {
+      if (chatId) {
+        await Messages.create({
+          assistantRole: MessageRole.MANAGER,
+          role: MessageRole.ASSISTANT,
+          sessionId: session._id,
+          chatId: chatId,
+          platformId: platformId,
+          text: text,
+        });
       }
       break;
     }

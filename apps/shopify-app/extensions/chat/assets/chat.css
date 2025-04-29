@@ -1,4 +1,4 @@
-/* ../../../../../../../../../private/var/folders/d8/kn6sfphj67n572x21m44vz4r0000gn/T/tmp-89373-CBqwIx8rmkRU/Users/ruslan/my/shopify/apps/ai-assistant/shopify-ai-bot/apps/shopify-app/app/components/publicChat/styles.css */
+/* ../../../../../../../../../private/var/folders/d8/kn6sfphj67n572x21m44vz4r0000gn/T/tmp-61703-JHE3Li4pH0Sm/Users/ruslan/my/shopify/apps/ai-assistant/shopify-ai-bot/apps/shopify-app/app/components/publicChat/styles.css */
 *,
 ::after,
 ::before {
@@ -25,7 +25,6 @@
 .h9b46deb2b8bf38be0cbcaf76ee696ddc {
   width: 100%;
   padding: 0 0.75rem;
-  display: flex;
   flex: 1 1 0%;
   overflow: scroll;
   border-top-left-radius: 1rem;
@@ -39,7 +38,7 @@
 .h00a3fc58acf17b2976aa046afe78debf {
   padding: 1rem 0;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   justify-content: flex-end;
   flex-grow: 1;
   gap: 0.5rem;

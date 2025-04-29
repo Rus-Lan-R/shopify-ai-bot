@@ -20,10 +20,26 @@ function broadcastOnlineUsers(chatId: string) {
   }
 }
 
+function broadcastMessageToOnlineUsers(
+  chatId: string,
+  message: string,
+  userId: string
+) {
+  const chatUsers = chatOnlineUsers.get(chatId);
+  if (!chatUsers) return;
+
+  for (const key of chatUsers.keys()) {
+    const ws = chatUsers.get(key);
+    if (key !== userId && ws && ws?.readyState === ws?.OPEN) {
+      ws?.send(message);
+    }
+  }
+}
+
 wsChatsRouter?.ws("/chats/:chatId", (ws, req, next) => {
   const chatId = req.params.chatId;
   const userId = req?.query?.userId as string;
-
+  console.log(userId);
   if (!userId) {
     next();
   }
@@ -54,6 +70,8 @@ wsChatsRouter?.ws("/chats/:chatId", (ws, req, next) => {
       parsedData = JSON.parse(e.toString());
       if (parsedData?.type === "CHECK_ONLINE") {
         broadcastOnlineUsers(chatId);
+      } else if (parsedData.type === "NEW_MESSAGE") {
+        broadcastMessageToOnlineUsers(chatId, e.toString(), userId);
       }
     } catch (error) {
       console.log("PAYLOAD PARSE ERROR:", error);

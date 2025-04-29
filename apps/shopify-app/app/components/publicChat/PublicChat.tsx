@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import SpriteIcon from "app/components/SpriteIcon";
 import { mergeClassNames } from "app/helpers/utils";
 import { useWebsocket } from "app/websocket/useWebsocket";
+import { MessageRole } from "@internal/types";
 
 export interface IChatMessage {
   role: "assistant" | "user";
@@ -20,7 +21,7 @@ interface ILodaerData {
   shopName?: string | null;
 }
 
-const CHAT_API = "https://novels-charity-athletics-amend.trycloudflare.com";
+const CHAT_API = "https://actual-lucky-stolen-xml.trycloudflare.com";
 //  "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
 
 const PublicChat = (props: {
@@ -44,7 +45,24 @@ const PublicChat = (props: {
   const { socket } = useWebsocket({
     path: `chats/${chatId}?userId=${userId}`,
     onMessage: (e) => {
-      console.log(e);
+      let parsedData;
+      try {
+        parsedData = JSON.parse(e.data);
+      } catch (error) {
+        console.log("PARSE PAYLOAD ERROR: ", error);
+        return;
+      }
+      console.log(parsedData);
+      switch (parsedData.type) {
+        case "NEW_MESSAGE":
+          setMessagesList((prev) => {
+            return [...prev, parsedData.data];
+          });
+          break;
+
+        default:
+          break;
+      }
     },
     onOpen: () => {
       console.log("socket connect");
@@ -60,8 +78,15 @@ const PublicChat = (props: {
     formData.append("message", message);
     setMessage("");
     try {
-      socket?.send("CLIENT CHAT NEW MESSAGE");
-      setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
+      socket?.send(
+        JSON.stringify({
+          type: "NEW_MESSAGE",
+          data: { role: MessageRole.USER, text: message },
+        }),
+      );
+      setMessagesList((prev) => {
+        return [...prev, { role: "user", text: message }];
+      });
       setIsLoading(true);
       const response = await fetch(
         `${CHAT_API}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
@@ -72,10 +97,9 @@ const PublicChat = (props: {
       );
       const data = (await response.json()) as { answer: string };
       if (!!data?.answer) {
-        setMessagesList((prev) => [
-          { role: "assistant", text: data.answer },
-          ...prev,
-        ]);
+        setMessagesList((prev) => {
+          return [...prev, { role: "assistant", text: data.answer }];
+        });
       }
     } catch (error) {
     } finally {
@@ -124,7 +148,7 @@ const PublicChat = (props: {
     if (conversationRef.current) {
       conversationRef.current.scrollIntoView();
     }
-  }, [messagesList.length]);
+  }, [messagesList.length, conversationRef.current, isOpen]);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
@@ -195,7 +219,9 @@ const PublicChat = (props: {
               {messagesList.map((item, index) => {
                 return (
                   <div
-                    ref={!index ? conversationRef : null}
+                    ref={
+                      index === messagesList.length - 1 ? conversationRef : null
+                    }
                     key={`${item.role}-${index}`}
                     className={mergeClassNames([
                       styles.chatMessage,

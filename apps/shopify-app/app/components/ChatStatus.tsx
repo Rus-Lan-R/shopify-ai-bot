@@ -69,59 +69,8 @@ const websocketStatusMap: {
   },
 };
 
-export const ChatStatus = (props: {
-  path: string;
-  currentUser: string;
-  onMessage: (data: string) => void;
-}) => {
-  const { path, currentUser, onMessage } = props;
-
-  const [status, setStatus] = useState(ChatSocketStatus.OFFLINE);
-
-  const { socket } = useWebsocket({
-    path: path,
-    onOpen: (ws) => {
-      setStatus(ChatSocketStatus.CONNECTING);
-    },
-    onMessage: (e) => {
-      let parsedData;
-      try {
-        parsedData = JSON.parse(e.data) as { type: string; users: string[] };
-      } catch (error) {
-        return;
-      }
-
-      switch (parsedData.type) {
-        case "ONLINE_USERS":
-          const onlineUsers = parsedData.users.filter(
-            (item) => item !== currentUser,
-          );
-
-          if (onlineUsers.length) {
-            setStatus(ChatSocketStatus.ONLINE);
-          } else {
-            setStatus(ChatSocketStatus.OFFLINE);
-          }
-
-          break;
-
-        default:
-          break;
-      }
-    },
-
-    onClose: () => {
-      setStatus(ChatSocketStatus.OFFLINE);
-    },
-  });
-
-  useEffect(() => {
-    if (socket) {
-      setInterval(() => {
-        socket.send(JSON.stringify({ type: "CHECK_ONLINE" }));
-      }, 60 * 1000);
-    }
-  }, [socket]);
+export const ChatStatus = (props: { status: ChatSocketStatus }) => {
+  const { status } = props;
 
   return (
     <Tooltip

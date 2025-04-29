@@ -21,7 +21,6 @@
 .chatBody {
   width: 100%;
   padding: 0 0.75rem;
-  display: flex;
   flex: 1 1 0%;
   overflow: scroll;
   border-top-left-radius: 1rem;
@@ -37,7 +36,7 @@
 .chatConversation {
   padding: 1rem 0;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   justify-content: flex-end;
   flex-grow: 1;
   gap: 0.5rem;

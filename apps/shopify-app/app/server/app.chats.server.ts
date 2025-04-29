@@ -13,7 +13,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       sessionId: session?._id,
     },
     {},
-    { sort: { createdAt: -1 } },
+    { limit: 10, sort: { createdAt: -1 } },
   ).populate<{ platformId: IPlatform }>("platformId");
 
   return {

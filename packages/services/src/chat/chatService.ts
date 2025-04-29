@@ -105,9 +105,11 @@ export class ChatService extends AiClient {
   }
 
   async getAllMessages(chatId: string) {
-    const messages = await Messages.find({ chatId }, {}, { limit: 100 }).lean<
-      IMessage[]
-    >();
+    const messages = await Messages.find(
+      { chatId },
+      {},
+      { limit: 100, sort: { createdAt: 1 } }
+    ).lean<IMessage[]>();
 
     return messages;
   }

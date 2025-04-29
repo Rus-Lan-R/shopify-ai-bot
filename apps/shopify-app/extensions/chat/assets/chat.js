@@ -24564,7 +24564,7 @@ var RemixEmbed = (() => {
     assistant: styles_default.chatMessage_assistant,
     user: styles_default.chatMessage_user
   };
-  var CHAT_API = "https://novels-charity-athletics-amend.trycloudflare.com";
+  var CHAT_API = "https://actual-lucky-stolen-xml.trycloudflare.com";
   var PublicChat = (props) => {
     const { shopName, chatId, userId } = props;
     const textareaRef = (0, import_react2.useRef)(null);
@@ -24580,7 +24580,23 @@ var RemixEmbed = (() => {
     const { socket } = useWebsocket({
       path: `chats/${chatId}?userId=${userId}`,
       onMessage: (e) => {
-        console.log(e);
+        let parsedData;
+        try {
+          parsedData = JSON.parse(e.data);
+        } catch (error) {
+          console.log("PARSE PAYLOAD ERROR: ", error);
+          return;
+        }
+        console.log(parsedData);
+        switch (parsedData.type) {
+          case "NEW_MESSAGE":
+            setMessagesList((prev) => {
+              return [...prev, parsedData.data];
+            });
+            break;
+          default:
+            break;
+        }
       },
       onOpen: () => {
         console.log("socket connect");
@@ -24595,8 +24611,15 @@ var RemixEmbed = (() => {
       formData.append("message", message2);
       setMessage("");
       try {
-        socket?.send("CLIENT CHAT NEW MESSAGE");
-        setMessagesList((prev) => [{ role: "user", text: message2 }, ...prev]);
+        socket?.send(
+          JSON.stringify({
+            type: "NEW_MESSAGE",
+            data: { role: "user" /* USER */, text: message2 }
+          })
+        );
+        setMessagesList((prev) => {
+          return [...prev, { role: "user", text: message2 }];
+        });
         setIsLoading(true);
         const response = await fetch(
           `${CHAT_API}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
@@ -24607,10 +24630,9 @@ var RemixEmbed = (() => {
         );
         const data = await response.json();
         if (!!data?.answer) {
-          setMessagesList((prev) => [
-            { role: "assistant", text: data.answer },
-            ...prev
-          ]);
+          setMessagesList((prev) => {
+            return [...prev, { role: "assistant", text: data.answer }];
+          });
         }
       } catch (error) {
       } finally {
@@ -24651,7 +24673,7 @@ var RemixEmbed = (() => {
       if (conversationRef.current) {
         conversationRef.current.scrollIntoView();
       }
-    }, [messagesList.length]);
+    }, [messagesList.length, conversationRef.current, isOpen]);
     const handleInput = (e) => {
       setMessage(e.target.value);
       if (textareaRef.current) {
@@ -24708,7 +24730,7 @@ var RemixEmbed = (() => {
             return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
               "div",
               {
-                ref: !index ? conversationRef : null,
+                ref: index === messagesList.length - 1 ? conversationRef : null,
                 className: mergeClassNames([
                   styles_default.chatMessage,
                   roleToStyleMap[item.role]
