@@ -24493,7 +24493,7 @@ var RemixEmbed = (() => {
   ] });
 
   // app/components/publicChat/styles.module.css
-  var result = { "chatFrame": "h0fc93b4ee9264f1642003e7c44a51b91", "chatBody": "h9b46deb2b8bf38be0cbcaf76ee696ddc", "chatConversation": "h00a3fc58acf17b2976aa046afe78debf", "chatTitle": "h5b6f597c9d90f588ad9b567baf64a6b7", "chatHeader": "hf080b3d143755990f027758abe9a4266", "chatFooter": "h4ceabac5bceea131688dab1117fb5019", "chatInput": "hef75644761b5430b68cc29865c530529", "chatButtonFrame": "hcb50499c85a4442cb7b27fa1684527e3", "chatSendButton": "h70c62086bbc437fdda3fcae7681c6891", "chatMessage": "h41662b2cded8da2e914640335b7fdd75", "chatMessage_user": "he55f5fed8e058b681c2a94462a021008", "chatMessage_assistant": "h6e606d6d3926a2f4c5b511529d997359", "chatMessage_text": "h0875056dfa38f290f224740fe3fc6021", "widgetButtonFrame": "h0ee59a59e8f24b86ea01df4f6cd92c4a", "widgetButton": "hb50ce5c4efffb5b6cda5bf1c8d7b59d5", "widget": "hbe2b0cbe00f79547016c8887e39944ac", "loading": "hfa82c56bf6a5162d3eba8c1c19d46adb", "typing": "h452cf0a5f76c208553a277ee49b22956", "typingDot": "ha5c0c3aaaf86f96a4f77d179ef8390f2" };
+  var result = { "chatFrame": "h0fc93b4ee9264f1642003e7c44a51b91", "chatBody": "h9b46deb2b8bf38be0cbcaf76ee696ddc", "chatConversation": "h00a3fc58acf17b2976aa046afe78debf", "chatTitle": "h5b6f597c9d90f588ad9b567baf64a6b7", "chatHeader": "hf080b3d143755990f027758abe9a4266", "chatFooter": "h4ceabac5bceea131688dab1117fb5019", "chatInput": "hef75644761b5430b68cc29865c530529", "chatButtonFrame": "hcb50499c85a4442cb7b27fa1684527e3", "chatSendButton": "h70c62086bbc437fdda3fcae7681c6891", "chatMessage": "h41662b2cded8da2e914640335b7fdd75", "chatMessage_user": "he55f5fed8e058b681c2a94462a021008", "chatMessage_assistant": "h6e606d6d3926a2f4c5b511529d997359", "chatMessage_manager": "h747f81687b8b34167c77c21abea96434", "chatMessage_text": "h0875056dfa38f290f224740fe3fc6021", "widgetButtonFrame": "h0ee59a59e8f24b86ea01df4f6cd92c4a", "widgetButton": "hb50ce5c4efffb5b6cda5bf1c8d7b59d5", "widget": "hbe2b0cbe00f79547016c8887e39944ac", "loading": "hfa82c56bf6a5162d3eba8c1c19d46adb", "typing": "h452cf0a5f76c208553a277ee49b22956", "typingDot": "ha5c0c3aaaf86f96a4f77d179ef8390f2" };
   var styles_default = result;
 
   // app/components/publicChat/PublicChat.tsx
@@ -24561,10 +24561,11 @@ var RemixEmbed = (() => {
   // app/components/publicChat/PublicChat.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var roleToStyleMap = {
-    assistant: styles_default.chatMessage_assistant,
-    user: styles_default.chatMessage_user
+    ["assistant" /* ASSISTANT */]: styles_default.chatMessage_assistant,
+    ["user" /* USER */]: styles_default.chatMessage_user,
+    ["manager" /* MANAGER */]: styles_default.chatMessage_manager
   };
-  var CHAT_API = "https://actual-lucky-stolen-xml.trycloudflare.com";
+  var CHAT_API = "https://myanmar-coaches-yrs-zope.trycloudflare.com";
   var PublicChat = (props) => {
     const { shopName, chatId, userId } = props;
     const textareaRef = (0, import_react2.useRef)(null);

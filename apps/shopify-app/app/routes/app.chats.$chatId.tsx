@@ -19,7 +19,7 @@ import { useWebsocket } from "app/websocket/useWebsocket";
 import { useEffect, useMemo, useState } from "react";
 export { loader, action } from "app/server/app.chats.$chat.server";
 
-const assistantToBadge: Partial<{
+export const assistantToBadge: Partial<{
   [key in MessageRole]: {
     tone: Tone;
     buttonText: string;
@@ -179,6 +179,12 @@ export default function ChatDetailsPage() {
             </InlineStack>
           </Card>
           <Chat
+            tooltipContent={
+              chat.assistantRole !== MessageRole.MANAGER
+                ? "Turn off the AI Assistant to send messages"
+                : null
+            }
+            isDisabled={chat.assistantRole !== MessageRole.MANAGER}
             watcherRole={MessageRole.MANAGER}
             messagesList={messagesList}
             isLoading={checkIsLoading("sendMessage")}

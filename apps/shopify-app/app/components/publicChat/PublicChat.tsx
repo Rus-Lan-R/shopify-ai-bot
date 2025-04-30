@@ -11,8 +11,9 @@ export interface IChatMessage {
 }
 
 const roleToStyleMap = {
-  assistant: styles.chatMessage_assistant,
-  user: styles.chatMessage_user,
+  [MessageRole.ASSISTANT]: styles.chatMessage_assistant,
+  [MessageRole.USER]: styles.chatMessage_user,
+  [MessageRole.MANAGER]: styles.chatMessage_manager,
 };
 
 interface ILodaerData {
@@ -21,7 +22,7 @@ interface ILodaerData {
   shopName?: string | null;
 }
 
-const CHAT_API = "https://actual-lucky-stolen-xml.trycloudflare.com";
+const CHAT_API = "https://myanmar-coaches-yrs-zope.trycloudflare.com";
 //  "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
 
 const PublicChat = (props: {

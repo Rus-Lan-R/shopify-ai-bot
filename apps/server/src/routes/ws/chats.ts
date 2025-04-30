@@ -39,7 +39,7 @@ function broadcastMessageToOnlineUsers(
 wsChatsRouter?.ws("/chats/:chatId", (ws, req, next) => {
   const chatId = req.params.chatId;
   const userId = req?.query?.userId as string;
-  console.log(userId);
+
   if (!userId) {
     next();
   }

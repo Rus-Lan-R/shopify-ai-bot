@@ -1,16 +1,26 @@
-import { Box, Button, Card, InlineStack, TextField } from "@shopify/polaris";
+import {
+  Box,
+  Button,
+  Card,
+  InlineStack,
+  TextField,
+  Tooltip,
+} from "@shopify/polaris";
 import { ChatBody } from "./ChatBody";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { IChatMessage } from "../publicChat/PublicChat";
 import { IMessage, MessageRole } from "@internal/types";
+import ConditionalWrapper from "../ConditionalWrapper";
 
 export const Chat = (props: {
+  tooltipContent?: ReactNode;
   isLoading: boolean;
+  isDisabled: boolean;
   messagesList: (IMessage | IChatMessage)[];
   watcherRole: MessageRole;
   onSend: (message: string) => void;
 }) => {
-  const { messagesList, isLoading, onSend } = props;
+  const { isDisabled, tooltipContent, messagesList, isLoading, onSend } = props;
   const [message, setMessage] = useState("");
 
   const handleSubmit = () => {
@@ -42,9 +52,22 @@ export const Chat = (props: {
           </Box>
 
           <div style={{ height: "fit-content", marginTop: "auto" }}>
-            <Button onClick={handleSubmit} loading={isLoading}>
-              Send
-            </Button>
+            <ConditionalWrapper
+              condition={!!tooltipContent}
+              wrapper={(children) => (
+                <Tooltip active content={tooltipContent}>
+                  {children}
+                </Tooltip>
+              )}
+            >
+              <Button
+                onClick={handleSubmit}
+                loading={isLoading}
+                disabled={isDisabled}
+              >
+                Send
+              </Button>
+            </ConditionalWrapper>
           </div>
         </InlineStack>
       </ChatBody>
