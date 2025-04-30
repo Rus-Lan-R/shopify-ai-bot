@@ -2,6 +2,8 @@ import styles from "./styles.module.css";
 import { useEffect, useRef, useState } from "react";
 import SpriteIcon from "app/components/SpriteIcon";
 import { mergeClassNames } from "app/helpers/utils";
+import { useWebsocket } from "app/websocket/useWebsocket";
+import { MessageRole } from "@internal/types";
 
 export interface IChatMessage {
   role: "assistant" | "user";
@@ -9,8 +11,9 @@ export interface IChatMessage {
 }
 
 const roleToStyleMap = {
-  assistant: styles.chatMessage_assistant,
-  user: styles.chatMessage_user,
+  [MessageRole.ASSISTANT]: styles.chatMessage_assistant,
+  [MessageRole.USER]: styles.chatMessage_user,
+  [MessageRole.MANAGER]: styles.chatMessage_manager,
 };
 
 interface ILodaerData {
@@ -19,13 +22,15 @@ interface ILodaerData {
   shopName?: string | null;
 }
 
-const CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
+const CHAT_API = "https://myanmar-coaches-yrs-zope.trycloudflare.com";
+//  "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
 
 const PublicChat = (props: {
+  userId: string;
   chatId?: string | null;
   shopName?: string | null;
 }) => {
-  const { shopName, chatId } = props;
+  const { shopName, chatId, userId } = props;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,13 +43,51 @@ const PublicChat = (props: {
   const [messagesList, setMessagesList] = useState<IChatMessage[]>([]);
   const [message, setMessage] = useState("");
 
+  const { socket } = useWebsocket({
+    path: `chats/${chatId}?userId=${userId}`,
+    onMessage: (e) => {
+      let parsedData;
+      try {
+        parsedData = JSON.parse(e.data);
+      } catch (error) {
+        console.log("PARSE PAYLOAD ERROR: ", error);
+        return;
+      }
+      console.log(parsedData);
+      switch (parsedData.type) {
+        case "NEW_MESSAGE":
+          setMessagesList((prev) => {
+            return [...prev, parsedData.data];
+          });
+          break;
+
+        default:
+          break;
+      }
+    },
+    onOpen: () => {
+      console.log("socket connect");
+    },
+    onClose: () => {
+      console.log("chat close");
+    },
+  });
+
   const handleSubmit = async (message: string) => {
     const formData = new FormData();
     formData.append("action", "message");
     formData.append("message", message);
     setMessage("");
     try {
-      setMessagesList((prev) => [{ role: "user", text: message }, ...prev]);
+      socket?.send(
+        JSON.stringify({
+          type: "NEW_MESSAGE",
+          data: { role: MessageRole.USER, text: message },
+        }),
+      );
+      setMessagesList((prev) => {
+        return [...prev, { role: "user", text: message }];
+      });
       setIsLoading(true);
       const response = await fetch(
         `${CHAT_API}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
@@ -54,15 +97,22 @@ const PublicChat = (props: {
         },
       );
       const data = (await response.json()) as { answer: string };
-      setMessagesList((prev) => [
-        { role: "assistant", text: data.answer },
-        ...prev,
-      ]);
+      if (!!data?.answer) {
+        setMessagesList((prev) => {
+          return [...prev, { role: "assistant", text: data.answer }];
+        });
+      }
     } catch (error) {
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (socket) {
+      socket.send(JSON.stringify({ type: "CHECK_ONLINE" }));
+    }
+  }, [socket]);
 
   useEffect(() => {
     (async () => {
@@ -99,7 +149,7 @@ const PublicChat = (props: {
     if (conversationRef.current) {
       conversationRef.current.scrollIntoView();
     }
-  }, [messagesList.length]);
+  }, [messagesList.length, conversationRef.current, isOpen]);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
@@ -170,7 +220,9 @@ const PublicChat = (props: {
               {messagesList.map((item, index) => {
                 return (
                   <div
-                    ref={!index ? conversationRef : null}
+                    ref={
+                      index === messagesList.length - 1 ? conversationRef : null
+                    }
                     key={`${item.role}-${index}`}
                     className={mergeClassNames([
                       styles.chatMessage,
@@ -187,7 +239,7 @@ const PublicChat = (props: {
             <textarea
               ref={textareaRef}
               className={styles.chatInput}
-              placeholder={"Type a message..."}
+              placeholder={"Type a message...."}
               name={"chat-input"}
               value={message}
               rows={1}

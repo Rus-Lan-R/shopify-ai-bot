@@ -7,7 +7,7 @@ import {
   useIndexResourceState,
 } from "@shopify/polaris";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { PlatformName } from "../../../../packages/types/src";
+import { MessageRole, PlatformName } from "../../../../packages/types/src";
 import { useMemo } from "react";
 import { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import {
@@ -18,6 +18,7 @@ import {
 } from "@shopify/polaris-icons";
 import { localeTimeFormated } from "app/helpers/storeTime";
 import type { loader } from "app/server/app.chats.server";
+import { assistantToBadge } from "./app.chats.$chatId";
 export { loader } from "app/server/app.chats.server";
 
 const resourceName = {
@@ -58,6 +59,12 @@ export default function ChatsPage() {
   const rowMarkup = useMemo(
     () =>
       chats?.map((chatItem, index) => {
+        const currentChatBadge =
+          assistantToBadge?.[
+            chatItem?.assistantRole
+              ? chatItem?.assistantRole
+              : MessageRole.MANAGER
+          ];
         return (
           <IndexTable.Row
             id={chatItem._id}
@@ -82,13 +89,18 @@ export default function ChatsPage() {
               </Badge>
             </IndexTable.Cell>
             <IndexTable.Cell>
-              <Text variant="bodyMd" fontWeight={"regular"} as="span">
-                {localeTimeFormated(chatItem.createdAt)}
-              </Text>
+              <Badge {...currentChatBadge} size={"large"}>
+                {currentChatBadge?.badgeText}
+              </Badge>
             </IndexTable.Cell>
             <IndexTable.Cell>
               <Text variant="bodyMd" fontWeight={"regular"} as="span">
                 {localeTimeFormated(chatItem.updatedAt)}
+              </Text>
+            </IndexTable.Cell>
+            <IndexTable.Cell>
+              <Text variant="bodyMd" fontWeight={"regular"} as="span">
+                {localeTimeFormated(chatItem.createdAt)}
               </Text>
             </IndexTable.Cell>
           </IndexTable.Row>
@@ -118,8 +130,9 @@ export default function ChatsPage() {
           headings={[
             { title: "ChatId" },
             { title: "Platform" },
-            { title: "Created at" },
+            { title: "AI" },
             { title: "Last active" },
+            { title: "Created at" },
           ]}
         >
           {rowMarkup}

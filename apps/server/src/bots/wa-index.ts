@@ -1,6 +1,6 @@
 import { Platforms, Sessions, MongoDB } from "@internal/database";
 import { WhatsAppBot } from "@internal/messengers";
-import { debounce } from "./helpers/debaunce";
+import { debounce } from "../helpers/debaunce";
 import {
   IntegrationStatus,
   IPlatform,

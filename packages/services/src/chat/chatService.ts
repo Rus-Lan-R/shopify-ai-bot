@@ -1,8 +1,12 @@
 import { Chats, Messages } from "@internal/database";
-import { IPlatform, ISession, MessageRole } from "@internal/types";
+import {
+  IChat,
+  IMessage,
+  IPlatform,
+  ISession,
+  MessageRole,
+} from "@internal/types";
 import { AiClient } from "../openAi/openAiService";
-import { extractTextWithoutAnnotations } from "../helpers";
-import { MessagesPage } from "openai/resources/beta/threads/messages";
 
 export class ChatService extends AiClient {
   public platform: IPlatform;
@@ -14,31 +18,45 @@ export class ChatService extends AiClient {
     this.session = session;
   }
 
-  async findOrCreateChat(externalChatId: string) {
-    let chat = await this.findExistChat(externalChatId);
+  async findOrCreateChat(externalChatId: string, externalIsMain?: boolean) {
+    let chat = await this.findExistChat(externalChatId, externalIsMain);
     if (!chat) {
-      chat = await this.createChat(externalChatId);
+      chat = (await this.createChat(externalChatId)).chat;
     }
     return chat;
   }
 
   async createChat(externalChatId?: string) {
     const thread = await this.createThread();
-    const chat = await Chats.create({
-      _id: thread.id,
+    const chat = await Chats.create<IChat>({
+      threadId: thread.id,
       sessionId: this.platform.sessionId,
       platformId: this.platform._id,
       externalChatId: externalChatId || thread.id,
     });
 
+    if (this.session.welcomeMessage) {
+      await Messages.create({
+        chatId: chat._id,
+        role: MessageRole.ASSISTANT,
+        sessionId: this.session._id,
+        platformId: this.platform._id,
+        text: this.session.welcomeMessage,
+      });
+    }
+
     return { chat, thread };
   }
 
-  async findExistChat(externalChatId: string) {
-    const existChat = await Chats.findOne({
-      externalChatId: externalChatId,
-      sessionId: this.platform.sessionId,
-    });
+  async findExistChat(externalChatId: string, externalIsMain?: boolean) {
+    const existChat = await Chats.findOne(
+      externalIsMain
+        ? { _id: externalChatId, sessionId: this.platform.sessionId }
+        : {
+            externalChatId: externalChatId,
+            sessionId: this.platform.sessionId,
+          }
+    ).lean<IChat>();
     return existChat;
   }
 
@@ -46,8 +64,15 @@ export class ChatService extends AiClient {
     return this.session.welcomeMessage;
   }
 
-  async getAiAnswer(message: string, externalChatId: string) {
-    const existChat = await this.findOrCreateChat(externalChatId);
+  async getAiAnswer(
+    message: string,
+    externalChatId: string,
+    externalIsMain?: boolean
+  ) {
+    const existChat = await this.findOrCreateChat(
+      externalChatId,
+      externalIsMain
+    );
 
     if (!!this?.session?.assistantId && !!existChat?._id) {
       console.log(message);
@@ -58,20 +83,21 @@ export class ChatService extends AiClient {
         text: message,
         role: MessageRole.USER,
       });
-      const responseText = await this.getOpenAIResponse({
-        userText: message,
-        assistantId: this.session.assistantId,
-        threadId: existChat?._id,
-      });
-      console.log(responseText);
-      await Messages.create({
-        chatId: existChat._id,
-        sessionId: existChat.sessionId,
-        platformId: existChat.platformId,
-        text: responseText,
-        role: MessageRole.ASSISTANT,
-      });
-      return responseText;
+      if (existChat.assistantRole === MessageRole.ASSISTANT) {
+        const responseText = await this.getOpenAIResponse({
+          userText: message,
+          assistantId: this.session.assistantId,
+          threadId: existChat?.threadId,
+        });
+        await Messages.create({
+          chatId: existChat._id,
+          sessionId: existChat.sessionId,
+          platformId: existChat.platformId,
+          text: responseText,
+          role: MessageRole.ASSISTANT,
+        });
+        return responseText;
+      }
     } else {
       console.log(this.session.assistantId, existChat?._id);
       return "Setup required";
@@ -79,21 +105,12 @@ export class ChatService extends AiClient {
   }
 
   async getAllMessages(chatId: string) {
-    const messages: MessagesPage =
-      await this.aiClient.beta.threads.messages.list(chatId, {
-        limit: 100,
-      });
+    const messages = await Messages.find(
+      { chatId },
+      {},
+      { limit: 100, sort: { createdAt: 1 } }
+    ).lean<IMessage[]>();
 
-    let preparedMessages = messages.data.map((item) => ({
-      role: item.role,
-      text: extractTextWithoutAnnotations(item.content),
-    }));
-
-    preparedMessages.push({
-      role: MessageRole.ASSISTANT,
-      text: this.session.welcomeMessage || "Hi, how can I help you?",
-    });
-
-    return preparedMessages;
+    return messages;
   }
 }

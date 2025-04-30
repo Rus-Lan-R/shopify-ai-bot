@@ -1,11 +1,151 @@
-import { useLoaderData } from "@remix-run/react";
-import { Box, Page } from "@shopify/polaris";
-import { ManagersChat } from "app/packages/ManagersChat";
-import type { loader } from "app/server/app.chats.$chat.server";
-export { loader } from "app/server/app.chats.$chat.server";
+import { IMessage, MessageRole } from "@internal/types";
+import { useLoaderData, useSubmit } from "@remix-run/react";
+import {
+  Badge,
+  BlockStack,
+  Box,
+  Button,
+  Card,
+  InlineStack,
+  Page,
+  Text,
+} from "@shopify/polaris";
+import { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
+import { Chat } from "app/components/chat/Chat";
+import { ChatSocketStatus, ChatStatus } from "app/components/ChatStatus";
+import { useLoading } from "app/helpers/useLoading";
+import type { IChatDetailsResponse } from "app/server/app.chats.$chat.server";
+import { useWebsocket } from "app/websocket/useWebsocket";
+import { useEffect, useMemo, useState } from "react";
+export { loader, action } from "app/server/app.chats.$chat.server";
+
+export const assistantToBadge: Partial<{
+  [key in MessageRole]: {
+    tone: Tone;
+    buttonText: string;
+    badgeText: string;
+    toggleRole: MessageRole;
+  };
+}> = {
+  [MessageRole.ASSISTANT]: {
+    tone: "success",
+    buttonText: "Turn off",
+    badgeText: "ON",
+    toggleRole: MessageRole.MANAGER,
+  },
+  [MessageRole.MANAGER]: {
+    tone: "new",
+    buttonText: "Turn on",
+    badgeText: "OFF",
+    toggleRole: MessageRole.ASSISTANT,
+  },
+};
 
 export default function ChatDetailsPage() {
-  const { messages } = useLoaderData<typeof loader>();
+  const submit = useSubmit();
+  const { messages, chatId, chat } = useLoaderData<IChatDetailsResponse>();
+  const [messagesList, setMessagesList] = useState(messages);
+  const [status, setStatus] = useState(ChatSocketStatus.OFFLINE);
+
+  const { isLoading, checkIsLoading, setLoadingSlug } = useLoading<
+    "toggle" | "sendMessage"
+  >();
+
+  const { socket } = useWebsocket({
+    path: `chats/${chatId}?userId=manager`,
+    onOpen: (ws) => {
+      setStatus(ChatSocketStatus.CONNECTING);
+    },
+    onMessage: (e) => {
+      let parsedData;
+      try {
+        parsedData = JSON.parse(e.data) as {
+          type: string;
+          data: IMessage;
+          users: string[];
+        };
+      } catch (error) {
+        return;
+      }
+
+      switch (parsedData.type) {
+        case "ONLINE_USERS":
+          const onlineUsers = parsedData.users.filter(
+            (item) => item !== "manager",
+          );
+
+          if (onlineUsers.length) {
+            setStatus(ChatSocketStatus.ONLINE);
+          } else {
+            setStatus(ChatSocketStatus.OFFLINE);
+          }
+
+          break;
+
+        case "NEW_MESSAGE": {
+          setMessagesList((prev) => {
+            return [...prev, parsedData.data];
+          });
+          break;
+        }
+        default:
+          break;
+      }
+    },
+
+    onClose: () => {
+      setStatus(ChatSocketStatus.OFFLINE);
+    },
+  });
+
+  const handleToggleRole = (newRole: MessageRole) => {
+    setLoadingSlug("toggle");
+    const formData = new FormData();
+    formData.append("action", "toggleAssistant");
+    formData.append("chatId", chatId);
+    formData.append("newAssistant", newRole);
+    submit(formData, { method: "POST" });
+  };
+
+  const handleSubmit = (message: string) => {
+    setLoadingSlug("sendMessage");
+    const messageData = {
+      role: MessageRole.MANAGER,
+      text: message,
+    } as IMessage;
+    socket?.send(
+      JSON.stringify({
+        type: "NEW_MESSAGE",
+        data: messageData,
+      }),
+    );
+    setMessagesList((prev) => {
+      return [...prev, messageData];
+    });
+
+    const formData = new FormData();
+    formData.append("action", "sendMessage");
+    formData.append("chatId", chatId);
+    formData.append("platformId", chat?.platformId || "");
+    formData.append("text", message);
+
+    submit(formData, { method: "POST" });
+  };
+
+  const currentChatBadge = useMemo(() => {
+    return assistantToBadge?.[
+      chat?.assistantRole ? chat?.assistantRole : MessageRole.MANAGER
+    ];
+  }, [chat]);
+
+  useEffect(() => {
+    if (socket) {
+      setInterval(() => {
+        socket.send(JSON.stringify({ type: "CHECK_ONLINE" }));
+      }, 60 * 1000);
+    }
+  }, [socket]);
+
   return (
     <Page
       title="Chat details"
@@ -14,7 +154,43 @@ export default function ChatDetailsPage() {
       }}
     >
       <Box paddingBlockEnd={"3200"}>
-        <ManagersChat messages={messages} />
+        <BlockStack gap={"300"}>
+          <Card>
+            <InlineStack blockAlign={"center"} align={"space-between"}>
+              <InlineStack align="center" gap={"100"}>
+                <Text as="p" variant={"headingMd"}>
+                  AI Assistant
+                </Text>
+                <Badge {...currentChatBadge}>
+                  {currentChatBadge?.badgeText}
+                </Badge>
+                <Button
+                  loading={checkIsLoading("toggle")}
+                  size={"micro"}
+                  onClick={() =>
+                    currentChatBadge?.toggleRole &&
+                    handleToggleRole(currentChatBadge?.toggleRole)
+                  }
+                >
+                  {currentChatBadge?.buttonText}
+                </Button>
+              </InlineStack>
+              <ChatStatus status={status} />
+            </InlineStack>
+          </Card>
+          <Chat
+            tooltipContent={
+              chat.assistantRole !== MessageRole.MANAGER
+                ? "Turn off the AI Assistant to send messages"
+                : null
+            }
+            isDisabled={chat.assistantRole !== MessageRole.MANAGER}
+            watcherRole={MessageRole.MANAGER}
+            messagesList={messagesList}
+            isLoading={checkIsLoading("sendMessage")}
+            onSend={handleSubmit}
+          ></Chat>
+        </BlockStack>
       </Box>
     </Page>
   );

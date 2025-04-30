@@ -52,12 +52,11 @@ export const ChatBody = (props: {
         style={{
           height: "300px",
           display: "flex",
-          flexDirection: "column-reverse",
+          flexDirection: "column",
           gap: "16px",
           marginBottom: "16px",
         }}
       >
-        <Scrollable.ScrollTo />
         {messages.length ? (
           messages?.map((item, index) => {
             return (
@@ -80,6 +79,11 @@ export const ChatBody = (props: {
                     <Text as={"p"}>{item.text}</Text>
                   </div>
                 </Card>
+                {index === messages.length - 1 ? (
+                  <Scrollable.ScrollTo />
+                ) : (
+                  <></>
+                )}
               </div>
             );
           })

@@ -68,12 +68,12 @@ export const assistantInit = async ({
     ],
   });
 
-  const { thread } = await chatService.createChat();
+  const { chat } = await chatService.createChat();
 
   return {
     assistantId: openAiAssistant.id,
     vectorStoreId: vs.id,
-    mainChatId: thread.id,
+    mainChatId: chat._id,
   };
 };
 

@@ -1093,11 +1093,11 @@ var RemixEmbed = (() => {
             var dispatcher = resolveDispatcher();
             return dispatcher.useReducer(reducer, initialArg, init);
           }
-          function useRef2(initialValue) {
+          function useRef3(initialValue) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect2(create, deps) {
+          function useEffect3(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1880,14 +1880,14 @@ var RemixEmbed = (() => {
           exports.useContext = useContext;
           exports.useDebugValue = useDebugValue;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect2;
+          exports.useEffect = useEffect3;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect;
           exports.useMemo = useMemo;
           exports.useReducer = useReducer;
-          exports.useRef = useRef2;
+          exports.useRef = useRef3;
           exports.useState = useState2;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
@@ -24493,11 +24493,11 @@ var RemixEmbed = (() => {
   ] });
 
   // app/components/publicChat/styles.module.css
-  var result = { "chatFrame": "h0fc93b4ee9264f1642003e7c44a51b91", "chatBody": "h9b46deb2b8bf38be0cbcaf76ee696ddc", "chatConversation": "h00a3fc58acf17b2976aa046afe78debf", "chatTitle": "h5b6f597c9d90f588ad9b567baf64a6b7", "chatHeader": "hf080b3d143755990f027758abe9a4266", "chatFooter": "h4ceabac5bceea131688dab1117fb5019", "chatInput": "hef75644761b5430b68cc29865c530529", "chatButtonFrame": "hcb50499c85a4442cb7b27fa1684527e3", "chatSendButton": "h70c62086bbc437fdda3fcae7681c6891", "chatMessage": "h41662b2cded8da2e914640335b7fdd75", "chatMessage_user": "he55f5fed8e058b681c2a94462a021008", "chatMessage_assistant": "h6e606d6d3926a2f4c5b511529d997359", "chatMessage_text": "h0875056dfa38f290f224740fe3fc6021", "widgetButtonFrame": "h0ee59a59e8f24b86ea01df4f6cd92c4a", "widgetButton": "hb50ce5c4efffb5b6cda5bf1c8d7b59d5", "widget": "hbe2b0cbe00f79547016c8887e39944ac", "loading": "hfa82c56bf6a5162d3eba8c1c19d46adb", "typing": "h452cf0a5f76c208553a277ee49b22956", "typingDot": "ha5c0c3aaaf86f96a4f77d179ef8390f2" };
+  var result = { "chatFrame": "h0fc93b4ee9264f1642003e7c44a51b91", "chatBody": "h9b46deb2b8bf38be0cbcaf76ee696ddc", "chatConversation": "h00a3fc58acf17b2976aa046afe78debf", "chatTitle": "h5b6f597c9d90f588ad9b567baf64a6b7", "chatHeader": "hf080b3d143755990f027758abe9a4266", "chatFooter": "h4ceabac5bceea131688dab1117fb5019", "chatInput": "hef75644761b5430b68cc29865c530529", "chatButtonFrame": "hcb50499c85a4442cb7b27fa1684527e3", "chatSendButton": "h70c62086bbc437fdda3fcae7681c6891", "chatMessage": "h41662b2cded8da2e914640335b7fdd75", "chatMessage_user": "he55f5fed8e058b681c2a94462a021008", "chatMessage_assistant": "h6e606d6d3926a2f4c5b511529d997359", "chatMessage_manager": "h747f81687b8b34167c77c21abea96434", "chatMessage_text": "h0875056dfa38f290f224740fe3fc6021", "widgetButtonFrame": "h0ee59a59e8f24b86ea01df4f6cd92c4a", "widgetButton": "hb50ce5c4efffb5b6cda5bf1c8d7b59d5", "widget": "hbe2b0cbe00f79547016c8887e39944ac", "loading": "hfa82c56bf6a5162d3eba8c1c19d46adb", "typing": "h452cf0a5f76c208553a277ee49b22956", "typingDot": "ha5c0c3aaaf86f96a4f77d179ef8390f2" };
   var styles_default = result;
 
   // app/components/publicChat/PublicChat.tsx
-  var import_react = __toESM(require_react(), 1);
+  var import_react2 = __toESM(require_react(), 1);
 
   // app/components/SpriteIcon/index.tsx
   var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
@@ -24511,32 +24511,116 @@ var RemixEmbed = (() => {
   // app/helpers/utils.ts
   var mergeClassNames = (classes) => classes.filter((item) => !!item).join(" ");
 
+  // app/websocket/useWebsocket.ts
+  var import_react = __toESM(require_react(), 1);
+  var useWebsocket = (props) => {
+    const ws = (0, import_react.useRef)(null);
+    const { path, onError, onMessage, onOpen, onClose, onReconnect } = props;
+    const reconnectTimeout = (0, import_react.useRef)(null);
+    const wsConnect = () => {
+      ws.current = new WebSocket(`ws://localhost:8080/api/ws/${path}`);
+      ws.current.onopen = () => {
+        if (ws.current) {
+          onOpen(ws.current);
+        }
+      };
+      ws.current.onmessage = onMessage;
+      if (onError) {
+        ws.current.onerror = onError;
+      }
+      if (onClose) {
+        ws.current.onclose = onClose;
+        ws.current.addEventListener("close", () => {
+          onReconnect?.();
+          scheduleReconnect();
+        });
+      }
+    };
+    const scheduleReconnect = () => {
+      if (reconnectTimeout.current) return;
+      reconnectTimeout.current = setTimeout(() => {
+        reconnectTimeout.current = null;
+        ws.current?.close();
+        wsConnect();
+      }, 5e3);
+    };
+    (0, import_react.useEffect)(() => {
+      wsConnect();
+      return () => {
+        if (ws?.current && ws?.current?.readyState) {
+          ws?.current?.close();
+        }
+        if (reconnectTimeout.current) {
+          clearTimeout(reconnectTimeout.current);
+        }
+      };
+    }, []);
+    return { socket: ws.current };
+  };
+
   // app/components/publicChat/PublicChat.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var roleToStyleMap = {
-    assistant: styles_default.chatMessage_assistant,
-    user: styles_default.chatMessage_user
+    ["assistant" /* ASSISTANT */]: styles_default.chatMessage_assistant,
+    ["user" /* USER */]: styles_default.chatMessage_user,
+    ["manager" /* MANAGER */]: styles_default.chatMessage_manager
   };
-  var CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
+  var CHAT_API = "https://myanmar-coaches-yrs-zope.trycloudflare.com";
   var PublicChat = (props) => {
-    const { shopName, chatId } = props;
-    const textareaRef = (0, import_react.useRef)(null);
-    const conversationRef = (0, import_react.useRef)(null);
-    const [isLoading, setIsLoading] = (0, import_react.useState)(false);
-    const [isOpen, setIsOpen] = (0, import_react.useState)(false);
-    const [loaderData, setLoaderData] = (0, import_react.useState)({
+    const { shopName, chatId, userId } = props;
+    const textareaRef = (0, import_react2.useRef)(null);
+    const conversationRef = (0, import_react2.useRef)(null);
+    const [isLoading, setIsLoading] = (0, import_react2.useState)(false);
+    const [isOpen, setIsOpen] = (0, import_react2.useState)(false);
+    const [loaderData, setLoaderData] = (0, import_react2.useState)({
       chatId,
       shopName
     });
-    const [messagesList, setMessagesList] = (0, import_react.useState)([]);
-    const [message, setMessage] = (0, import_react.useState)("");
+    const [messagesList, setMessagesList] = (0, import_react2.useState)([]);
+    const [message, setMessage] = (0, import_react2.useState)("");
+    const { socket } = useWebsocket({
+      path: `chats/${chatId}?userId=${userId}`,
+      onMessage: (e) => {
+        let parsedData;
+        try {
+          parsedData = JSON.parse(e.data);
+        } catch (error) {
+          console.log("PARSE PAYLOAD ERROR: ", error);
+          return;
+        }
+        console.log(parsedData);
+        switch (parsedData.type) {
+          case "NEW_MESSAGE":
+            setMessagesList((prev) => {
+              return [...prev, parsedData.data];
+            });
+            break;
+          default:
+            break;
+        }
+      },
+      onOpen: () => {
+        console.log("socket connect");
+      },
+      onClose: () => {
+        console.log("chat close");
+      }
+    });
     const handleSubmit = async (message2) => {
       const formData = new FormData();
       formData.append("action", "message");
       formData.append("message", message2);
       setMessage("");
       try {
-        setMessagesList((prev) => [{ role: "user", text: message2 }, ...prev]);
+        socket?.send(
+          JSON.stringify({
+            type: "NEW_MESSAGE",
+            data: { role: "user" /* USER */, text: message2 }
+          })
+        );
+        setMessagesList((prev) => {
+          return [...prev, { role: "user", text: message2 }];
+        });
         setIsLoading(true);
         const response = await fetch(
           `${CHAT_API}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
@@ -24546,16 +24630,22 @@ var RemixEmbed = (() => {
           }
         );
         const data = await response.json();
-        setMessagesList((prev) => [
-          { role: "assistant", text: data.answer },
-          ...prev
-        ]);
+        if (!!data?.answer) {
+          setMessagesList((prev) => {
+            return [...prev, { role: "assistant", text: data.answer }];
+          });
+        }
       } catch (error) {
       } finally {
         setIsLoading(false);
       }
     };
-    (0, import_react.useEffect)(() => {
+    (0, import_react2.useEffect)(() => {
+      if (socket) {
+        socket.send(JSON.stringify({ type: "CHECK_ONLINE" }));
+      }
+    }, [socket]);
+    (0, import_react2.useEffect)(() => {
       (async () => {
         if (loaderData.chatId) {
           try {
@@ -24580,11 +24670,11 @@ var RemixEmbed = (() => {
         }
       })();
     }, [loaderData.chatId]);
-    (0, import_react.useEffect)(() => {
+    (0, import_react2.useEffect)(() => {
       if (conversationRef.current) {
         conversationRef.current.scrollIntoView();
       }
-    }, [messagesList.length]);
+    }, [messagesList.length, conversationRef.current, isOpen]);
     const handleInput = (e) => {
       setMessage(e.target.value);
       if (textareaRef.current) {
@@ -24641,7 +24731,7 @@ var RemixEmbed = (() => {
             return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
               "div",
               {
-                ref: !index ? conversationRef : null,
+                ref: index === messagesList.length - 1 ? conversationRef : null,
                 className: mergeClassNames([
                   styles_default.chatMessage,
                   roleToStyleMap[item.role]
@@ -24658,7 +24748,7 @@ var RemixEmbed = (() => {
             {
               ref: textareaRef,
               className: styles_default.chatInput,
-              placeholder: "Type a message...",
+              placeholder: "Type a message....",
               name: "chat-input",
               value: message,
               rows: 1,
@@ -24714,7 +24804,11 @@ var RemixEmbed = (() => {
     if (container) {
       const shopName = container?.getAttribute("data-shopName");
       const localChatId = localStorage.getItem("supportAiChatId");
-      console.log("localChatId", localChatId);
+      let userId = localStorage.getItem("chat-user-id");
+      if (!userId) {
+        userId = Date.now().toString();
+        localStorage.setItem("chat-user-id", userId);
+      }
       import_react_dom.default.render(
         /* @__PURE__ */ (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
@@ -24733,6 +24827,7 @@ var RemixEmbed = (() => {
             PublicChat_default,
             {
               shopName,
+              userId,
               chatId: localChatId && localChatId !== "undefined" ? localChatId : null
             }
           )

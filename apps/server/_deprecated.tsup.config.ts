@@ -9,7 +9,7 @@ const env = {
 
 export default defineConfig([
   {
-    entry: ["src/tg-index.ts"],
+    entry: ["src/index.ts"],
     format: ["esm"],
     minify: false,
     outDir: "dist",
@@ -27,23 +27,23 @@ export default defineConfig([
       "@internal/types",
     ],
   },
-  {
-    entry: ["src/wa-index.ts"],
-    format: ["esm"],
-    minify: false,
-    outDir: "dist",
-    define: env,
-    splitting: false,
-    sourcemap: true,
-    clean: false,
-    dts: false,
-    target: "esnext",
-    noExternal: ["fs"],
-    external: [
-      "@internal/database",
-      "@internal/services",
-      "@internal/messengers",
-      "@internal/types",
-    ],
-  },
+  // {
+  //   entry: ["src/wa-index.ts"],
+  //   format: ["esm"],
+  //   minify: false,
+  //   outDir: "dist",
+  //   define: env,
+  //   splitting: false,
+  //   sourcemap: true,
+  //   clean: false,
+  //   dts: false,
+  //   target: "esnext",
+  //   noExternal: ["fs"],
+  //   external: [
+  //     "@internal/database",
+  //     "@internal/services",
+  //     "@internal/messengers",
+  //     "@internal/types",
+  //   ],
+  // },
 ]);

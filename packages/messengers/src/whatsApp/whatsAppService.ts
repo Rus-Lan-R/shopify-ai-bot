@@ -59,7 +59,9 @@ export class WhatsAppBot extends ChatService {
               msg.body,
               chat.externalChatId
             );
-            msg.reply(aiResponse);
+            if (!!aiResponse) {
+              msg.reply(aiResponse);
+            }
           }
         }
       })

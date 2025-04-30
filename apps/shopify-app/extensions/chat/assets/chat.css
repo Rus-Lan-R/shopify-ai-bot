@@ -1,4 +1,4 @@
-/* ../../../../../../../../../private/var/folders/d8/kn6sfphj67n572x21m44vz4r0000gn/T/tmp-81363-P3F4vu2yusto/Users/ruslan/my/shopify/apps/ai-assistant/shopify-ai-bot/apps/shopify-app/app/components/publicChat/styles.css */
+/* ../../../../../../../../../private/var/folders/d8/kn6sfphj67n572x21m44vz4r0000gn/T/tmp-471-lr4QHeC0xX2V/Users/ruslan/my/shopify/apps/ai-assistant/shopify-ai-bot/apps/shopify-app/app/components/publicChat/styles.css */
 *,
 ::after,
 ::before {
@@ -25,7 +25,6 @@
 .h9b46deb2b8bf38be0cbcaf76ee696ddc {
   width: 100%;
   padding: 0 0.75rem;
-  display: flex;
   flex: 1 1 0%;
   overflow: scroll;
   border-top-left-radius: 1rem;
@@ -39,7 +38,7 @@
 .h00a3fc58acf17b2976aa046afe78debf {
   padding: 1rem 0;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   justify-content: flex-end;
   flex-grow: 1;
   gap: 0.5rem;
@@ -121,6 +120,10 @@
   background-color: rgb(235, 235, 235);
 }
 .h6e606d6d3926a2f4c5b511529d997359 {
+  background-color: rgb(244, 245, 247);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
+}
+.h747f81687b8b34167c77c21abea96434 {
   background-color: rgb(244, 245, 247);
   box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;
 }
