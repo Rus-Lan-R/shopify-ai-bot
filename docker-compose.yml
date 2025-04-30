@@ -4,11 +4,11 @@ services:
   server:
     build:
       context: .
-      dockerfile: Dockerfile.bots
+      dockerfile: Dockerfile.server
       args:
         DATABASE_URL: ${DATABASE_URL}
         OPENAI_API_KEY: ${OPENAI_API_KEY}
-        SERVER_PORT: ${SERVER_PORT}
+        PORT: ${SERVER_PORT}
     env_file:
       - .env
     image: server
@@ -24,7 +24,7 @@ services:
         SCOPES: ${SCOPES}
         DATABASE_URL: ${DATABASE_URL}
         OPENAI_API_KEY: ${OPENAI_API_KEY}
-        APP_PORT: ${APP_PORT}
+        PORT: ${APP_PORT}
     env_file:
       - .env
     image: shopify-app

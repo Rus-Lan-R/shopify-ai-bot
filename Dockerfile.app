@@ -8,7 +8,7 @@ ARG SHOPIFY_APP_URL
 ARG SCOPES
 ARG DATABASE_URL
 ARG OPENAI_API_KEY
-ARG APP_PORT
+ARG PORT
 ARG WS_URL
 
 
@@ -18,7 +18,7 @@ ENV SHOPIFY_APP_URL=${SHOPIFY_APP_URL}
 ENV SCOPES=${SCOPES}
 ENV DATABASE_URL=${DATABASE_URL}
 ENV OPENAI_API_KEY=${OPENAI_API_KEY}
-ENV APP_PORT=${APP_PORT}
+ENV PORT=${PORT}
 ENV WS_URL=${WS_URL}
 
 
@@ -49,6 +49,6 @@ RUN pnpm --filter @internal/services build
 
 RUN pnpm --filter shopify-app build
 
-EXPOSE ${APP_PORT}
+EXPOSE ${PORT}
 
 CMD ["pnpm", "--filter", "shopify-app", "start"]
