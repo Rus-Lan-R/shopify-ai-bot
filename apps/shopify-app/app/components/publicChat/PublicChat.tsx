@@ -22,8 +22,8 @@ interface ILodaerData {
   shopName?: string | null;
 }
 
-const CHAT_API = "https://myanmar-coaches-yrs-zope.trycloudflare.com";
-//  "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
+// const CHAT_API = "https://myanmar-coaches-yrs-zope.trycloudflare.com";
+const CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
 
 const PublicChat = (props: {
   userId: string;
