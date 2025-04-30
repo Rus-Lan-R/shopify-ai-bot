@@ -9,7 +9,7 @@ import {
 import { ChatBody } from "./ChatBody";
 import { ReactNode, useState } from "react";
 import { IChatMessage } from "../publicChat/PublicChat";
-import { IMessage, MessageRole } from "@internal/types";
+import { IMessage, MessageRole } from "../../../../../packages/types";
 import ConditionalWrapper from "../ConditionalWrapper";
 
 export const Chat = (props: {
