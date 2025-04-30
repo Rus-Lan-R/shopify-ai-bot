@@ -1,5 +1,7 @@
 import esbuild from "esbuild";
 import cssModulesPlugin from "esbuild-plugin-css-modules";
+import dotenv from "dotenv";
+dotenv.config();
 
 esbuild
   .build({
@@ -14,6 +16,12 @@ esbuild
       ".css": "css",
     },
     plugins: [cssModulesPlugin()],
+    define: {
+      "process.env.SHOPIFY_APP_URL": JSON.stringify(
+        process.env.SHOPIFY_APP_URL,
+      ),
+      "process.env.WS_URL": JSON.stringify(process.env.WS_URL),
+    },
   })
   .catch((error) => {
     console.log(error);

@@ -22,9 +22,6 @@ interface ILodaerData {
   shopName?: string | null;
 }
 
-// const CHAT_API = "https://myanmar-coaches-yrs-zope.trycloudflare.com";
-const CHAT_API = "https://chat-assistant-app-b47c5af582bc.herokuapp.com";
-
 const PublicChat = (props: {
   userId: string;
   chatId?: string | null;
@@ -90,7 +87,7 @@ const PublicChat = (props: {
       });
       setIsLoading(true);
       const response = await fetch(
-        `${CHAT_API}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+        `${process.env.SHOPIFY_APP_URL}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
         {
           method: "POST",
           body: formData,
@@ -119,7 +116,7 @@ const PublicChat = (props: {
       if (loaderData.chatId) {
         try {
           const response = await fetch(
-            `${CHAT_API}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+            `${process?.env?.SHOPIFY_APP_URL}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
             {
               method: "GET",
             },
@@ -166,7 +163,7 @@ const PublicChat = (props: {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `${CHAT_API}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
+        `${process?.env?.SHOPIFY_APP_URL}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
         {
           method: "POST",
           body: formData,

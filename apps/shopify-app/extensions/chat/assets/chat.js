@@ -24518,7 +24518,7 @@ var RemixEmbed = (() => {
     const { path, onError, onMessage, onOpen, onClose, onReconnect } = props;
     const reconnectTimeout = (0, import_react.useRef)(null);
     const wsConnect = () => {
-      ws.current = new WebSocket(`ws://localhost:8080/api/ws/${path}`);
+      ws.current = new WebSocket(`${"wss://chat-assistant-bots-16b7f1f5fa9e.herokuapp.com"}/api/ws/${path}`);
       ws.current.onopen = () => {
         if (ws.current) {
           onOpen(ws.current);
@@ -24565,7 +24565,6 @@ var RemixEmbed = (() => {
     ["user" /* USER */]: styles_default.chatMessage_user,
     ["manager" /* MANAGER */]: styles_default.chatMessage_manager
   };
-  var CHAT_API = "https://myanmar-coaches-yrs-zope.trycloudflare.com";
   var PublicChat = (props) => {
     const { shopName, chatId, userId } = props;
     const textareaRef = (0, import_react2.useRef)(null);
@@ -24623,7 +24622,7 @@ var RemixEmbed = (() => {
         });
         setIsLoading(true);
         const response = await fetch(
-          `${CHAT_API}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+          `${"https://chat-assistant-app-b47c5af582bc.herokuapp.com"}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
           {
             method: "POST",
             body: formData
@@ -24650,7 +24649,7 @@ var RemixEmbed = (() => {
         if (loaderData.chatId) {
           try {
             const response = await fetch(
-              `${CHAT_API}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+              `${"https://chat-assistant-app-b47c5af582bc.herokuapp.com"}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
               {
                 method: "GET"
               }
@@ -24688,7 +24687,7 @@ var RemixEmbed = (() => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `${CHAT_API}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
+          `${"https://chat-assistant-app-b47c5af582bc.herokuapp.com"}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
           {
             method: "POST",
             body: formData
