@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
-import { server } from "./wsServer/expressSServer";
-import apiRouter from "./routes/index";
+import { server } from "./wsServer/expressSServer.js";
+import apiRouter from "./routes/index.js";
 dotenv.config();
 
 const { app } = server;

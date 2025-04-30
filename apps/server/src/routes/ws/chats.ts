@@ -49,6 +49,7 @@ wsChatsRouter?.ws("/chats/:chatId", (ws, req, next) => {
   }
 
   const chatUsers = chatOnlineUsers.get(chatId)!;
+  // @ts-ignore
   chatUsers.set(userId, ws);
 
   broadcastOnlineUsers(chatId);

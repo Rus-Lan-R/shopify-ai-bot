@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "start:server": "node dist/index.js",
     "start:tg": "node dist/tg-index.js",
     "start:wa": "node dist/wa-index.js",
     "start": "pnpm start:tg & pnpm start:wa",

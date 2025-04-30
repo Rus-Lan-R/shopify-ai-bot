@@ -1,6 +1,6 @@
 import { Router } from "express";
-import wsChatsRouter from "./ws/chats";
-import testRouter from "./test";
+import wsChatsRouter from "./ws/chats.js";
+import testRouter from "./test/index.js";
 
 const apiRouter = Router();
 
