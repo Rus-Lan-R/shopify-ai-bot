@@ -44,4 +44,4 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           /usr/local/bin/heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
-          /usr/local/bin/heroku container:release server -a ${{ secrets.HEROKU_BOTS_APP_NAME }}
+          /usr/local/bin/heroku container:release web -a ${{ secrets.HEROKU_BOTS_APP_NAME }}
