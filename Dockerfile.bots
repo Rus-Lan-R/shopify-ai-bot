@@ -12,7 +12,7 @@ ARG SERVER_PORT
 ENV DATABASE_URL=${DATABASE_URL}
 ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 ENV PUPPETEER_EXECUTABLE_PATH='/usr/bin/chromium'
-ENV SERVER_PORT=${SERVER_PORT}
+ENV PORT=${SERVER_PORT}
 
 COPY pnpm-lock.yaml ./
 COPY package.json ./
@@ -46,6 +46,6 @@ RUN pnpm --filter @internal/messengers build
 
 RUN pnpm --filter server build
 
-EXPOSE ${SERVER_PORT}
+EXPOSE ${PORT}
 
 CMD ["pnpm", "--filter", "server", "start:server"]
