@@ -8,6 +8,9 @@ const { app } = server;
 const port = process.env.SERVER_PORT || 8080;
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("OK");
+});
 app.use("/api", apiRouter);
 
 // let isServiceOnline = false;
