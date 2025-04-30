@@ -36,8 +36,8 @@ jobs:
 
       - name: Tag and Push server
         run: |
-          docker tag server registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/server
-          docker push registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/server
+          docker tag server registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/web
+          docker push registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/web
 
       - name: Release
         env:

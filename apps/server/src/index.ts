@@ -11,6 +11,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("OK");
 });
+
 app.use("/api", apiRouter);
 
 // let isServiceOnline = false;
