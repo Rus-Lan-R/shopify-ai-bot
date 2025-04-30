@@ -39,7 +39,7 @@ function broadcastMessageToOnlineUsers(
 wsChatsRouter?.ws("/chats/:chatId", (ws, req, next) => {
   const chatId = req.params.chatId;
   const userId = req?.query?.userId as string;
-
+  console.log(`WS connection for chat ${chatId}, user ${userId}`);
   if (!userId) {
     next();
   }
@@ -53,8 +53,11 @@ wsChatsRouter?.ws("/chats/:chatId", (ws, req, next) => {
   chatUsers.set(userId, ws);
 
   broadcastOnlineUsers(chatId);
-
-  ws.on("close", () => {
+  ws.on("open", () => {
+    console.log("WebSocket connected");
+  });
+  ws.on("close", (code, reason) => {
+    console.log("Closed with code:", code, "reason:", reason);
     const chatUsers = chatOnlineUsers.get(chatId);
     if (chatUsers) {
       chatUsers.delete(userId);

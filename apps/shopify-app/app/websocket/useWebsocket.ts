@@ -14,7 +14,7 @@ export const useWebsocket = (props: {
   const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const wsConnect = () => {
-    ws.current = new WebSocket(`${process.env.WS_URL}/api/ws/${path}`);
+    ws.current = new WebSocket(`${process.env.WS_URL}/ws/${path}`);
     ws.current.onopen = () => {
       if (ws.current) {
         onOpen(ws.current);
