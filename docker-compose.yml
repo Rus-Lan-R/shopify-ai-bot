@@ -1,18 +1,19 @@
 version: "3.9"
 
 services:
-  chat-assistant-bots:
+  server:
     build:
       context: .
       dockerfile: Dockerfile.bots
       args:
         DATABASE_URL: ${DATABASE_URL}
         OPENAI_API_KEY: ${OPENAI_API_KEY}
+        SERVER_PORT: ${SERVER_PORT}
     env_file:
       - .env
-    image: chat-assistant-bots
+    image: server
 
-  chat-assistant-app:
+  shopify-app:
     build:
       context: .
       dockerfile: Dockerfile.app
@@ -23,6 +24,7 @@ services:
         SCOPES: ${SCOPES}
         DATABASE_URL: ${DATABASE_URL}
         OPENAI_API_KEY: ${OPENAI_API_KEY}
+        APP_PORT: ${APP_PORT}
     env_file:
       - .env
-    image: chat-assistant-app
+    image: shopify-app
