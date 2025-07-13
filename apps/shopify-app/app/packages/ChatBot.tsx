@@ -17,8 +17,8 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
     formData.append("message", message);
     try {
       setMessagesList((prev) => [
-        { role: MessageRole.USER, text: message },
         ...prev,
+        { role: MessageRole.USER, text: message },
       ]);
       setIsLoading(true);
       const response = await fetch(`/api/chat?shop=${shop}&chatId=${chatId}`, {
@@ -27,8 +27,8 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
       });
       const data = (await response.json()) as { answer: string };
       setMessagesList((prev) => [
-        { role: MessageRole.ASSISTANT, text: data.answer },
         ...prev,
+        { role: MessageRole.ASSISTANT, text: data.answer },
       ]);
     } catch (error) {
     } finally {
@@ -37,7 +37,7 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
   };
 
   useEffect(() => {
-    setMessagesList(fetcher.data?.messages || []);
+    setMessagesList((fetcher.data?.messages || []) as IChatMessage[]);
   }, [fetcher.data]);
 
   useEffect(() => {
@@ -46,6 +46,7 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
 
   return (
     <Chat
+      isDisabled={false}
       messagesList={messagesList}
       isLoading={isLoading}
       onSend={handleSubmit}

@@ -24518,7 +24518,7 @@ var RemixEmbed = (() => {
     const { path, onError, onMessage, onOpen, onClose, onReconnect } = props;
     const reconnectTimeout = (0, import_react.useRef)(null);
     const wsConnect = () => {
-      ws.current = new WebSocket(`${"wss://chat-assistant-bots-16b7f1f5fa9e.herokuapp.com"}/api/ws/${path}`);
+      ws.current = new WebSocket(`${"ws://localhost:8080"}/ws/${path}`);
       ws.current.onopen = () => {
         if (ws.current) {
           onOpen(ws.current);
@@ -24558,12 +24558,20 @@ var RemixEmbed = (() => {
     return { socket: ws.current };
   };
 
+  // ../../packages/types/dist/index.js
+  var MessageRole = /* @__PURE__ */ ((MessageRole2) => {
+    MessageRole2["ASSISTANT"] = "assistant";
+    MessageRole2["USER"] = "user";
+    MessageRole2["MANAGER"] = "manager";
+    return MessageRole2;
+  })(MessageRole || {});
+
   // app/components/publicChat/PublicChat.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var roleToStyleMap = {
-    ["assistant" /* ASSISTANT */]: styles_default.chatMessage_assistant,
-    ["user" /* USER */]: styles_default.chatMessage_user,
-    ["manager" /* MANAGER */]: styles_default.chatMessage_manager
+    [MessageRole.ASSISTANT]: styles_default.chatMessage_assistant,
+    [MessageRole.USER]: styles_default.chatMessage_user,
+    [MessageRole.MANAGER]: styles_default.chatMessage_manager
   };
   var PublicChat = (props) => {
     const { shopName, chatId, userId } = props;
@@ -24614,7 +24622,7 @@ var RemixEmbed = (() => {
         socket?.send(
           JSON.stringify({
             type: "NEW_MESSAGE",
-            data: { role: "user" /* USER */, text: message2 }
+            data: { role: MessageRole.USER, text: message2 }
           })
         );
         setMessagesList((prev) => {
@@ -24622,7 +24630,7 @@ var RemixEmbed = (() => {
         });
         setIsLoading(true);
         const response = await fetch(
-          `${"https://chat-assistant-app-b47c5af582bc.herokuapp.com"}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+          `${"https://app-test.ngrok.dev"}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
           {
             method: "POST",
             body: formData
@@ -24641,7 +24649,7 @@ var RemixEmbed = (() => {
     };
     (0, import_react2.useEffect)(() => {
       if (socket) {
-        socket.send(JSON.stringify({ type: "CHECK_ONLINE" }));
+        socket?.send(JSON.stringify({ type: "CHECK_ONLINE" }));
       }
     }, [socket]);
     (0, import_react2.useEffect)(() => {
@@ -24649,7 +24657,7 @@ var RemixEmbed = (() => {
         if (loaderData.chatId) {
           try {
             const response = await fetch(
-              `${"https://chat-assistant-app-b47c5af582bc.herokuapp.com"}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+              `${"https://app-test.ngrok.dev"}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
               {
                 method: "GET"
               }
@@ -24687,7 +24695,7 @@ var RemixEmbed = (() => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `${"https://chat-assistant-app-b47c5af582bc.herokuapp.com"}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
+          `${"https://app-test.ngrok.dev"}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
           {
             method: "POST",
             body: formData

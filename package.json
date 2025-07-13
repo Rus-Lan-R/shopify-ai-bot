@@ -19,13 +19,10 @@
     "build:chat": "pnpm --filter shopify-app build:chat",
     "docker:build": "docker build -t bots --file Dockerfile.bots ."
   },
-  "dependencies": {
-    "crypto": "^1.0.1",
-    "dotenv": "^16.4.5"
-  },
   "devDependencies": {
     "@types/node": "^22.2.0",
     "concurrently": "^8.0.0",
+    "prettier": "^3.6.2",
     "tsconfig-paths": "^4.2.0",
     "tsup": "^8.4.0",
     "typescript": "^5.0.0"

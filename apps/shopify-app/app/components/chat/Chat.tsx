@@ -32,7 +32,11 @@ export const Chat = (props: {
 
   return (
     <Card>
-      <ChatBody messages={messagesList} watcherRole={props.watcherRole}>
+      <ChatBody
+        isLoading={isLoading}
+        messages={messagesList}
+        watcherRole={props.watcherRole}
+      >
         <InlineStack
           gap={"300"}
           blockAlign={"stretch"}

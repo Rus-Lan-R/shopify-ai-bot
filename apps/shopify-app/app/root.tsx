@@ -6,6 +6,17 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import Sprite from "./components/SpriteIcon/Sprite";
+import { LoaderFunctionArgs } from "@remix-run/node";
+
+export type RootLoader = typeof loader;
+export async function loader({ request }: LoaderFunctionArgs) {
+  console.log(process.env.WS_URL);
+  return {
+    ENV: {
+      WS_URL: process.env.WS_URL,
+    },
+  };
+}
 
 export default function App() {
   return (

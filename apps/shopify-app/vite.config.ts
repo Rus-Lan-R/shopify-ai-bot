@@ -89,6 +89,9 @@ export default defineConfig({
       ],
     },
   },
+  optimizeDeps: {
+    exclude: ["crypto", "dotenv"],
+  },
   // optimizeDeps: {
   //   include: ["@shopify/app-bridge-react", "@shopify/polaris"],
   // },

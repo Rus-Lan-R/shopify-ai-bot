@@ -5,6 +5,7 @@ dotenv.config();
 
 esbuild
   .build({
+    external: ["cookie-signature", "crypto"],
     entryPoints: ["./embeded/chat.tsx"],
     bundle: true,
     outfile: "./extensions/chat/assets/chat.js",
