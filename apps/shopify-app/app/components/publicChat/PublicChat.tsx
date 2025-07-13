@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import SpriteIcon from "app/components/SpriteIcon";
 import { mergeClassNames } from "app/helpers/utils";
 import { useWebsocket } from "app/websocket/useWebsocket";
-import { MessageRole } from "../../../../../packages/types";
+import { MessageRole } from "@internal/types";
+import { useIsTyping } from "app/hooks/useIsTyping";
 
 export interface IChatMessage {
   role: "assistant" | "user";
@@ -37,10 +38,12 @@ const PublicChat = (props: {
     shopName,
   });
 
+  const [isOtherTyping, setIsOtherTyping] = useState(false);
   const [messagesList, setMessagesList] = useState<IChatMessage[]>([]);
   const [message, setMessage] = useState("");
 
   const { socket } = useWebsocket({
+    wsUrl: process.env.WS_URL || "",
     path: `chats/${chatId}?userId=${userId}`,
     onMessage: (e) => {
       let parsedData;
@@ -50,12 +53,15 @@ const PublicChat = (props: {
         console.log("PARSE PAYLOAD ERROR: ", error);
         return;
       }
-      console.log(parsedData);
       switch (parsedData.type) {
         case "NEW_MESSAGE":
           setMessagesList((prev) => {
             return [...prev, parsedData.data];
           });
+          break;
+
+        case "TYPING":
+          setIsOtherTyping(parsedData.data.isTyping);
           break;
 
         default:
@@ -68,6 +74,15 @@ const PublicChat = (props: {
     onClose: () => {
       console.log("chat close");
     },
+  });
+
+  const handleOnTyping = (value: boolean) => {
+    socket?.send(JSON.stringify({ type: "TYPING", data: { isTyping: value } }));
+  };
+
+  const { setIsTyping } = useIsTyping({
+    value: message,
+    onTypingChange: handleOnTyping,
   });
 
   const handleSubmit = async (message: string) => {
@@ -197,23 +212,6 @@ const PublicChat = (props: {
           </div>
           <div className={styles.chatBody}>
             <div className={styles.chatConversation}>
-              {!!isLoading ? (
-                <div
-                  className={mergeClassNames([
-                    styles.chatMessage,
-                    styles.chatMessage_assistant,
-                  ])}
-                >
-                  <div className={styles.typing}>
-                    <div className={styles.typingDot}></div>
-                    <div className={styles.typingDot}></div>
-                    <div className={styles.typingDot}></div>
-                  </div>
-                </div>
-              ) : (
-                <></>
-              )}
-
               {messagesList.map((item, index) => {
                 return (
                   <div
@@ -230,6 +228,22 @@ const PublicChat = (props: {
                   </div>
                 );
               })}
+              {!!isLoading || isOtherTyping ? (
+                <div
+                  className={mergeClassNames([
+                    styles.chatMessage,
+                    styles.chatMessage_assistant,
+                  ])}
+                >
+                  <div className={styles.typing}>
+                    <div className={styles.typingDot}></div>
+                    <div className={styles.typingDot}></div>
+                    <div className={styles.typingDot}></div>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
           <div className={styles.chatFooter}>
@@ -241,6 +255,7 @@ const PublicChat = (props: {
               value={message}
               rows={1}
               onChange={handleInput}
+              onBlur={() => setIsTyping(false)}
             ></textarea>
             <div className={styles.chatButtonFrame}>
               <button

@@ -11,6 +11,7 @@ import { ReactNode, useState } from "react";
 import { IChatMessage } from "../publicChat/PublicChat";
 import { IMessage, MessageRole } from "../../../../../packages/types";
 import ConditionalWrapper from "../ConditionalWrapper";
+import { useIsTyping } from "app/hooks/useIsTyping";
 
 export const Chat = (props: {
   tooltipContent?: ReactNode;
@@ -18,10 +19,28 @@ export const Chat = (props: {
   isDisabled: boolean;
   messagesList: (IMessage | IChatMessage)[];
   watcherRole: MessageRole;
+  isClientTyping: boolean;
   onSend: (message: string) => void;
+  onTyping?: (isTyping: boolean) => void;
 }) => {
-  const { isDisabled, tooltipContent, messagesList, isLoading, onSend } = props;
+  const {
+    isDisabled,
+    tooltipContent,
+    messagesList,
+    isLoading,
+    isClientTyping,
+    onTyping,
+    onSend,
+  } = props;
   const [message, setMessage] = useState("");
+  const { setIsTyping } = useIsTyping({
+    value: message,
+    onTypingChange: onTyping,
+  });
+
+  const handleInput = (value: string) => {
+    setMessage(value);
+  };
 
   const handleSubmit = () => {
     if (!!message.trim()) {
@@ -33,7 +52,7 @@ export const Chat = (props: {
   return (
     <Card>
       <ChatBody
-        isLoading={isLoading}
+        isClientTyping={isClientTyping}
         messages={messagesList}
         watcherRole={props.watcherRole}
       >
@@ -51,7 +70,8 @@ export const Chat = (props: {
               ariaExpanded={true}
               multiline={true}
               placeholder={"Message"}
-              onChange={(value) => setMessage(value)}
+              onChange={handleInput}
+              onBlur={() => setIsTyping(false)}
             ></TextField>
           </Box>
 

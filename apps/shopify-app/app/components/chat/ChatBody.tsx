@@ -1,14 +1,6 @@
-import {
-  BlockStack,
-  Box,
-  Card,
-  Frame,
-  Loading,
-  Scrollable,
-  Text,
-} from "@shopify/polaris";
+import { IMessage, MessageRole } from "@internal/types";
+import { BlockStack, Box, Card, Scrollable, Text } from "@shopify/polaris";
 import { IChatMessage } from "../publicChat/PublicChat";
-import { IMessage, MessageRole } from "../../../../../packages/types/src";
 
 const watcherToRoleStyle: {
   [key in MessageRole]: {
@@ -48,12 +40,12 @@ const watcherToRoleStyle: {
 };
 
 export const ChatBody = (props: {
-  isLoading: boolean;
   messages: (IChatMessage | IMessage)[];
   children: JSX.Element;
   watcherRole: MessageRole;
+  isClientTyping: boolean;
 }) => {
-  const { isLoading, messages, children, watcherRole } = props;
+  const { isClientTyping, messages, children, watcherRole } = props;
 
   return (
     <Box position={"relative"} minHeight={"300px"}>
@@ -66,9 +58,7 @@ export const ChatBody = (props: {
           marginBottom: "16px",
         }}
       >
-        {true || isLoading ? (
-          "loading..."
-        ) : messages.length ? (
+        {messages.length ? (
           messages?.map((item, index) => {
             return (
               <div
@@ -103,6 +93,7 @@ export const ChatBody = (props: {
             <Text as={"p"}>Start conversation</Text>
           </BlockStack>
         )}
+        {!!isClientTyping && "typing..."}
       </Scrollable>
       <Box
         position={"sticky"}

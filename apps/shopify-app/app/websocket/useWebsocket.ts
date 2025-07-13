@@ -1,8 +1,7 @@
-import { useLoaderData } from "@remix-run/react";
-import { RootLoader } from "app/root";
 import { useEffect, useRef } from "react";
 
 export const useWebsocket = (props: {
+  wsUrl: string;
   path: string;
   onMessage: (e: MessageEvent) => void;
   onOpen: (ws: WebSocket) => void;
@@ -10,15 +9,14 @@ export const useWebsocket = (props: {
   onClose?: () => void;
   onReconnect?: () => void;
 }) => {
-  const { ENV } = useLoaderData<RootLoader>();
-
   const ws = useRef<WebSocket | null>(null);
-  const { path, onError, onMessage, onOpen, onClose, onReconnect } = props;
+  const { path, wsUrl, onError, onMessage, onOpen, onClose, onReconnect } =
+    props;
 
   const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const wsConnect = () => {
-    ws.current = new WebSocket(`${ENV?.WS_URL}/ws/${path}`);
+    ws.current = new WebSocket(`${wsUrl}/ws/${path}`);
     ws.current.onopen = () => {
       if (ws.current) {
         onOpen(ws.current);

@@ -1,13 +1,12 @@
 import { Badge, BlockStack, Box, Text, Tooltip } from "@shopify/polaris";
 import { Progress, Tone } from "@shopify/polaris/build/ts/src/components/Badge";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import {
   DisabledIcon,
   WifiIcon,
   ConnectIcon,
   RefreshIcon,
 } from "@shopify/polaris-icons";
-import { useWebsocket } from "app/websocket/useWebsocket";
 
 export const enum ChatSocketStatus {
   ONLINE = "ONLINE",

@@ -1085,7 +1085,7 @@ var RemixEmbed = (() => {
             }
             return dispatcher.useContext(Context);
           }
-          function useState2(initialState) {
+          function useState4(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1097,7 +1097,7 @@ var RemixEmbed = (() => {
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect3(create, deps) {
+          function useEffect5(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1880,7 +1880,7 @@ var RemixEmbed = (() => {
           exports.useContext = useContext;
           exports.useDebugValue = useDebugValue;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect3;
+          exports.useEffect = useEffect5;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
@@ -1888,7 +1888,7 @@ var RemixEmbed = (() => {
           exports.useMemo = useMemo;
           exports.useReducer = useReducer;
           exports.useRef = useRef3;
-          exports.useState = useState2;
+          exports.useState = useState4;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -24497,7 +24497,7 @@ var RemixEmbed = (() => {
   var styles_default = result;
 
   // app/components/publicChat/PublicChat.tsx
-  var import_react2 = __toESM(require_react(), 1);
+  var import_react4 = __toESM(require_react(), 1);
 
   // app/components/SpriteIcon/index.tsx
   var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
@@ -24515,10 +24515,10 @@ var RemixEmbed = (() => {
   var import_react = __toESM(require_react(), 1);
   var useWebsocket = (props) => {
     const ws = (0, import_react.useRef)(null);
-    const { path, onError, onMessage, onOpen, onClose, onReconnect } = props;
+    const { path, wsUrl, onError, onMessage, onOpen, onClose, onReconnect } = props;
     const reconnectTimeout = (0, import_react.useRef)(null);
     const wsConnect = () => {
-      ws.current = new WebSocket(`${"ws://localhost:8080"}/ws/${path}`);
+      ws.current = new WebSocket(`${wsUrl}/ws/${path}`);
       ws.current.onopen = () => {
         if (ws.current) {
           onOpen(ws.current);
@@ -24558,34 +24558,70 @@ var RemixEmbed = (() => {
     return { socket: ws.current };
   };
 
-  // ../../packages/types/dist/index.js
-  var MessageRole = /* @__PURE__ */ ((MessageRole2) => {
-    MessageRole2["ASSISTANT"] = "assistant";
-    MessageRole2["USER"] = "user";
-    MessageRole2["MANAGER"] = "manager";
-    return MessageRole2;
-  })(MessageRole || {});
+  // app/hooks/useIsTyping.ts
+  var import_react3 = __toESM(require_react(), 1);
+
+  // app/hooks/useDebounce.ts
+  var import_react2 = __toESM(require_react(), 1);
+  function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = (0, import_react2.useState)(value);
+    (0, import_react2.useEffect)(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+      return () => {
+        clearTimeout(handler);
+      };
+    }, [value, delay]);
+    return debouncedValue;
+  }
+  var useDebounce_default = useDebounce;
+
+  // app/hooks/useIsTyping.ts
+  var useIsTyping = ({
+    value,
+    onTypingChange
+  }) => {
+    const [isTyping, setIsTyping] = (0, import_react3.useState)(false);
+    const debouncedValue = useDebounce_default(value, 1e3);
+    (0, import_react3.useEffect)(() => {
+      onTypingChange?.(isTyping);
+    }, [isTyping]);
+    (0, import_react3.useEffect)(() => {
+      setIsTyping(false);
+    }, [debouncedValue]);
+    (0, import_react3.useEffect)(() => {
+      if (value.trim().length && !isTyping) {
+        setIsTyping(true);
+      } else if (!value.trim()) {
+        setIsTyping(false);
+      }
+    }, [value]);
+    return { isTyping, setIsTyping };
+  };
 
   // app/components/publicChat/PublicChat.tsx
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   var roleToStyleMap = {
-    [MessageRole.ASSISTANT]: styles_default.chatMessage_assistant,
-    [MessageRole.USER]: styles_default.chatMessage_user,
-    [MessageRole.MANAGER]: styles_default.chatMessage_manager
+    ["assistant" /* ASSISTANT */]: styles_default.chatMessage_assistant,
+    ["user" /* USER */]: styles_default.chatMessage_user,
+    ["manager" /* MANAGER */]: styles_default.chatMessage_manager
   };
   var PublicChat = (props) => {
     const { shopName, chatId, userId } = props;
-    const textareaRef = (0, import_react2.useRef)(null);
-    const conversationRef = (0, import_react2.useRef)(null);
-    const [isLoading, setIsLoading] = (0, import_react2.useState)(false);
-    const [isOpen, setIsOpen] = (0, import_react2.useState)(false);
-    const [loaderData, setLoaderData] = (0, import_react2.useState)({
+    const textareaRef = (0, import_react4.useRef)(null);
+    const conversationRef = (0, import_react4.useRef)(null);
+    const [isLoading, setIsLoading] = (0, import_react4.useState)(false);
+    const [isOpen, setIsOpen] = (0, import_react4.useState)(false);
+    const [loaderData, setLoaderData] = (0, import_react4.useState)({
       chatId,
       shopName
     });
-    const [messagesList, setMessagesList] = (0, import_react2.useState)([]);
-    const [message, setMessage] = (0, import_react2.useState)("");
+    const [isOtherTyping, setIsOtherTyping] = (0, import_react4.useState)(false);
+    const [messagesList, setMessagesList] = (0, import_react4.useState)([]);
+    const [message, setMessage] = (0, import_react4.useState)("");
     const { socket } = useWebsocket({
+      wsUrl: "ws://localhost:8080",
       path: `chats/${chatId}?userId=${userId}`,
       onMessage: (e) => {
         let parsedData;
@@ -24595,12 +24631,14 @@ var RemixEmbed = (() => {
           console.log("PARSE PAYLOAD ERROR: ", error);
           return;
         }
-        console.log(parsedData);
         switch (parsedData.type) {
           case "NEW_MESSAGE":
             setMessagesList((prev) => {
               return [...prev, parsedData.data];
             });
+            break;
+          case "TYPING":
+            setIsOtherTyping(parsedData.data.isTyping);
             break;
           default:
             break;
@@ -24613,6 +24651,13 @@ var RemixEmbed = (() => {
         console.log("chat close");
       }
     });
+    const handleOnTyping = (value) => {
+      socket?.send(JSON.stringify({ type: "TYPING", data: { isTyping: value } }));
+    };
+    const { setIsTyping } = useIsTyping({
+      value: message,
+      onTypingChange: handleOnTyping
+    });
     const handleSubmit = async (message2) => {
       const formData = new FormData();
       formData.append("action", "message");
@@ -24622,7 +24667,7 @@ var RemixEmbed = (() => {
         socket?.send(
           JSON.stringify({
             type: "NEW_MESSAGE",
-            data: { role: MessageRole.USER, text: message2 }
+            data: { role: "user" /* USER */, text: message2 }
           })
         );
         setMessagesList((prev) => {
@@ -24630,7 +24675,7 @@ var RemixEmbed = (() => {
         });
         setIsLoading(true);
         const response = await fetch(
-          `${"https://app-test.ngrok.dev"}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+          `${"https://et-pakistan-optional-nm.trycloudflare.com"}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
           {
             method: "POST",
             body: formData
@@ -24647,17 +24692,17 @@ var RemixEmbed = (() => {
         setIsLoading(false);
       }
     };
-    (0, import_react2.useEffect)(() => {
+    (0, import_react4.useEffect)(() => {
       if (socket) {
         socket?.send(JSON.stringify({ type: "CHECK_ONLINE" }));
       }
     }, [socket]);
-    (0, import_react2.useEffect)(() => {
+    (0, import_react4.useEffect)(() => {
       (async () => {
         if (loaderData.chatId) {
           try {
             const response = await fetch(
-              `${"https://app-test.ngrok.dev"}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+              `${"https://et-pakistan-optional-nm.trycloudflare.com"}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
               {
                 method: "GET"
               }
@@ -24677,7 +24722,7 @@ var RemixEmbed = (() => {
         }
       })();
     }, [loaderData.chatId]);
-    (0, import_react2.useEffect)(() => {
+    (0, import_react4.useEffect)(() => {
       if (conversationRef.current) {
         conversationRef.current.scrollIntoView();
       }
@@ -24695,7 +24740,7 @@ var RemixEmbed = (() => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `${"https://app-test.ngrok.dev"}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
+          `${"https://et-pakistan-optional-nm.trycloudflare.com"}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
           {
             method: "POST",
             body: formData
@@ -24720,20 +24765,6 @@ var RemixEmbed = (() => {
       isOpen ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatFrame, children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatHeader, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: styles_default.chatTitle, children: loaderData?.assistantName || "Assistant chat" }) }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatBody, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatConversation, children: [
-          !!isLoading ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-            "div",
-            {
-              className: mergeClassNames([
-                styles_default.chatMessage,
-                styles_default.chatMessage_assistant
-              ]),
-              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.typing, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.typingDot }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.typingDot }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.typingDot })
-              ] })
-            }
-          ) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, {}),
           messagesList.map((item, index) => {
             return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
               "div",
@@ -24747,7 +24778,21 @@ var RemixEmbed = (() => {
               },
               `${item.role}-${index}`
             );
-          })
+          }),
+          !!isLoading || isOtherTyping ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            "div",
+            {
+              className: mergeClassNames([
+                styles_default.chatMessage,
+                styles_default.chatMessage_assistant
+              ]),
+              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.typing, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.typingDot }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.typingDot }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.typingDot })
+              ] })
+            }
+          ) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, {})
         ] }) }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: styles_default.chatFooter, children: [
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
@@ -24759,7 +24804,8 @@ var RemixEmbed = (() => {
               name: "chat-input",
               value: message,
               rows: 1,
-              onChange: handleInput
+              onChange: handleInput,
+              onBlur: () => setIsTyping(false)
             }
           ),
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.chatButtonFrame, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(

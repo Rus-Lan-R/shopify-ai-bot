@@ -1,5 +1,5 @@
 import { IMessage, MessageRole } from "@internal/types";
-import { useLoaderData, useSubmit } from "@remix-run/react";
+import { useLoaderData, useRouteLoaderData, useSubmit } from "@remix-run/react";
 import {
   Badge,
   BlockStack,
@@ -14,6 +14,7 @@ import { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import { Chat } from "app/components/chat/Chat";
 import { ChatSocketStatus, ChatStatus } from "app/components/ChatStatus";
 import { useLoading } from "app/helpers/useLoading";
+import { RootLoader } from "app/root";
 import type { IChatDetailsResponse } from "app/server/app.chats.$chat.server";
 import { useWebsocket } from "app/websocket/useWebsocket";
 import { useEffect, useMemo, useState } from "react";
@@ -43,8 +44,10 @@ export const assistantToBadge: Partial<{
 
 export default function ChatDetailsPage() {
   const submit = useSubmit();
+  const rootLoader = useRouteLoaderData<RootLoader>("root");
   const { messages, chatId, chat } = useLoaderData<IChatDetailsResponse>();
   const [messagesList, setMessagesList] = useState(messages);
+  const [isClientTyping, setIsClientTyping] = useState<boolean>(false);
   const [status, setStatus] = useState(ChatSocketStatus.OFFLINE);
 
   const { isLoading, checkIsLoading, setLoadingSlug } = useLoading<
@@ -52,6 +55,7 @@ export default function ChatDetailsPage() {
   >();
 
   const { socket } = useWebsocket({
+    wsUrl: rootLoader?.ENV?.WS_URL || "",
     path: `chats/${chatId}?userId=manager`,
     onOpen: (ws) => {
       setStatus(ChatSocketStatus.CONNECTING);
@@ -61,7 +65,7 @@ export default function ChatDetailsPage() {
       try {
         parsedData = JSON.parse(e.data) as {
           type: string;
-          data: IMessage;
+          data: IMessage | { isTyping: boolean };
           users: string[];
         };
       } catch (error) {
@@ -83,9 +87,17 @@ export default function ChatDetailsPage() {
           break;
 
         case "NEW_MESSAGE": {
-          setMessagesList((prev) => {
-            return [...prev, parsedData.data];
-          });
+          if ("text" in parsedData?.data)
+            setMessagesList((prev) => {
+              return [...prev, parsedData.data];
+            });
+          break;
+        }
+
+        case "TYPING": {
+          if ("isTyping" in parsedData.data) {
+            setIsClientTyping(parsedData.data.isTyping);
+          }
           break;
         }
         default:
@@ -105,6 +117,10 @@ export default function ChatDetailsPage() {
     formData.append("chatId", chatId);
     formData.append("newAssistant", newRole);
     submit(formData, { method: "POST" });
+  };
+
+  const handleTyping = (isTyping: boolean) => {
+    socket?.send(JSON.stringify({ type: "TYPING", data: { isTyping } }));
   };
 
   const handleSubmit = (message: string) => {
@@ -188,7 +204,9 @@ export default function ChatDetailsPage() {
             watcherRole={MessageRole.MANAGER}
             messagesList={messagesList}
             isLoading={checkIsLoading("sendMessage")}
+            isClientTyping={isClientTyping}
             onSend={handleSubmit}
+            onTyping={handleTyping}
           ></Chat>
         </BlockStack>
       </Box>

@@ -74,7 +74,8 @@ wsChatsRouter?.ws("/chats/:chatId", (ws, req, next) => {
       parsedData = JSON.parse(e.toString());
       if (parsedData?.type === "CHECK_ONLINE") {
         broadcastOnlineUsers(chatId);
-      } else if (parsedData.type === "NEW_MESSAGE") {
+      } else if (["NEW_MESSAGE", "TYPING"].includes(parsedData.type)) {
+        console.log(chatId);
         broadcastMessageToOnlineUsers(chatId, e.toString(), userId);
       }
     } catch (error) {
