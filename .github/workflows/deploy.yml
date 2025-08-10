@@ -10,7 +10,7 @@ env:
   ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
   ECR_REPO_SERVER: chat-pilot-ai/server
   ECR_REPO_APP: chat-pilot-ai/app
-  ECS_CLUSTER: my-cluster
+  ECS_CLUSTER: chat-pilot-cluster
   ECS_SERVICE_SERVER: server-service
   ECS_SERVICE_APP: shopify-app-service
 
