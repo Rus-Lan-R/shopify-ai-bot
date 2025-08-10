@@ -1,47 +1,50 @@
-name: Deploy nodes to Heroku
+name: Deploy to AWS ECS
 
 on:
   push:
     branches:
       - master
 
+env:
+  AWS_REGION: us-west-1
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+  ECR_REPO_SERVER: chat-pilot-ai/server
+  ECR_REPO_APP: chat-pilot-ai/app
+  ECS_CLUSTER: my-cluster
+  ECS_SERVICE_SERVER: server-service
+  ECS_SERVICE_APP: shopify-app-service
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - name: Install Heroku CLI
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
         run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
-        shell: bash
+          aws ecr get-login-password --region $AWS_REGION | \
+          docker login --username AWS --password-stdin $ECR_REGISTRY
 
-      - name: Login to Heroku
+      - name: Build and push server image
         run: |
-          echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username=_ --password-stdin registry.heroku.com
+          docker build -t $ECR_REGISTRY/$ECR_REPO_SERVER:latest -f Dockerfile.server .
+          docker push $ECR_REGISTRY/$ECR_REPO_SERVER:latest
 
-      - name: Create .env file
+      - name: Build and push shopify-app image
         run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
+          docker build -t $ECR_REGISTRY/$ECR_REPO_APP:latest -f Dockerfile.app .
+          docker push $ECR_REGISTRY/$ECR_REPO_APP:latest
 
-      - name: Build images with Docker Compose
-        run: docker compose build
-
-      - name: Tag and Push shopify-app
+      - name: Deploy to ECS
         run: |
-          docker tag shopify-app registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
-          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
-
-      - name: Tag and Push server
-        run: |
-          docker tag server registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/web
-          docker push registry.heroku.com/${{ secrets.HEROKU_BOTS_APP_NAME }}/web
-
-      - name: Release
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          /usr/local/bin/heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
-          /usr/local/bin/heroku container:release web -a ${{ secrets.HEROKU_BOTS_APP_NAME }}
+          aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE_SERVER --force-new-deployment
+          aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE_APP --force-new-deployment
