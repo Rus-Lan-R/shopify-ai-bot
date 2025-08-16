@@ -3,6 +3,7 @@ import express from "express";
 import { server } from "./wsServer/expressSServer.js";
 import apiRouter from "./routes/index.js";
 import wsChatsRouter from "./routes/ws/chats.js";
+
 dotenv.config();
 
 const { app, getWss } = server;
@@ -14,7 +15,7 @@ app.use("/ws", wsChatsRouter);
 
 setInterval(() => {
   getWss().clients.forEach((ws) => {
-    if (ws.readyState === WebSocket.OPEN) {
+    if (ws?.readyState === 1) {
       ws.ping();
     }
   });
