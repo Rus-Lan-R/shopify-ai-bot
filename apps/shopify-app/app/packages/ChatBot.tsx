@@ -21,13 +21,10 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
         { role: MessageRole.USER, text: message },
       ]);
       setIsLoading(true);
-      const response = await fetch(
-        `/app-api/chat?shop=${shop}&chatId=${chatId}`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
+      const response = await fetch(`/api/chat?shop=${shop}&chatId=${chatId}`, {
+        method: "POST",
+        body: formData,
+      });
       const data = (await response.json()) as { answer: string };
       setMessagesList((prev) => [
         ...prev,
@@ -44,7 +41,7 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
   }, [fetcher.data]);
 
   useEffect(() => {
-    fetcher.load(`/app-api/chat?shop=${shop}&chatId=${chatId}`);
+    fetcher.load(`/api/chat?shop=${shop}&chatId=${chatId}`);
   }, []);
 
   return (
