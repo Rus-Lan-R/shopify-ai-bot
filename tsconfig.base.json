@@ -13,6 +13,7 @@
       "@internal/database": ["./packages/database/dist"],
       "@internal/services": ["./packages/services/dist"],
       "@internal/messengers": ["./packages/messengers/dist"],
+      "@internal/const": ["./packages/const/dist"],
       "@internal/types": ["./packages/types/dist"]
     }
   },

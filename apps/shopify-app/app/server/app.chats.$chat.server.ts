@@ -1,5 +1,6 @@
 import { Chats, Messages } from "@internal/database";
-import { IChat, IMessage, MessageRole } from "../../../../packages/types/src";
+import type { IChat, IMessage } from "@internal/types";
+import { MessageRole } from "@internal/const";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { ExtendedSession } from "app/modules/sessionStorage";
 import { authenticate } from "app/shopify.server";

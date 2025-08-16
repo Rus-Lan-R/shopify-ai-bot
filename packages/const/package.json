@@ -1,5 +1,5 @@
 {
-  "name": "@internal/types",
+  "name": "@internal/const",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,16 +11,11 @@
       "require": "./dist/index.js"
     }
   },
-  "scripts": {
-    "build": "tsup"
-  },
-  "dependencies": {
-    "@internal/const": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "^5.0.0"
   },
-  "_moduleAliases": {
-    "@internal/const": "packages/const/dist"
+  "scripts": {
+    "build": "tsup"
   }
 }

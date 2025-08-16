@@ -3,10 +3,7 @@ import { FormInput } from "app/components/form/FormInput";
 import { BlockStack, Button, Form, InlineStack } from "@shopify/polaris";
 import { useSubmit } from "@remix-run/react";
 import { useLoading } from "app/helpers/useLoading";
-import {
-  IntegrationStatus,
-  PlatformName,
-} from "../../../../../packages/types/src";
+import { IntegrationStatus, PlatformName } from "@internal/const";
 
 export const TelegramFormIntegrations = (props: {
   primaryApiKey?: string | null;

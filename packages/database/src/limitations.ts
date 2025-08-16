@@ -1,4 +1,4 @@
-import { ILimitation } from "@internal/types";
+import type { ILimitation } from "@internal/types";
 import mongoose, { Schema, model } from "mongoose";
 
 // 🔌 Platforms

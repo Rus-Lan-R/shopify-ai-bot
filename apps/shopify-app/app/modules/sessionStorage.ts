@@ -1,7 +1,7 @@
 import { Session } from "@shopify/shopify-app-remix/server";
 import { SessionStorage } from "@shopify/shopify-app-session-storage";
 import { Sessions as SessionsModel } from "@internal/database";
-import { ISession } from "@internal/types";
+import type { ISession } from "@internal/types";
 
 export type ExtendedSession = Session & ISession;
 export interface MongoDBSessionStorageOptions {
@@ -33,12 +33,11 @@ export class MongoDBSessionStorage implements SessionStorage {
 
   public async deleteSession(id: string): Promise<boolean> {
     try {
-    await SessionsModel.deleteOne({ _id: id });
-    return true;
+      await SessionsModel.deleteOne({ _id: id });
+      return true;
     } catch (error) {
-      return false
+      return false;
     }
-  
   }
 
   public async deleteSessions(ids: string[]): Promise<boolean> {

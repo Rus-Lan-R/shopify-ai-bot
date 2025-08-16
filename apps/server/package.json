@@ -23,6 +23,7 @@
     "@internal/messengers": "workspace:*",
     "@internal/services": "workspace:*",
     "@internal/types": "workspace:*",
+    "@internal/const": "workspace:*",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
@@ -43,6 +44,7 @@
     "@internal/services": "packages/services/dist",
     "@internal/database": "packages/database/dist",
     "@internal/messengers": "packages/messengers/dist",
-    "@internal/types": "packages/types/dist"
+    "@internal/types": "packages/types/dist",
+    "@internal/const": "packages/const/dist"
   }
 }

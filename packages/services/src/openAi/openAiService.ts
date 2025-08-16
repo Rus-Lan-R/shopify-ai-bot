@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { Run } from "openai/resources/beta/threads/runs/runs";
 import { Message } from "openai/resources/beta/threads/messages";
 import { extractTextWithoutAnnotations } from "../helpers";
-import { MessageRole } from "@internal/types";
+import { MessageRole } from "@internal/const";
 
 export class AiClient {
   public aiClient: OpenAI;

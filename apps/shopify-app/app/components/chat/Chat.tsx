@@ -9,9 +9,10 @@ import {
 import { ChatBody } from "./ChatBody";
 import { ReactNode, useState } from "react";
 import { IChatMessage } from "../publicChat/PublicChat";
-import { IMessage, MessageRole } from "../../../../../packages/types";
 import ConditionalWrapper from "../ConditionalWrapper";
 import { useIsTyping } from "app/hooks/useIsTyping";
+import type { IMessage } from "@internal/types";
+import { MessageRole } from "@internal/const";
 
 export const Chat = (props: {
   tooltipContent?: ReactNode;

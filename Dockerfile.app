@@ -30,6 +30,7 @@ COPY tsconfig.json ./
 COPY tsup.config.ts ./
 
 COPY apps/shopify-app/package.json apps/shopify-app/
+COPY packages/const/package.json packages/const/
 COPY packages/types/package.json packages/types/
 COPY packages/database/package.json packages/database/
 COPY packages/services/package.json packages/services/
@@ -37,6 +38,9 @@ COPY packages/services/package.json packages/services/
 RUN corepack enable && pnpm install --frozen-lockfile
 
 COPY apps/shopify-app apps/shopify-app
+
+COPY packages/const packages/const
+RUN pnpm --filter @internal/const build
 
 COPY packages/types packages/types
 RUN pnpm --filter @internal/types build

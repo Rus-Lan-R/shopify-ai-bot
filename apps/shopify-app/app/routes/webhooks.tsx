@@ -1,10 +1,10 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
 import { Chats, Messages, Platforms, Sessions } from "@internal/database";
-import { IChat } from "../../../../packages/types/src";
 import { ExtendedSession } from "app/modules/sessionStorage";
 import { FileTypes } from "app/modules/openAi/openAi.interfaces";
 import { openAi } from "app/services/openAi.server";
 import { authenticate } from "app/shopify.server";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import type { IChat } from "@internal/types";
 
 const deleteShop = async (shop: string) => {
   const shopSession = await Sessions.findById(shop);

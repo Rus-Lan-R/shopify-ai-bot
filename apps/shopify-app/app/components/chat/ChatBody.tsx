@@ -1,4 +1,6 @@
-import { IMessage, MessageRole } from "@internal/types";
+import { MessageRole } from "@internal/const";
+import type { IMessage } from "@internal/types";
+
 import { BlockStack, Box, Card, Scrollable, Text } from "@shopify/polaris";
 import { IChatMessage } from "../publicChat/PublicChat";
 

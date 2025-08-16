@@ -22,6 +22,7 @@ COPY tsconfig.json ./
 COPY tsup.config.ts ./
 
 COPY apps/server/package.json apps/server/
+COPY packages/const/package.json packages/const/
 COPY packages/types/package.json packages/types/
 COPY packages/database/package.json packages/database/
 COPY packages/services/package.json packages/services/
@@ -30,6 +31,9 @@ COPY packages/messengers/package.json packages/messengers/
 RUN corepack enable && pnpm install --frozen-lockfile
 
 COPY apps/server apps/server
+
+COPY packages/const packages/const
+RUN pnpm --filter @internal/const build
 
 COPY packages/types packages/types
 RUN pnpm --filter @internal/types build

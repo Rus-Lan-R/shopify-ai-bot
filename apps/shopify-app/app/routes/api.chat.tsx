@@ -5,7 +5,8 @@ import {
   LoaderFunctionArgs,
 } from "@remix-run/node";
 import { Platforms, Sessions } from "@internal/database";
-import { IMessage, IPlatform, ISession, PlatformName } from "@internal/types";
+import type { IMessage, IPlatform, ISession } from "@internal/types";
+import { PlatformName } from "@internal/const";
 import { ChatService } from "@internal/services";
 import { openAiKey } from "app/services/openAi.server";
 import { formDataToObject } from "app/helpers/utils";

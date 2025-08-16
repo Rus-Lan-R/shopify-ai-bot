@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "prebuild": "pnpm --filter @internal/types build && pnpm --filter @internal/database run build && pnpm --filter @internal/services run build && pnpm --filter @internal/messengers run build",
+    "prebuild": "pnpm --filter @internal/const build && pnpm --filter @internal/types build && pnpm --filter @internal/database run build && pnpm --filter @internal/services run build && pnpm --filter @internal/messengers run build",
     "build:shopify": "pnpm run prebuild && pnpm run --filter shopify-app build",
     "start:shopify": "pnpm run --filter shopify-app start",
     "dev:shopify": "pnpm run --filter shopify-app dev",
@@ -14,7 +14,7 @@
     "dev:tg": "pnpm --filter server dev:tg",
     "dev:wa": "pnpm --filter server dev:wa",
     "dev:server": "pnpm --filter server dev:server",
-    "build": "pnpm --filter @internal/types build && pnpm --filter @internal/database build && pnpm --filter @internal/services build && pnpm --filter bots build",
+    "build": "pnpm --filter @internal/const build && pnpm --filter @internal/types build && pnpm --filter @internal/database build && pnpm --filter @internal/services build && pnpm --filter bots build",
     "lint": "pnpm -r lint",
     "build:chat": "pnpm --filter shopify-app build:chat",
     "docker:build": "docker build -t bots --file Dockerfile.bots ."
@@ -30,6 +30,7 @@
   "_moduleAliases": {
     "@internal/services": "packages/services/dist",
     "@internal/database": "packages/database/dist",
+    "@internal/const": "packages/const/dist",
     "@internal/types": "packages/types/dist"
   }
 }

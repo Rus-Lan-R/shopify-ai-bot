@@ -1,4 +1,4 @@
-import { MessageRole } from "@internal/types";
+import { MessageRole } from "@internal/const";
 import mongoose, { Schema, model } from "mongoose";
 
 // 💬 Chat

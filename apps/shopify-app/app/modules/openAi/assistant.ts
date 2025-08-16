@@ -1,14 +1,11 @@
 import { Platforms } from "@internal/database";
-import {
-  IntegrationStatus,
-  IPlatform,
-  ISession,
-  PlatformName,
-} from "../../../../../packages/types/src";
 import { ChatService } from "@internal/services";
 import { openAi, openAiKey } from "app/services/openAi.server";
+import type { IPlatform, ISession } from "@internal/types";
+import { PlatformName, IntegrationStatus } from "@internal/const";
 
 const devPromopt = `vector storage files contain information about products`;
+
 export const assistantInit = async ({
   shopSession,
   assistantName,

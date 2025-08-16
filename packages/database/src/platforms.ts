@@ -1,5 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
-import { IPlatform, PlatformName, IntegrationStatus } from "@internal/types";
+import type { IPlatform } from "@internal/types";
+import { PlatformName, IntegrationStatus } from "@internal/const";
 
 // 🔌 Platforms
 const PlatformSchema = new Schema<IPlatform>(

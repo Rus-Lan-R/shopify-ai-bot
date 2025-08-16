@@ -22,7 +22,8 @@
       "app/*": ["app/*"],
       "@internal/database": ["../../packages/database/src"],
       "@internal/services": ["../../packages/services/src"],
-      "@internal/types": ["../../packages/types/src"]
+      "@internal/types": ["../../packages/types/src"],
+      "@internal/const": ["../../packages/const/src"]
     }
   }
 }

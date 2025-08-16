@@ -14,6 +14,7 @@
   "dependencies": {
     "@internal/database": "workspace:*",
     "@internal/types": "workspace:*",
+    "@internal/const": "workspace:*",
     "@internal/services": "workspace:*",
     "node-telegram-bot-api": "^0.66.0",
     "whatsapp-web.js": "^1.27.0"
@@ -27,6 +28,7 @@
   "_moduleAliases": {
     "@internal/database": "packages/database/dist",
     "@internal/types": "packages/types/dist",
-    "@internal/services": "packages/types/dist"
+    "@internal/services": "packages/services/dist",
+    "@internal/const": "packages/const/dist"
   }
 }

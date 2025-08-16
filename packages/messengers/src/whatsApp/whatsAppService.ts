@@ -1,8 +1,9 @@
 import { Platforms } from "@internal/database";
-import { IPlatform, IntegrationStatus, ISession } from "@internal/types";
 import whatsapp from "whatsapp-web.js";
 import { logerFunction } from "../helpers";
 import { ChatService } from "@internal/services";
+import { IntegrationStatus } from "@internal/const";
+import type { IPlatform, ISession } from "@internal/types";
 
 export class WhatsAppBot extends ChatService {
   private bot: whatsapp.Client;

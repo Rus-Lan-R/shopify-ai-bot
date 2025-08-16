@@ -1,12 +1,7 @@
 import { Chats, Messages } from "@internal/database";
-import {
-  IChat,
-  IMessage,
-  IPlatform,
-  ISession,
-  MessageRole,
-} from "@internal/types";
 import { AiClient } from "../openAi/openAiService";
+import { MessageRole } from "@internal/const";
+import type { IChat, IMessage, IPlatform, ISession } from "@internal/types";
 
 export class ChatService extends AiClient {
   public platform: IPlatform;

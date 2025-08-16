@@ -1,4 +1,5 @@
-import { IMessage, MessageRole } from "@internal/types";
+import type { IMessage } from "@internal/types";
+import { MessageRole } from "@internal/const";
 import { useLoaderData, useRouteLoaderData, useSubmit } from "@remix-run/react";
 import {
   Badge,

@@ -9,11 +9,12 @@ import {
 } from "@shopify/polaris";
 import { useLoaderData } from "@remix-run/react";
 import { useMemo } from "react";
-import { IPlatform, PlatformName } from "../../../../packages/types/src";
 import { TelegramFormIntegrations } from "app/components/integrations/TelegramFormIntegration";
 import { WhatsAppFormIntegration } from "app/components/integrations/WhatsAppFormIntegration";
-import type { loader } from "app/server/app.integrations.server";
 export { loader, action } from "app/server/app.integrations.server";
+import { PlatformName } from "@internal/const";
+import type { IPlatform } from "@internal/types";
+import type { loader } from "app/server/app.integrations.server";
 
 export default function IntegrationsPage() {
   const { platforms, isNewDisabled } = useLoaderData<typeof loader>();

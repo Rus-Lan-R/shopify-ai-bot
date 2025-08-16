@@ -6,7 +6,7 @@
     "node": "^18.20 || ^20.10 || >=21.0.0"
   },
   "scripts": {
-    "build": "npm run build:chat && remix vite:build",
+    "build": "remix vite:build",
     "dev": "shopify app dev --tunnel-url https://app-test.ngrok.dev:3000",
     "config:link": "shopify app config link",
     "generate": "shopify app generate",
@@ -22,13 +22,13 @@
     "vite": "vite",
     "vite:dev": "vite",
     "sprite": "ts-node --require tsconfig-paths/register ./scripts/sprite.ts",
-    "build:chat": "node esbuild.config.js",
-    "heroku": "heroku container:login && heroku container:push web --app chat-assistant-app && heroku container:release web --app chat-assistant-app"
+    "build:chat": "node esbuild.config.js"
   },
   "dependencies": {
     "@internal/database": "workspace:*",
     "@internal/services": "workspace:*",
     "@internal/types": "workspace:*",
+    "@internal/const": "workspace:*",
     "@remix-run/dev": "^2.15.0",
     "@remix-run/fs-routes": "^2.15.0",
     "@remix-run/node": "^2.15.0",

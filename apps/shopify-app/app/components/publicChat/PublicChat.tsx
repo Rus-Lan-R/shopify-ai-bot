@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import SpriteIcon from "app/components/SpriteIcon";
 import { mergeClassNames } from "app/helpers/utils";
 import { useWebsocket } from "app/websocket/useWebsocket";
-import { MessageRole } from "@internal/types";
+import { MessageRole } from "@internal/const";
 import { useIsTyping } from "app/hooks/useIsTyping";
 
 export interface IChatMessage {

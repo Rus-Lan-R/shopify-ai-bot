@@ -16,9 +16,11 @@
   },
   "dependencies": {
     "@internal/types": "workspace:*",
+    "@internal/const": "workspace:*",
     "mongoose": "^8.13.2"
   },
   "_moduleAliases": {
-    "@internal/types": "packages/types/dist"
+    "@internal/types": "packages/types/dist",
+    "@internal/const": "packages/const/dist"
   }
 }

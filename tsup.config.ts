@@ -32,6 +32,16 @@ export default defineConfig([
     minify: false,
   },
   {
+    entry: ["packages/const/src/index.ts"],
+    outDir: "packages/const/dist",
+    format: ["esm"],
+    splitting: false,
+    sourcemap: false,
+    clean: true,
+    dts: true,
+    minify: false,
+  },
+  {
     entry: ["packages/types/src/index.ts"],
     outDir: "packages/types/dist",
     format: ["esm"],

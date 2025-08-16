@@ -3,6 +3,8 @@ import { installGlobals } from "@remix-run/node";
 import path from "path";
 import { defineConfig, type UserConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import dotenv from "dotenv";
+dotenv.config();
 
 installGlobals({ nativeFetch: true });
 
@@ -49,6 +51,7 @@ export default defineConfig({
         __dirname,
         "../../packages/services/src",
       ),
+      "@internal/const": path.resolve(__dirname, "../../packages/const/src"),
       "@internal/types": path.resolve(__dirname, "../../packages/types/src"),
     },
   },

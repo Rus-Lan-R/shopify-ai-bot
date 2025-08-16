@@ -24675,7 +24675,7 @@ var RemixEmbed = (() => {
         });
         setIsLoading(true);
         const response = await fetch(
-          `${"https://www.chatpilotai.agency"}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+          `${"https://app.chatpilotai.agency"}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
           {
             method: "POST",
             body: formData
@@ -24702,7 +24702,7 @@ var RemixEmbed = (() => {
         if (loaderData.chatId) {
           try {
             const response = await fetch(
-              `${"https://www.chatpilotai.agency"}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+              `${"https://app.chatpilotai.agency"}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
               {
                 method: "GET"
               }
@@ -24740,7 +24740,7 @@ var RemixEmbed = (() => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `${"https://www.chatpilotai.agency"}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
+          `${"https://app.chatpilotai.agency"}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
           {
             method: "POST",
             body: formData

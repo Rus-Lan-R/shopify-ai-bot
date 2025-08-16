@@ -5,6 +5,8 @@ import {
   AppDistribution,
   shopifyApp,
 } from "@shopify/shopify-app-remix/server";
+import dotenv from "dotenv";
+dotenv.config();
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,

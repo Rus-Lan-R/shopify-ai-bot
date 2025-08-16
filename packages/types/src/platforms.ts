@@ -1,17 +1,4 @@
-export enum IntegrationStatus {
-  NEW = "NEW",
-  ACTIVE = "ACTIVE",
-  CONNECTING = "CONNECTING",
-  DISCONNECTED = "DISCONNECTED",
-}
-
-export enum PlatformName {
-  TELEGRAM = "Telegram",
-  INSTAGRAM = "Instagram",
-  WHATSAPP = "WhatsApp",
-  WEBSITE = "Website",
-}
-
+import { PlatformName, IntegrationStatus } from "@internal/const";
 export interface IPlatform {
   _id: string;
   primaryApiKey: string;

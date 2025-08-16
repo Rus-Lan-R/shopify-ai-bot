@@ -1,5 +1,4 @@
-import { MessageRole } from "./messages";
-
+import { MessageRole } from "@internal/const";
 export interface IChat {
   _id: string;
   threadId: string;

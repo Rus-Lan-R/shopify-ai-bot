@@ -7,7 +7,6 @@ import {
   useIndexResourceState,
 } from "@shopify/polaris";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { MessageRole, PlatformName } from "../../../../packages/types/src";
 import { useMemo } from "react";
 import { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import {
@@ -20,6 +19,7 @@ import { localeTimeFormated } from "app/helpers/storeTime";
 import type { loader } from "app/server/app.chats.server";
 import { assistantToBadge } from "./app.chats.$chatId";
 export { loader } from "app/server/app.chats.server";
+import { MessageRole, PlatformName } from "@internal/const";
 
 const resourceName = {
   singular: "Chats",

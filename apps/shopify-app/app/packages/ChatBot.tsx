@@ -3,7 +3,7 @@ import { Chat } from "app/components/chat/Chat";
 import { useFetcher } from "@remix-run/react";
 import { MainChatLoader } from "app/routes/api.chat";
 import { IChatMessage } from "app/components/publicChat/PublicChat";
-import { MessageRole } from "../../../../packages/types/src";
+import { MessageRole } from "@internal/const";
 
 export const ChatBot = (props: { shop: string; chatId: string }) => {
   const { shop, chatId } = props;
