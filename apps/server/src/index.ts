@@ -24,6 +24,6 @@ setInterval(() => {
   });
 }, 30000);
 
-app.listen(port, async () => {
+app.listen(Number(port), "0.0.0.0", async () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
