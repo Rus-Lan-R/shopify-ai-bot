@@ -9,7 +9,7 @@ const { app, getWss } = server;
 const port = process.env.PORT || 8080;
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/health", (req, res) => {
   res.send("OK");
 });
 
@@ -25,5 +25,5 @@ setInterval(() => {
 }, 30000);
 
 app.listen(Number(port), "0.0.0.0", async () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+  console.log(`⚡️[server]: Server is running at PORT:${port}`);
 });
