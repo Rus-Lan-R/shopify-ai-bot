@@ -16,11 +16,11 @@ api_version = "2025-01"
 
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled", "app/scopes_update" ]
-  uri = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/webhooks"
+  uri = "https://app-test.ngrok.dev/webhooks"
 
   [[webhooks.subscriptions]]
   compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
-  uri = "https://chat-assistant-app-b47c5af582bc.herokuapp.com/webhooks"
+  uri = "https://app-test.ngrok.dev/webhooks"
 
 [auth]
 redirect_urls = [
