@@ -49,6 +49,6 @@ RUN pnpm --filter @internal/services build
 
 RUN pnpm --filter shopify-app build
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD ["pnpm", "--filter", "shopify-app", "start"]

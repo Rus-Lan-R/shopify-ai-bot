@@ -46,6 +46,6 @@ RUN pnpm --filter @internal/messengers build
 
 RUN pnpm --filter server build
 
-EXPOSE 8080
+EXPOSE ${PORT}
 
 CMD ["pnpm", "--filter", "server", "start:server"]
