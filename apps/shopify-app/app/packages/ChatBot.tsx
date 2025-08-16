@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Chat } from "app/components/chat/Chat";
 import { useFetcher } from "@remix-run/react";
-import { MainChatLoader } from "app/routes/app-api.chat";
+import { MainChatLoader } from "app/routes/api.chat";
 import { IChatMessage } from "app/components/publicChat/PublicChat";
 import { MessageRole } from "../../../../packages/types/src";
 

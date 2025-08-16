@@ -16,17 +16,17 @@ api_version = "2025-01"
 
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled", "app/scopes_update" ]
-  uri = "https://www.chatpilotai.agency/webhooks"
+  uri = "https://app.chatpilotai.agency/webhooks"
 
   [[webhooks.subscriptions]]
   compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
-  uri = "https://www.chatpilotai.agency/webhooks"
+  uri = "https://app.chatpilotai.agency/webhooks"
 
 [auth]
 redirect_urls = [
-  "https://www.chatpilotai.agency/auth/callback",
-  "https://www.chatpilotai.agency/auth/shopify/callback",
-  "https://www.chatpilotai.agency/api/auth/callback"
+  "https://app.chatpilotai.agency/auth/callback",
+  "https://app.chatpilotai.agency/auth/shopify/callback",
+  "https://app.chatpilotai.agency/api/auth/callback"
 ]
 
 [access_scopes]
