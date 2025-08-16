@@ -47,7 +47,7 @@ export default function ChatDetailsPage() {
   const submit = useSubmit();
   const rootLoader = useRouteLoaderData<RootLoader>("root");
   const { messages, chatId, chat } = useLoaderData<IChatDetailsResponse>();
-  const [messagesList, setMessagesList] = useState(messages);
+  const [messagesList, setMessagesList] = useState<IMessage[]>(messages);
   const [isClientTyping, setIsClientTyping] = useState<boolean>(false);
   const [status, setStatus] = useState(ChatSocketStatus.OFFLINE);
 

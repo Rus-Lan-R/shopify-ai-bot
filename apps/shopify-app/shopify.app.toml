@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5ac3b631ef30cb1cb4b5ba0813aefe7d"
-application_url = "https://www.chatpilotai.agency"
+application_url = "https://app.chatpilotai.agency"
 embedded = true
 name = "ChatPilot AI"
 handle = "support-ai-assistant"
