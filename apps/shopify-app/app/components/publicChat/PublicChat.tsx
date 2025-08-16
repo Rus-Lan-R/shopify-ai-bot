@@ -121,7 +121,7 @@ const PublicChat = (props: {
   };
 
   useEffect(() => {
-    if (socket) {
+    if (socket && socket.readyState === 1) {
       socket?.send(JSON.stringify({ type: "CHECK_ONLINE" }));
     }
   }, [socket]);
