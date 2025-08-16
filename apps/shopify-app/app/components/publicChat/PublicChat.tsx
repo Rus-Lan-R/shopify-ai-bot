@@ -102,7 +102,7 @@ const PublicChat = (props: {
       });
       setIsLoading(true);
       const response = await fetch(
-        `${process.env.SHOPIFY_APP_URL}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+        `${process.env.SHOPIFY_APP_URL}/app-api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
         {
           method: "POST",
           body: formData,
@@ -131,7 +131,7 @@ const PublicChat = (props: {
       if (loaderData.chatId) {
         try {
           const response = await fetch(
-            `${process?.env?.SHOPIFY_APP_URL}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+            `${process?.env?.SHOPIFY_APP_URL}/app-api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
             {
               method: "GET",
             },
@@ -178,7 +178,7 @@ const PublicChat = (props: {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `${process?.env?.SHOPIFY_APP_URL}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
+        `${process?.env?.SHOPIFY_APP_URL}/app-api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
         {
           method: "POST",
           body: formData,

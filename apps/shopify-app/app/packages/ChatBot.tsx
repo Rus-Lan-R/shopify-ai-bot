@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Chat } from "app/components/chat/Chat";
 import { useFetcher } from "@remix-run/react";
-import { MainChatLoader } from "app/routes/api.chat";
+import { MainChatLoader } from "app/routes/app-api.chat";
 import { IChatMessage } from "app/components/publicChat/PublicChat";
 import { MessageRole } from "../../../../packages/types/src";
 
@@ -21,10 +21,13 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
         { role: MessageRole.USER, text: message },
       ]);
       setIsLoading(true);
-      const response = await fetch(`/api/chat?shop=${shop}&chatId=${chatId}`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `/app-api/chat?shop=${shop}&chatId=${chatId}`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
       const data = (await response.json()) as { answer: string };
       setMessagesList((prev) => [
         ...prev,
@@ -41,11 +44,12 @@ export const ChatBot = (props: { shop: string; chatId: string }) => {
   }, [fetcher.data]);
 
   useEffect(() => {
-    fetcher.load(`/api/chat?shop=${shop}&chatId=${chatId}`);
+    fetcher.load(`/app-api/chat?shop=${shop}&chatId=${chatId}`);
   }, []);
 
   return (
     <Chat
+      isClientTyping={false}
       isDisabled={false}
       messagesList={messagesList}
       isLoading={isLoading}
