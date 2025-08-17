@@ -14,6 +14,7 @@ import { StatisticsCard } from "app/components/StatisticsCard/Stats";
 import { Suspense } from "react";
 import { ChatBot } from "app/packages/ChatBot";
 import type { loader } from "app/server/app._index.server.js";
+import { InfoCard } from "app/packages/InfoCard/InfoCard";
 export { loader } from "app/server/app._index.server.js";
 
 export default function IndexPage() {
@@ -34,6 +35,7 @@ export default function IndexPage() {
         <BlockStack gap={"300"}>
           {assistantId ? (
             <>
+              <InfoCard></InfoCard>
               <Card padding={"300"}>
                 <BlockStack gap={"500"}>
                   <InlineStack
