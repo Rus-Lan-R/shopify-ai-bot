@@ -2,7 +2,7 @@
 ::after,
 ::before {
   box-sizing: border-box;
-  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-seri;
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .chatFrame {
