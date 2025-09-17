@@ -24608,7 +24608,7 @@ var RemixEmbed = (() => {
     ["manager" /* MANAGER */]: styles_default.chatMessage_manager
   };
   var PublicChat = (props) => {
-    const { shopName, chatId, userId } = props;
+    const { position, shopName, chatId, userId } = props;
     const textareaRef = (0, import_react4.useRef)(null);
     const conversationRef = (0, import_react4.useRef)(null);
     const [isLoading, setIsLoading] = (0, import_react4.useState)(false);
@@ -24675,7 +24675,7 @@ var RemixEmbed = (() => {
         });
         setIsLoading(true);
         const response = await fetch(
-          `${"https://app.chatpilotai.agency"}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
+          `${"https://app-test.ngrok.dev"}/api/chat?shopName=${loaderData.shopName}&chatId=${loaderData.chatId}`,
           {
             method: "POST",
             body: formData
@@ -24693,7 +24693,7 @@ var RemixEmbed = (() => {
       }
     };
     (0, import_react4.useEffect)(() => {
-      if (socket) {
+      if (socket && socket.readyState === 1) {
         socket?.send(JSON.stringify({ type: "CHECK_ONLINE" }));
       }
     }, [socket]);
@@ -24702,7 +24702,7 @@ var RemixEmbed = (() => {
         if (loaderData.chatId) {
           try {
             const response = await fetch(
-              `${"https://app.chatpilotai.agency"}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
+              `${"https://app-test.ngrok.dev"}/api/chat?shopName=${loaderData?.shopName}&chatId=${loaderData?.chatId}`,
               {
                 method: "GET"
               }
@@ -24740,7 +24740,7 @@ var RemixEmbed = (() => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `${"https://app.chatpilotai.agency"}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
+          `${"https://app-test.ngrok.dev"}/api/chat?_data=routes/api.chat&shopName=${loaderData?.shopName}`,
           {
             method: "POST",
             body: formData
@@ -24826,25 +24826,31 @@ var RemixEmbed = (() => {
           ) })
         ] })
       ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: styles_default.widgetButtonFrame, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-        "button",
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        "div",
         {
-          className: mergeClassNames([
-            styles_default.widgetButton,
-            isLoading ? styles_default.loading : null
-          ]),
-          onClick: handleOpen,
-          disabled: isLoading,
+          className: position.includes("left") ? "" : styles_default.widgetButtonFrame,
           children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-            SpriteIcon_default,
+            "button",
             {
-              name: isOpen ? "cross" : "message",
-              size: "2rem",
-              color: "#000"
+              className: mergeClassNames([
+                styles_default.widgetButton,
+                isLoading ? styles_default.loading : null
+              ]),
+              onClick: handleOpen,
+              disabled: isLoading,
+              children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                SpriteIcon_default,
+                {
+                  name: isOpen ? "cross" : "message",
+                  size: "2rem",
+                  color: "#000"
+                }
+              )
             }
           )
         }
-      ) })
+      )
     ] });
   };
   var PublicChat_default = PublicChat;
@@ -24856,6 +24862,7 @@ var RemixEmbed = (() => {
     const container = document.getElementById("support-ai-chat-place");
     if (container) {
       const shopName = container?.getAttribute("data-shopName");
+      const position = container.getAttribute("data-position");
       const localChatId = localStorage.getItem("supportAiChatId");
       let userId = localStorage.getItem("chat-user-id");
       if (!userId) {
@@ -24881,6 +24888,7 @@ var RemixEmbed = (() => {
             {
               shopName,
               userId,
+              position: position || "right",
               chatId: localChatId && localChatId !== "undefined" ? localChatId : null
             }
           )
