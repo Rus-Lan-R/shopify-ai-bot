@@ -17,7 +17,7 @@ const roleToStyleMap = {
   [MessageRole.MANAGER]: styles.chatMessage_manager,
 };
 
-interface ILodaerData {
+interface ILoaderData {
   assistantName?: string | null;
   chatId?: string | null;
   shopName?: string | null;
@@ -25,15 +25,16 @@ interface ILodaerData {
 
 const PublicChat = (props: {
   userId: string;
+  position: string;
   chatId?: string | null;
   shopName?: string | null;
 }) => {
-  const { shopName, chatId, userId } = props;
+  const { position, shopName, chatId, userId } = props;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [loaderData, setLoaderData] = useState<Partial<ILodaerData>>({
+  const [loaderData, setLoaderData] = useState<Partial<ILoaderData>>({
     chatId,
     shopName,
   });
@@ -275,7 +276,9 @@ const PublicChat = (props: {
       ) : (
         <></>
       )}
-      <div className={styles.widgetButtonFrame}>
+      <div
+        className={position.includes("left") ? "" : styles.widgetButtonFrame}
+      >
         <button
           className={mergeClassNames([
             styles.widgetButton,

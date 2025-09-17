@@ -6,6 +6,7 @@ const renderComponent = () => {
   const container = document.getElementById("support-ai-chat-place");
   if (container) {
     const shopName = container?.getAttribute("data-shopName");
+    const position = container.getAttribute("data-position");
     const localChatId = localStorage.getItem("supportAiChatId");
 
     let userId = localStorage.getItem("chat-user-id");
@@ -29,6 +30,7 @@ const renderComponent = () => {
         <PublicChat
           shopName={shopName}
           userId={userId}
+          position={position || "right"}
           chatId={
             localChatId && localChatId !== "undefined" ? localChatId : null
           }
