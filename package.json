@@ -1,5 +1,5 @@
 {
-  "name": "ai-assistnat",
+  "name": "ai-assistant",
   "private": true,
   "workspaces": [
     "apps/*",
